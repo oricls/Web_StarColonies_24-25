@@ -1,30 +1,75 @@
 :root {
   --primary-bg-color: #2D1D42;
   --secondary-bg-color: #141119;
-  --tercary-bg-color : #1B1528;
+  --tercary-bg-color: #1B1528;
   --accent-color: #3B82F6;
   --primary-color: #432974;
   --special-color: #F8D503;
   --text-color: white;
-  --font-family: 'Kumbh Sans', sans-serif;
-  --submit-button-color : #6A47C9;
+  --submit-button-color: #6A47C9;
+  --login-header-color: #6750A4;
+  --login-input-bg: var(--secondary-bg-color);
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-family), serif;
-  background-color: var(--primary-bg-color);
+  font-family: helvetica, 'Kumbh Sans', sans-serif;
+  background-image: linear-gradient(to bottom, var(--primary-bg-color), var(--secondary-bg-color));
   color: var(--text-color);
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-image: linear-gradient(to bottom, var(--primary-bg-color), var(--secondary-bg-color));
-  box-sizing: border-box;
 }
 
+.font-barlow {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+/* Navigation */
+.navbar {
+  background-color: transparent;
+}
+
+/* Custom buttons */
+.btn-accent {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color);
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  opacity: 0.9;
+  color: var(--text-color);
+}
+
+.btn-outline-accent {
+  color: var(--text-color);
+  border-color: var(--accent-color);
+}
+
+.btn-outline-accent:hover {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--text-color);
+}
+
+.btn-special {
+  background-color: var(--special-color);
+  border-color: var(--special-color);
+  color: #212529;
+  z-index: 2;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.btn-special:hover {
+  background-color: var(--special-color);
+  border-color: var(--special-color);
+  transform: scale(1.05);
+}
+
+/* Button glow effect */
 .btn-glow-wrapper::before {
   content: "";
   position: absolute;
@@ -45,13 +90,55 @@ body {
   filter: blur(10px);
 }
 
-.hall-of-fame, .form {
+/* Hall of Fame */
+.hall-of-fame {
+  background-color: var(--tercary-bg-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hall-of-fame h3 {
+  background-color: var(--primary-color);
+  letter-spacing: 0.1em;
+  font-size: 2.5rem;
+  color: var(--text-color);
+}
+
+/* Custom table */
+.table-custom {
+  color: var(--text-color);
+  background-color: var(--tercary-bg-color);
+}
+
+.table-custom thead th {
+  color: var(--accent-color);
+  background-color: var(--tercary-bg-color);
+  padding-bottom: 0.8rem;
+  padding-top: 0.8rem;
+}
+
+.table-custom tbody td {
+  border-color: var(--secondary-bg-color);
+  background-color: var(--tercary-bg-color);
+  padding-bottom: 0.8rem;
+  padding-top: 0.8rem;
+}
+
+.table-hover.table-custom tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+/* Form styles */
+.form {
   background-color: var(--secondary-bg-color);
   border-radius: 0.5rem;
   overflow: hidden;
+  width: 60%;
+  margin: 0 auto;
 }
 
-.hall-of-fame h3, .form h3 {
+.form h3 {
   width: 100%;
   font-size: 2.5rem;
   font-weight: 700;
@@ -63,62 +150,123 @@ body {
   background-color: var(--primary-color);
 }
 
-.hall-of-fame-header {
-  display: grid;
-  grid-template-columns: 1fr 4fr 4fr;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.5);
-  padding: 1rem 1.5rem;
-}
-
-.hall-of-fame-header div, .form div {
-  color: var(--accent-color);
-  font-weight: 700;
-}
-
-.hall-of-fame-row {
-  display: grid;
-  grid-template-columns: 1fr 4fr 4fr;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.3);
-}
-
-.hall-of-fame-row:last-child {
-  border-bottom: none;
-}
-
-.missions-score {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.form {
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 30em;
-  align-content: space-between;
-}
-
-.form form {
-  width: 70%;
-  padding: 1.5rem;  
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
-}
-
-.form-control{
-  width: 100%;
-  background-color: #222222;
+.form-control:focus {
+  background-color: var(--login-input-bg);
   color: white;
-  border-radius: 5px;
+  border-color: var(--primary-bg-color);
+  box-shadow: 0 0 0 0.25rem var(--primary-bg-color);
 }
 
-.button-form-submit {
+.btn-submit {
   background-color: var(--submit-button-color);
   border: none;
-  height: 3rem;
-  border-radius: 5px;
-  align-items: end;
+  color: white;
+}
+
+/* Login Page Specific Styles */
+.login-container {
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.login-header {
+  background-color: var(--login-header-color);
+  color: var(--text-color);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.login-input {
+  background-color: var(--login-input-bg);
+  border: none;
+  color: white;
+  padding: 0.75rem 1rem;
+}
+
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-login {
+  background-color: var(--submit-button-color);
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 0.75rem;
+  border: none;
+}
+
+.btn-login:hover {
+  opacity: 0.6;
+  color: white;
+}
+
+.text-accent-link {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.text-accent-link:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: var(--primary-bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+footer p {
+  margin-bottom: 0;
+}
+
+/* Quelques styles personnalisés minimaux pour le Dashboard */
+.border-dashed {
+  border-style: dashed !important;
+  border-width: 2px !important;
+}
+
+.bg-dark {
+  background-color: var(--tercary-bg-color) !important;
+}
+
+.bg-purple {
+  background-color: #4F378B !important;
+}
+
+.btn-purple {
+  background-color: var(--submit-button-color);
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: var(--submit-button-color);
+  opacity: 0.9;
+  color: white;
+}
+
+.text-warning {
+  color: var(--special-color) !important;
+}
+
+.monster-icon {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
 }
