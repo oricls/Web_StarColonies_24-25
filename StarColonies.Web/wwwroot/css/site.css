@@ -7,6 +7,7 @@
   --special-color: #F8D503;
   --text-color: white;
   --font-family: 'Kumbh Sans', sans-serif;
+  --submit-button-color : #6A47C9;
 }
 
 body {
@@ -44,13 +45,14 @@ body {
   filter: blur(10px);
 }
 
-.hall-of-fame {
+.hall-of-fame, .form {
   background-color: var(--secondary-bg-color);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
-.hall-of-fame h3 {
+.hall-of-fame h3, .form h3 {
+  width: 100%;
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -68,7 +70,7 @@ body {
   padding: 1rem 1.5rem;
 }
 
-.hall-of-fame-header div {
+.hall-of-fame-header div, .form div {
   color: var(--accent-color);
   font-weight: 700;
 }
@@ -87,4 +89,36 @@ body {
 .missions-score {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+.form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 30em;
+  align-content: space-between;
+}
+
+.form form {
+  width: 70%;
+  padding: 1.5rem;  
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+.form-control{
+  width: 100%;
+  background-color: #222222;
+  color: white;
+  border-radius: 5px;
+}
+
+.button-form-submit {
+  background-color: var(--submit-button-color);
+  border: none;
+  height: 3rem;
+  border-radius: 5px;
+  align-items: end;
 }

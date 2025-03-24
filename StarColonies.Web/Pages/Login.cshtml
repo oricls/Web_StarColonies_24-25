@@ -1,0 +1,70 @@
+﻿@page
+@model StarColonies.Web.Pages.Login
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+
+<html>
+<!-- était un copié-collé-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>starcolonies</title>
+    <link rel="stylesheet" href="css/site.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Kumbh+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        @*A METTRE DANS LA LAYOUT APRES EVIDEMMENT MAIS JE TESTAIS*@
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'barlow-condensed': ['"Barlow Condensed"', 'sans-serif'],
+                        'kumbh': ['"Kumbh Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-bg': 'var(--primary-bg-color)',
+                        'secondary-bg': 'var(--secondary-bg-color)',
+                        'tercary-bg' : 'var(--tercary-bg-color)',
+                        'accent': 'var(--accent-color)',
+                        'primary': 'var(--primary-color)',
+                        'text': 'var(--text-color)',
+                        'button': 'var(--special-color)',
+                    },
+                }
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+<!--<nav class="container mx-auto px-6 py-6 flex justify-between items-center">
+    <div class="mr-4">
+        <img src="img/logo.png" alt="Logo Starcolonies" class="h-20">
+    </div>
+</nav>-->
+
+<section class="container mx-auto px-4 py-16 max-w-4xl">
+    <div class="form shadow-lg bg-tercary-bg">
+        <h3 class="text-4xl font-barlow-condensed font-bold text-center py-6 tracking-wider" style="background-color: var(--primary-color);">CONNEXION</h3>
+
+        <form method="post">
+            <label asp-for="Input.Identifiant">Identifiant*</label>
+            <input class="form-control" asp-for="Input.Identifiant" type="text" placeholder="abc"/>
+
+            <label asp-for="Input.Password">Mot de passe*</label>
+            <input class="form-control" asp-for="Input.Password" type="password" placeholder="*****"/>
+
+            <button class="button-form-submit">Se connecter</button>
+        </form>
+    </div>
+</section>
+
+<footer class="w-full py-6 text-center mt-16" style="background-color: var(--primary-bg-color);">
+    <p class="text-text text-sm font-kumbh">&COPY; 2025 Laudrikx Games - StarColonies: The Age of Middleware</p>
+</footer>
+</body>
+</html>
