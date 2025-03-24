@@ -1,0 +1,131 @@
+@page
+@model StarColonies.Web.Pages.Dashboard
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarColonies</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Kumbh+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-bg-color: #1b1429;
+            --secondary-bg-color: #2d1e40;
+            --tercary-bg-color: #41285a;
+            --accent-color: #ffcc00;
+            --primary-color: #ffffff;
+            --text-color: #e0d7f5;
+            --special-color: #a855f7;
+        }
+
+        body {
+            background-color: var(--primary-bg-color);
+            font-family: 'Kumbh Sans', sans-serif;
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: var(--secondary-bg-color);
+            color: var(--primary-color);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .team-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .btn-consult {
+            background-color: var(--special-color);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .new-team {
+            border: 2px dashed var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h3 class="mb-4" style="color: var(--accent-color);">Mes équipes</h3>
+
+    <div class="row g-4">
+        
+        <!-- Équipe 1 -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="~/img/rocket.png" alt="Alpha striker" class="team-icon">
+                <h3>Alpha striker</h3>
+                <p class="text-success">Sélectionnée pour les missions</p>
+                <div class="d-flex justify-content-around my-2">
+                    <div>
+                        <strong>7</strong>
+                        <p>Membres</p>
+                    </div>
+                    <div>
+                        <strong>2</strong>
+                        <p>Niveau moyen</p>
+                    </div>
+                </div>
+                <p>Compositions :</p>
+                <div class="d-flex justify-content-center">
+                    <span class="badge bg-danger">S</span>
+                    <span class="badge bg-warning mx-1">M</span>
+                    <span class="badge bg-success">O</span>
+                    <span class="badge bg-info mx-1">M</span>
+                    <span class="badge bg-secondary">+3</span>
+                </div>
+                <button class="btn btn-consult mt-3">Consulter</button>
+            </div>
+        </div>
+
+        <!-- Équipe 2 -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="~/img/rocket.png" alt="Alpha striker" class="team-icon">
+                <h3>John Doe's</h3>
+                <div class="d-flex justify-content-around my-2">
+                    <div>
+                        <strong>1</strong>
+                        <p>Membres</p>
+                    </div>
+                    <div>
+                        <strong>99</strong>
+                        <p>Niveau moyen</p>
+                    </div>
+                </div>
+                <p>Compositions :</p>
+                <span class="badge bg-primary">S</span>
+                <button class="btn btn-consult mt-3">Consulter</button>
+            </div>
+        </div>
+
+        <!-- Nouvelle équipe -->
+        <div class="col-md-4">
+            <div class="card new-team">
+                <h3>+ Nouvelle équipe</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
