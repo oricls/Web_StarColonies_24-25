@@ -1,22 +1,90 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+:root {
+  --primary-bg-color: #2D1D42;
+  --secondary-bg-color: #141119;
+  --tercary-bg-color : #1B1528;
+  --accent-color: #3B82F6;
+  --primary-color: #432974;
+  --special-color: #F8D503;
+  --text-color: white;
+  --font-family: 'Kumbh Sans', sans-serif;
 }
 
 body {
-  margin-bottom: 60px;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family), serif;
+  background-color: var(--primary-bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom, var(--primary-bg-color), var(--secondary-bg-color));
+  box-sizing: border-box;
+}
+
+.btn-glow-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20rem;
+  height: 20rem;
+  background: radial-gradient(
+          circle,
+          rgba(255, 215, 0, 0.6) 0%,
+          rgba(255, 215, 0, 0.3) 20%,
+          rgba(255, 215, 0, 0.1) 40%,
+          rgba(255, 215, 0, 0) 70%
+  );
+  z-index: 1;
+  border-radius: 50%;
+  filter: blur(10px);
+}
+
+.hall-of-fame {
+  background-color: var(--secondary-bg-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.hall-of-fame h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--text-color);
+  background-color: var(--primary-color);
+}
+
+.hall-of-fame-header {
+  display: grid;
+  grid-template-columns: 1fr 4fr 4fr;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.5);
+  padding: 1rem 1.5rem;
+}
+
+.hall-of-fame-header div {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.hall-of-fame-row {
+  display: grid;
+  grid-template-columns: 1fr 4fr 4fr;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+.hall-of-fame-row:last-child {
+  border-bottom: none;
+}
+
+.missions-score {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
