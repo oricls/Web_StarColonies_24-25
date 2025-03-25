@@ -1,0 +1,280 @@
+@page
+@model StarColonies.Web.Pages.RegisterAvatar
+
+@{
+    ViewData["Title"] = "Inscription - Avatar";
+    ViewData["HideNavButtons"] = true;
+}
+
+<div class="container d-flex flex-column align-items-center py-5">
+
+    <!-- Étapes d'inscription -->
+    <div class="registration-steps mb-4">
+        <!-- Étape 1 (complétée) -->
+        <div class="step-item completed">
+            <div class="step-circle">1</div>
+            <div class="step-label">Informations</div>
+        </div>
+
+        <!-- Ligne de connexion 1-2 -->
+        <div class="step-line active-line"></div>
+
+        <!-- Étape 2 (active) -->
+        <div class="step-item active">
+            <div class="step-glow-wrapper">
+                <div class="step-circle">2</div>
+            </div>
+            <div class="step-label">Avatar</div>
+        </div>
+
+        <!-- Ligne de connexion 2-3 -->
+        <div class="step-line"></div>
+
+        <!-- Étape 3 -->
+        <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-label">Profession</div>
+        </div>
+    </div>
+
+    <!-- Formulaire de sélection d'avatar -->
+    <div class="hall-of-fame w-100" style="max-width: 600px;">
+        <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">INSCRIPTION</h3>
+
+        <form method="post" class="p-4">
+            <div class="row mb-4">
+                <div class="col-md-5">
+                    <div class="avatar-preview-container">
+                        <div class="avatar-preview border border-2 border-dashed rounded d-flex flex-column align-items-center justify-content-center p-3">
+                            <span class="text-purple mb-2">Aperçu</span>
+                            <div id="avatarPreview" class="text-center">
+                                <!-- L'aperçu de l'avatar s'affichera ici -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="avatar-grid">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="avatar-option" data-avatar="1">
+                                    <div class="avatar-square bg-purple rounded p-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="avatar-option" data-avatar="2">
+                                    <div class="avatar-square bg-purple rounded p-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="avatar-option" data-avatar="3">
+                                    <div class="avatar-square bg-purple rounded p-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="avatar-option" data-avatar="4">
+                                    <div class="avatar-square bg-purple rounded p-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="avatar-option" data-avatar="5">
+                                    <div class="avatar-square bg-purple rounded p-3"></div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="avatar-option import-avatar" data-avatar="import">
+                                    <div class="avatar-square bg-accent rounded p-3 d-flex flex-column align-items-center justify-content-center">
+                                        <i class="fas fa-download mb-1"></i>
+                                        <span class="small">Importer</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/Register" class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-arrow-left me-2"></i> PRÉCÉDENT
+                </a>
+                <a href="/RegisterProfession" class="btn btn-purple font-barlow fw-bold w-50 mx-3">CONTINUER</a>
+            </div>
+
+            <input type="hidden" id="selectedAvatar" name="SelectedAvatar" value="" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarOptions = document.querySelectorAll('.avatar-option');
+            const avatarPreview = document.getElementById('avatarPreview');
+            const selectedAvatarInput = document.getElementById('selectedAvatar');
+
+            // Événement de clic pour les options d'avatar
+            avatarOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Supprimer la classe 'selected' de toutes les options
+                    avatarOptions.forEach(opt => opt.classList.remove('selected'));
+
+                    // Ajouter la classe 'selected' à l'option cliquée
+                    this.classList.add('selected');
+
+                    // Stocker l'avatar sélectionné
+                    const avatarId = this.getAttribute('data-avatar');
+                    selectedAvatarInput.value = avatarId;
+
+                    // Mettre à jour l'aperçu
+                    if (avatarId === 'import') {
+                        avatarPreview.innerHTML = '<p>Image personnalisée</p>';
+                    } else {
+                        avatarPreview.innerHTML = `<div class="avatar-preview-img bg-purple rounded p-3" style="width: 100px; height: 100px;"></div>`;
+                    }
+                });
+            });
+
+            // Gestionnaire pour l'importation d'image
+            const importOption = document.querySelector('.import-avatar');
+            if (importOption) {
+                importOption.addEventListener('click', function() {
+                    //ajouter ici la logique pour importer une image plus tard
+                });
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <style>
+        /* Styles pour les étapes d'inscription avec effet de halo */
+        /* TODO: Regrouper avec la première étape, un layout peut-être ou juste dans site.css ?*/
+        .registration-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .step-glow-wrapper {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .step-item.active .step-glow-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5rem;
+            height: 5rem;
+            background: radial-gradient(
+                circle,
+                rgba(59, 130, 246, 0.6) 0%,
+                rgba(59, 130, 246, 0.3) 20%,
+                rgba(59, 130, 246, 0.1) 40%,
+                rgba(59, 130, 246, 0) 70%
+            );
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #25192f;
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-item.active .step-circle {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .step-item.completed .step-circle {
+            border: solid 0.1rem var(--accent-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            text-align: center;
+        }
+
+        .step-item.active .step-label,
+        .step-item.completed .step-label {
+            color: white;
+        }
+
+        .step-line {
+            height: 2px;
+            background-color: transparent;
+            width: 100%;
+            max-width: 120px;
+            margin: 0 5px;
+            position: relative;
+            top: -20px;
+            z-index: 1;
+        }
+
+        /* Styles pour la sélection d'avatar */
+        .avatar-preview-container {
+            height: 100%;
+        }
+
+        .avatar-preview {
+            height: 100%;
+            min-height: 200px;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .avatar-option {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--accent-color);
+        }
+        
+        .avatar-square{
+            height: 5rem;
+        }
+
+        .text-purple {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .bg-purple {
+            background-color: var(--primary-color);
+        }
+
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+    </style>
+}

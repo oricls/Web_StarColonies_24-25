@@ -2,18 +2,165 @@
 @model StarColonies.Web.Pages.Register
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Inscription";
+    ViewData["HideNavButtons"] = true;
 }
 
-<!DOCTYPE html>
+<div class="container d-flex flex-column align-items-center py-5">
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
+    <!-- Étapes d'inscription -->
+    <div class="registration-steps mb-4">
+        <!-- Étape 1 (active) -->
+        <div class="step-item active">
+            <div class="step-glow-wrapper">
+                <div class="step-circle">1</div>
+            </div>
+            <div class="step-label">Informations</div>
+        </div>
+
+        <!-- Ligne de connexion 1-2 -->
+        <div class="step-line"></div>
+
+        <!-- Étape 2 -->
+        <div class="step-item">
+            <div class="step-circle">2</div>
+            <div class="step-label">Avatar</div>
+        </div>
+
+        <!-- Ligne de connexion 2-3 -->
+        <div class="step-line"></div>
+
+        <!-- Étape 3 -->
+        <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-label">Profession</div>
+        </div>
+    </div>
+
+    <!-- Formulaire d'inscription -->
+    <div class="hall-of-fame w-100" style="max-width: 600px;">
+        <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">INSCRIPTION</h3>
+
+        <form method="post" class="p-4">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Courriel*</label>
+                    <input type="email" class="form-control login-input" name="Email" placeholder="mon@email.com" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nom de colon*</label>
+                    <input type="text" class="form-control login-input" name="ColonName" placeholder="Christophe (lol)" required />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Mot de passe*</label>
+                    <input type="password" class="form-control login-input" name="Password" placeholder="motdepasse123" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Confirmation du mot de passe*</label>
+                    <input type="password" class="form-control login-input" name="ConfirmPassword" placeholder="lamêmechose" required />
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Date de naissance*</label>
+                <input type="date" class="form-control login-input" name="BirthDate" required />
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3">ANNULER</button>
+                <a href="/RegisterAvatar" class="btn btn-purple font-barlow fw-bold w-50 mx-3 text-center">CONTINUER</a>
+            </div>
+
+            <div class="text-center mt-4">
+                <p class="small mb-0">Déjà un compte ? <a href="/Login" class="text-accent-link">Se connecter</a></p>
+            </div>
+        </form>
+    </div>
 </div>
-</body>
-</html>
+
+@section Styles {
+    <style>
+        /* Styles pour les étapes d'inscription avec effet de halo */
+        .registration-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .step-glow-wrapper {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .step-item.active .step-glow-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 5rem;
+            height: 5rem;
+            background: radial-gradient(
+                circle,
+                rgba(59, 130, 246, 0.6) 0%,
+                rgba(59, 130, 246, 0.3) 20%,
+                rgba(59, 130, 246, 0.1) 40%,
+                rgba(59, 130, 246, 0) 70%
+            );
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #25192f;
+            color: #a0a0a0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-item.active .step-circle {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: white;
+        }
+
+        .step-line {
+            height: 2px;
+            background-color: transparent;
+            width: 100%;
+            max-width: 120px;
+            margin: 0 5px;
+            position: relative;
+            top: -20px;
+            z-index: 1;
+        }
+    </style>
+}

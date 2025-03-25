@@ -256,6 +256,17 @@ footer p {
   color: white;
 }
 
+.btn-outline-secondary {
+  border: 0.1rem solid var(--submit-button-color);
+  color: var(--submit-button-color);
+}
+
+.btn-outline-secondary:hover {
+  background:  var(--submit-button-color);
+  color: var(--text-color);
+  border: 0.1rem solid var(--submit-button-color);
+}
+
 .text-warning {
   color: var(--special-color) !important;
 }
