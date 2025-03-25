@@ -1,0 +1,100 @@
+@page
+@model StarColonies.Web.Pages.ConsultMission
+
+@{
+    ViewData["Title"] = "ConsultMission";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="display-3 fw-bold mb-4 font-barlow">
+            Exploration de la base abandonnée
+        </h3>
+        <div>
+            <button class="btn rounded-circle me-2" style="font-size: 1.5rem; padding: 1rem; color: white; background-color: var(--primary-color); border-color: var(--submit-button-color);">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="btn rounded-circle" style="font-size: 1.5rem; padding: 1rem; color: white; background-color: var(--primary-color); border-color: var(--submit-button-color);">
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+    </div>
+    <p class="fs-5 mx-auto mb-5">
+        Cette mission consiste à explorer une base abandonnée pour récupérer des ressources et des informations.
+    </p>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-2 mx-2">
+            <div class="card text-center" style="background-color: var(--primary-color);">
+                <div class="card-body">
+                    <h1>12</h1>
+                    <p>Niveau de difficulté</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mx-2">
+            <div class="card text-center" style="background-color: var(--primary-color);">
+                <div class="card-body">
+                    <h1>4</h1>
+                    <p>Nombres d'ennemis</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mx-2">
+            <div class="card text-center" style="background-color: var(--primary-color);">
+                <div class="card-body">
+                    <h1>24</h1>
+                    <p>Endurance totale</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mx-2">
+            <div class="card text-center" style="background-color: var(--primary-color);">
+                <div class="card-body">
+                    <h1>31</h1>
+                    <p>Force totale</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-4 mt-5">
+    <h4 class="fw-bold mb-3">Monstres présents :</h4>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body" style="background-color: var(--tercary-bg-color)">
+                    <div class="monster-icon d-flex justify-content-center align-items-center">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <h5>Dragon</h5>
+                    <p>Feu</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card" style="background-color: var(--quaternary-bg-color)">
+                                <div class="card-body">
+                                    <h6>50</h6>
+                                    <p>Force</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card" style="background-color: var(--quaternary-bg-color)">
+                                <div class="card-body">
+                                    <h6>30</h6>
+                                    <p>Endurance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add more monster cards as needed -->
+    </div>
+</div>
+
