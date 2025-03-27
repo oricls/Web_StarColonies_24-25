@@ -1,0 +1,51 @@
+﻿@page
+@model StarColonies.Web.Pages.CreateTeams
+
+@{
+    ViewData["Title"] = "CreateTeam";
+}
+
+<div class="container mt-4">
+    <section class="mb-5">
+        <h2 class="font-barlow fw-bold text-warning mb-4">Créer une nouvelle équipe</h2>
+
+        <div class="row g-4  justify-content-center align-items-center">
+            <div class="col-lg-4 col-md-6">
+                <div class="card bg-dark h-100 border-0 shadow">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-center align-items-center mb-3">
+                            <div class="teams-preview-logo me-3 d-flex align-items-center">
+                                <img src="https://picsum.photos/seed/team1/50" alt="Team's logo" class="img-fluid rounded-circle">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Nom de l'équipe</label>
+                            <input class="form-control login-input" placeholder="Ma super équipe" />
+                            <span class="text-danger"></span>
+                        </div>
+                        
+                        <button class="btn btn-purple w-100 mt-auto font-barlow fw-bold">CREER L'EQUIPE</button>
+                        
+                        <div class="important-message">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="login-container hall-of-fame">
+                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">MEMBRES</h3>
+                </div>
+                <div class="card bg-dark h-100 border-0 shadow">
+                    <div class="card-body d-flex flex-column">
+                        truc à ajouter
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</div>
