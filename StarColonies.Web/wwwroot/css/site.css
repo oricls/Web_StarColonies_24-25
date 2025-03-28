@@ -164,7 +164,7 @@ body {
 }
 
 /* Login Page Specific Styles */
-.login-container {
+.login-container, .title-page {
   max-width: 450px;
   width: 100%;
   margin: 0 auto;
@@ -284,4 +284,19 @@ footer p {
 .teams-preview-logo {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #6A47C9;
+  position: relative;
+  border: 0.2rem solid #6750A4;
+}
+
+.teams-preview-logo img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
