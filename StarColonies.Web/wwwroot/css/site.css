@@ -9,6 +9,7 @@
   --submit-button-color: #6A47C9;
   --login-header-color: #6750A4;
   --login-input-bg: var(--secondary-bg-color);
+  --stat-card-color : #1D1F22;
 }
 
 body {
@@ -299,4 +300,14 @@ footer p {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.stat-card {
+  background-color: var(--stat-card-color);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 35px;
 }
