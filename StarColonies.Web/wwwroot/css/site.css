@@ -10,6 +10,7 @@
   --submit-button-color: #6A47C9;
   --login-header-color: #6750A4;
   --login-input-bg: var(--secondary-bg-color);
+  --alert-message-color : #9A3A3B;
 }
 
 body {
@@ -281,4 +282,13 @@ footer p {
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
+}
+
+.alert-message {
+  display: inline-flex;
+  align-items: center;
+  background: var(--alert-message-color);
+  color: var(--text-color);
+  padding: 10px 20px;
+  border-radius: 8px;
 }
