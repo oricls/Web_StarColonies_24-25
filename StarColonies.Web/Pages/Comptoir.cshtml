@@ -1,0 +1,322 @@
+@page
+@model StarColonies.Web.Pages.Comptoir
+
+@{
+    ViewData["Title"] = "Comptoir des ressources";
+}
+
+<div class="container-fluid py-4">
+    <!-- Section Mes ressources -->
+    <section class="mb-5">
+        <h2 class="font-barlow text-white fw-bold mb-4">Mes ressources :</h2>
+
+        <div class="d-flex flex-wrap gap-3">
+            <!-- Ressource 1 (Marteau/Outil) -->
+            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-hammer text-info"></i>
+                </div>
+                <span class="text-white font-barlow fw-bold">x 10</span>
+            </div>
+
+            <!-- Ressource 2 (Ampoule) -->
+            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-lightbulb text-info"></i>
+                </div>
+                <span class="text-white font-barlow fw-bold">x 10</span>
+            </div>
+
+            <!-- Ressource 3 (Pomme) -->
+            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-apple-alt text-info"></i>
+                </div>
+                <span class="text-white font-barlow fw-bold">x 10</span>
+            </div>
+
+            <!-- Ressource 4 (Pistolet) -->
+            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-gun text-info"></i>
+                </div>
+                <span class="text-white font-barlow fw-bold">x 10</span>
+            </div>
+
+            <!-- Ressource 5 (Cerveau) -->
+            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                    <i class="fas fa-brain text-info"></i>
+                </div>
+                <span class="text-white font-barlow fw-bold">x 10</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Objets disponibles -->
+    <section>
+        <h2 class="font-barlow text-white fw-bold mb-4">Objets disponibles :</h2>
+
+        <div class="row g-4">
+            <!-- Potion de force -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">Potion de force</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="far fa-clock me-1"></i>
+                                    <span>20min</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Augmente temporairement la force de tous les membres d'une équipe</p>
+
+                        <!-- Coût en ressources -->
+                        <div class="d-flex mb-3">
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-hammer text-info small"></i>
+                                </div>
+                                <span class="text-white">x 5</span>
+                            </div>
+
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-lightbulb text-info small"></i>
+                                </div>
+                                <span class="text-white">x 2</span>
+                            </div>
+
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-brain text-info small"></i>
+                                </div>
+                                <span class="text-white">x 2</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-purple w-100">ÉCHANGER</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Potion d'endurance -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-warning border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">Potion d'endurance</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="far fa-clock me-1"></i>
+                                    <span>20min</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Augmente temporairement l'endurance de tous les membres d'une équipe</p>
+
+                        <!-- Expire dans -->
+                        <div class="btn btn-warning w-100 mb-0 text-dark fw-bold">
+                            Expire dans 14:32
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seconde chance -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">Seconde chance</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-rocket me-1"></i>
+                                    <span>1 mission</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Chaque colon se voit octroyer une vie supplémentaire (endurance x2 en gros lol)</p>
+
+                        <!-- Coût en ressources -->
+                        <div class="d-flex mb-3">
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-hammer text-info small"></i>
+                                </div>
+                                <span class="text-white">x 10</span>
+                            </div>
+
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-gun text-info small"></i>
+                                </div>
+                                <span class="text-white">x 5</span>
+                            </div>
+
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-brain text-info small"></i>
+                                </div>
+                                <span class="text-white">x 8</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-purple w-100">ÉCHANGER</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coup de pouce -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-warning border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">Coup de pouce</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-rocket me-1"></i>
+                                    <span>3 missions</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Invoque un soldat supplémentaire pour les prochaines missions</p>
+
+                        <!-- Expire dans -->
+                        <div class="btn btn-warning w-100 mb-0 text-dark fw-bold">
+                            Expire dans 2 missions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grâce de Midas -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">Grâce de Midas</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-rocket me-1"></i>
+                                    <span>1 mission</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Double le nombre de ressources obtenues</p>
+
+                        <!-- Coût en ressources -->
+                        <div class="d-flex mb-3">
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-gun text-info small"></i>
+                                </div>
+                                <span class="text-white">x 20</span>
+                            </div>
+
+                            <div class="me-3 d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-brain text-info small"></i>
+                                </div>
+                                <span class="text-white">x 20</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-purple w-100">ÉCHANGER</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- L'item trop cheaté -->
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                            </div>
+                            <div>
+                                <h5 class="font-barlow text-white fw-bold mb-0">L'item trop cheaté</h5>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="fas fa-rocket me-1"></i>
+                                    <span>1 mission</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="small text-white mb-3">Élimine instantanément tous les monstres</p>
+
+                        <!-- Coût en ressources -->
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-hammer text-info small"></i>
+                                </div>
+                                <span class="text-white">x 42</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-lightbulb text-info small"></i>
+                                </div>
+                                <span class="text-white">x 42</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-gun text-info small"></i>
+                                </div>
+                                <span class="text-white">x 42</span>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                    <i class="fas fa-brain text-info small"></i>
+                                </div>
+                                <span class="text-white">x 42</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-purple w-100">ÉCHANGER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Styles {
+    <style>
+        /* Bordure spéciale pour les objets expirés */
+        .border-warning {
+            border-width: 2px !important;
+        }
+
+        /* Style pour les ressources */
+        .bg-quaternary-bg-color {
+            background-color: var(--quaternary-bg-color);
+        }
+    </style>
+}
