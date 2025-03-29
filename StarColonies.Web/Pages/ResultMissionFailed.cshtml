@@ -1,0 +1,23 @@
+﻿@page
+@model StarColonies.Web.Pages.ResultMissionFailed
+
+@{
+    ViewData["Title"] = "Résulat de la mission (echouée)";
+    ViewData["HideNavButtons"] = true;
+}
+
+<div class="container text-center mt-5">
+    <i class="fa fa-face-dizzy" style="font-size: 5rem; color: var(--primary-color);"></i>
+    <h1 class="display-4 fw-bold mt-4">Mission échouée...</h1>
+    <p class="lead">Exploration de la base abandonnée</p>
+
+    <div class="alert-message alert alert-danger d-inline-block mt-3 px-3 py-2" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        Gagnez une mission plus facile avant de retenter celle-ci !
+    </div>
+    
+    <div class="mt-5">
+        <button type="submit" class="btn btn-login w-50 py-2">Retourner au Dashboard</button>
+    </div>
+    
+</div>

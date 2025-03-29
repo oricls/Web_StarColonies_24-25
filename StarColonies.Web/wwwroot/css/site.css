@@ -10,7 +10,11 @@
   --submit-button-color: #6A47C9;
   --login-header-color: #6750A4;
   --login-input-bg: var(--secondary-bg-color);
+<<<<<<< HEAD
   --stat-card-color : #1D1F22;
+=======
+  --alert-message-color : #9A3A3B;
+>>>>>>> origin/integration_mission_echouee
 }
 
 body {
@@ -283,6 +287,7 @@ footer p {
   justify-content: center;
   font-size: 1.3rem;
 }
+<<<<<<< HEAD
 .teams-preview-logo {
   display: flex;
   justify-content: center;
@@ -312,3 +317,14 @@ footer p {
   width: 80px;
   height: 35px;
 }
+=======
+
+.alert-message {
+  display: inline-flex;
+  align-items: center;
+  background: var(--alert-message-color);
+  color: var(--text-color);
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+>>>>>>> origin/integration_mission_echouee
