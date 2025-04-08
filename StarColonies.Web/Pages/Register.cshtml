@@ -44,29 +44,29 @@
         <form method="post" class="p-4">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Courriel*</label>
-                    <input type="email" class="form-control login-input" name="Email" placeholder="mon@email.com" required />
+                    <label class="form-label" asp-for="RegisterInput.Courriel" >Courriel*</label>
+                    <input type="email" class="form-control login-input" name="Email" asp-for="RegisterInput.Courriel" placeholder="mon@email.com" required />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Nom de colon*</label>
-                    <input type="text" class="form-control login-input" name="ColonName" placeholder="Christophe (lol)" required />
+                    <label class="form-label" asp-for="RegisterInput.NameOfColon">Nom de colon*</label>
+                    <input type="text" class="form-control login-input" name="ColonName" asp-for="RegisterInput.NameOfColon" placeholder="Christophe (lol)" required />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Mot de passe*</label>
-                    <input type="password" class="form-control login-input" name="Password" placeholder="motdepasse123" required />
+                    <label class="form-label" asp-for="RegisterInput.Password">Mot de passe*</label>
+                    <input type="password" class="form-control login-input" name="Password" asp-for="RegisterInput.Password" placeholder="motdepasse123" required />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label">Confirmation du mot de passe*</label>
-                    <input type="password" class="form-control login-input" name="ConfirmPassword" placeholder="lamêmechose" required />
+                    <label class="form-label" asp-for="RegisterInput.ConfirmPassword">Confirmation du mot de passe*</label>
+                    <input type="password" class="form-control login-input" name="ConfirmPassword" asp-for="RegisterInput.ConfirmPassword" placeholder="lamêmechose" required />
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Date de naissance*</label>
-                <input type="date" class="form-control login-input" name="BirthDate" required />
+                <label class="form-label" asp-for="RegisterInput.BirthDate">Date de naissance*</label>
+                <input type="date" class="form-control login-input" name="BirthDate" asp-for="RegisterInput.BirthDate" required />
             </div>
 
             <div class="d-flex justify-content-between mt-4">

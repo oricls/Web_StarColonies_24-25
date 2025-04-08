@@ -101,18 +101,18 @@
             <div class="stats-section mb-4">
                 <!-- Force -->
                 <div class="stat-item d-flex align-items-center mb-3">
-                    <label class="me-2 font-barlow fw-bold" style="width: 120px;">FORCE</label>
+                    <label class="me-2 font-barlow fw-bold" asp-for="RegisterProfessionInputModel.Force" style="width: 120px;">FORCE</label>
                     <div class="w-100">
-                        <input type="range" class="form-range" id="forceRange" name="Force" min="1" max="6" value="2">
+                        <input type="range" class="form-range" asp-for="RegisterProfessionInputModel.Force" id="forceRange" name="Force" min="1" max="6" value="2">
                     </div>
-                    <span class="ms-2 stat-value">2</span>
+                    <in class="ms-2 stat-value">2</in>
                 </div>
 
                 <!-- Endurance -->
                 <div class="stat-item d-flex align-items-center">
-                    <label class="me-2 font-barlow fw-bold" style="width: 120px;">ENDURANCE</label>
+                    <label class="me-2 font-barlow fw-bold" style="width: 120px;" asp-for="RegisterProfessionInputModel.Endurance">ENDURANCE</label>
                     <div class="w-100">
-                        <input type="range" class="form-range" id="enduranceRange" name="Endurance" min="1" max="6" value="5">
+                        <input type="range" class="form-range" id="enduranceRange" name="Endurance" asp-for="RegisterProfessionInputModel.Endurance" min="1" max="6" value="5">
                     </div>
                     <span class="ms-2 stat-value">5</span>
                 </div>
