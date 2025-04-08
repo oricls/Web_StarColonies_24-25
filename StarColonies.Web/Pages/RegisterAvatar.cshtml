@@ -1,5 +1,5 @@
 @page
-@model StarColonies.Web.Pages.RegisterAvatar
+@model RegisterAvatarModel
 
 @{
     ViewData["Title"] = "Inscription - Avatar";
@@ -10,20 +10,20 @@
 
     <!-- Étapes d'inscription -->
     <div class="registration-steps mb-4">
-        <!-- Étape 1 (complétée) -->
-        <div class="step-item completed">
-            <div class="step-circle">1</div>
+        <!-- Étape 1 (active) -->
+        <div class="step-item ">
+            <div class="step-glow-wrapper">
+                <div class="step-circle">1</div>
+            </div>
             <div class="step-label">Informations</div>
         </div>
 
         <!-- Ligne de connexion 1-2 -->
-        <div class="step-line active-line"></div>
+        <div class="step-line"></div>
 
-        <!-- Étape 2 (active) -->
+        <!-- Étape 2 -->
         <div class="step-item active">
-            <div class="step-glow-wrapper">
-                <div class="step-circle">2</div>
-            </div>
+            <div class="step-circle">2</div>
             <div class="step-label">Avatar</div>
         </div>
 
@@ -41,56 +41,44 @@
     <div class="hall-of-fame w-100" style="max-width: 600px;">
         <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">INSCRIPTION</h3>
 
-        <form method="post" class="p-4">
+        <form method="post" class="p-4" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            
             <div class="row mb-4">
-                <div class="col-md-5">
-                    <div class="avatar-preview-container">
-                        <div class="avatar-preview border border-2 border-dashed rounded d-flex flex-column align-items-center justify-content-center p-3">
-                            <span class="text-purple mb-2">Aperçu</span>
-                            <div id="avatarPreview" class="text-center">
-                                <!-- L'aperçu de l'avatar s'affichera ici -->
-                            </div>
-                        </div>
+                <div class="col-md-5 d-flex align-items-center justify-content-center">
+                    <div id="avatarPreview" class="rounded overflow-hidden" style="width: 200px; height: 200px;">
+                        <!-- L'aperçu de l'avatar s'affichera ici -->
+                        <p class="text-center">Aperçu</p>
                     </div>
                 </div>
                 <div class="col-md-7">
                     <div class="avatar-grid">
                         <div class="row g-2">
-                            <div class="col-4">
-                                <div class="avatar-option" data-avatar="1">
-                                    <div class="avatar-square bg-purple rounded p-3"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="avatar-option" data-avatar="2">
-                                    <div class="avatar-square bg-purple rounded p-3"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="avatar-option" data-avatar="3">
-                                    <div class="avatar-square bg-purple rounded p-3"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="avatar-option" data-avatar="4">
-                                    <div class="avatar-square bg-purple rounded p-3"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="avatar-option" data-avatar="5">
-                                    <div class="avatar-square bg-purple rounded p-3"></div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="avatar-option import-avatar" data-avatar="import">
-                                    <div class="avatar-square bg-accent rounded p-3 d-flex flex-column align-items-center justify-content-center">
-                                        <i class="fas fa-download mb-1"></i>
-                                        <span class="small">Importer</span>
+                            <!-- Avatars par défaut -->
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <div class="col-4">
+                                    <div class="avatar-option rounded overflow-hidden" data-avatar="@i" style="aspect-ratio: 1;">
+                                        <img src="~/avatars/avatar_@(i).png" class="img-fluid w-100 h-100 object-fit-cover" alt="Avatar @i" />
                                     </div>
                                 </div>
+                            }
+                            
+                            <!-- Option d'importation -->
+                            <div class="col-4">
+                                <label for="customAvatarInput" class="mb-0 w-100">
+                                    <div class="avatar-option import-avatar rounded overflow-hidden bg-accent d-flex flex-column align-items-center justify-content-center" data-avatar="import" style="aspect-ratio: 1;">
+                                        <i class="fas fa-upload mb-1"></i>
+                                        <span class="small">Importer</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Champ de téléchargement caché -->
+                    <input type="file" id="customAvatarInput" class="d-none" asp-for="RegisterAvatarInput.CustomAvatar" accept="image/*" />
+                    <span asp-validation-for="RegisterAvatarInput.CustomAvatar" class="text-danger"></span>
                 </div>
             </div>
 
@@ -98,58 +86,76 @@
                 <a href="/Register" class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3 d-flex align-items-center justify-content-center">
                     <i class="fas fa-arrow-left me-2"></i> PRÉCÉDENT
                 </a>
-                <a href="/RegisterProfession" class="btn btn-purple font-barlow fw-bold w-50 mx-3">CONTINUER</a>
+                <button type="submit" class="btn btn-purple font-barlow fw-bold w-50 mx-3">CONTINUER</button>
             </div>
-
-            <input type="hidden" id="selectedAvatar" name="SelectedAvatar" value="" />
+            
+            <!-- Champ d'avatar par défaut caché -->
+            <input type="hidden" id="selectedAvatarId" asp-for="RegisterAvatarInput.SelectedAvatarId" value="" />
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const avatarOptions = document.querySelectorAll('.avatar-option');
+            const avatarOptions = document.querySelectorAll('.avatar-option:not(.import-avatar)');
             const avatarPreview = document.getElementById('avatarPreview');
-            const selectedAvatarInput = document.getElementById('selectedAvatar');
+            const selectedAvatarInput = document.getElementById('selectedAvatarId');
+            const customAvatarInput = document.getElementById('customAvatarInput');
 
-            // Événement de clic pour les options d'avatar
+            // Événement de clic pour les options d'avatar standard
             avatarOptions.forEach(option => {
                 option.addEventListener('click', function() {
                     // Supprimer la classe 'selected' de toutes les options
-                    avatarOptions.forEach(opt => opt.classList.remove('selected'));
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
 
                     // Ajouter la classe 'selected' à l'option cliquée
                     this.classList.add('selected');
 
                     // Stocker l'avatar sélectionné
                     const avatarId = this.getAttribute('data-avatar');
-                    selectedAvatarInput.value = avatarId;
-
-                    // Mettre à jour l'aperçu
-                    if (avatarId === 'import') {
-                        avatarPreview.innerHTML = '<p>Image personnalisée</p>';
-                    } else {
-                        avatarPreview.innerHTML = `<div class="avatar-preview-img bg-purple rounded p-3" style="width: 100px; height: 100px;"></div>`;
-                    }
+                    selectedAvatarInput.value = avatarId; //ceci met à jour l'input caché
+                    
+                    // Réinitialiser le champ de fichier personnalisé
+                    customAvatarInput.value = '';
+                    
+                    // Mettre à jour l'aperçu avec l'avatar sélectionné
+                    const avatarImgSrc = `/avatars/avatar_${avatarId}.png`;
+                    avatarPreview.innerHTML = `<img src="${avatarImgSrc}" class="w-100 h-100 object-fit-cover" alt="Avatar ${avatarId}" />`;
                 });
             });
 
-            // Gestionnaire pour l'importation d'image
-            const importOption = document.querySelector('.import-avatar');
-            if (importOption) {
-                importOption.addEventListener('click', function() {
-                    //ajouter ici la logique pour importer une image plus tard
-                });
-            }
+            // Gestion de l'importation d'image
+            customAvatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    // Supprimer la classe 'selected' de toutes les options
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Ajouter la classe 'selected' à l'option d'importation
+                    document.querySelector('.import-avatar').classList.add('selected');
+                    
+                    // Réinitialiser l'ID d'avatar sélectionné
+                    selectedAvatarInput.value = '';
+                    
+                    // Prévisualiser l'image téléchargée
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-100 h-100 object-fit-cover" alt="Avatar personnalisé" />`;
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
         });
     </script>
 }
 
+
 @section Styles {
     <style>
         /* Styles pour les étapes d'inscription avec effet de halo */
-        /* TODO: Regrouper avec la première étape, un layout peut-être ou juste dans site.css ?*/
         .registration-steps {
             display: flex;
             justify-content: center;
@@ -235,22 +241,14 @@
             z-index: 1;
         }
 
-        /* Styles pour la sélection d'avatar */
-        .avatar-preview-container {
-            height: 100%;
-        }
-
-        .avatar-preview {
-            height: 100%;
-            min-height: 200px;
-            border-color: rgba(255, 255, 255, 0.2) !important;
+        .active-line {
+            background-color: var(--accent-color);
         }
 
         .avatar-option {
             cursor: pointer;
             transition: all 0.2s ease;
             border: 2px solid transparent;
-            border-radius: 0.5rem;
         }
 
         .avatar-option:hover {
@@ -260,21 +258,13 @@
         .avatar-option.selected {
             border-color: var(--accent-color);
         }
-        
-        .avatar-square{
-            height: 5rem;
-        }
-
-        .text-purple {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .bg-purple {
-            background-color: var(--primary-color);
-        }
 
         .bg-accent {
             background-color: var(--accent-color);
+        }
+        
+        .object-fit-cover {
+            object-fit: cover;
         }
     </style>
 }
