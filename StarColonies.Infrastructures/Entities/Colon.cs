@@ -2,17 +2,21 @@
 
 public class Colon
 {
-    public int IdColon { get; set; }
-    
-    public string Nom { get; set; }
-    public string Prenom { get; set; }
-    public int Endurence { get; set; }
-    public int Niveau { get; set; }
-    public string Avatar { get; set; }
+    public int Id { get; set; }
+    public string NomColon { get; set; } = String.Empty;
+    public string Email { get; set; } = String.Empty;
+    public string Password { get; set; } = String.Empty;
+    public string DateBirth { get; set; } = String.Empty;
+    public int Endurance { get; set; }
+    public int Strength { get; set; }
+    public int Level { get; set; }
+    public string Avatar { get; set; } = String.Empty;
     
     // clés étrangères
-    public User IdUser { get; set; } // dans la cas où l'utilisateur serait séparé du colon
-    public Profession IdProfession { get; set; }
-    public List<Equipe> IdEquipes { get; set; }
-    public List<Bonus> IdBonuses { get; set; }
+    public int IdProfessionId { get; set; }
+    public Profession Profession { get; set; } = null!;
+    
+    public List<Team> Equipes { get; set; } = new List<Team>();
+    public List<Bonus> Bonuses { get; set; } = new List<Bonus>();
+    public List<Resource> Resources { get; set; } = new List<Resource>();
 }

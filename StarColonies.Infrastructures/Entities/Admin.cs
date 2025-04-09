@@ -2,10 +2,10 @@
 
 public class Admin
 {
-    public int IdAdmin { get; set; }
-    public string Nom {get; set;}
-    public string Email {get; set;}
-    public string Password {get; set;}
+    public int Id { get; set; }
+    public string Name {get; set;} = string.Empty;
+    public string Email {get; set;} = string.Empty;
+    public string Password {get; set;} = string.Empty;
     
-    List<JournalActivite> journalActivites {get; set;}
+    List<Log> Logs {get; set;} = new List<Log>();
 }

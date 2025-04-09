@@ -2,7 +2,8 @@
 
 public class Profession
 {
-    public int IdProfession { get; set; }
-    public string Description { get; set; }
-    public string Icone { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = String.Empty;
+    public string Description { get; set; } = String.Empty;
+    public string Icone { get; set; } = String.Empty;
 }
