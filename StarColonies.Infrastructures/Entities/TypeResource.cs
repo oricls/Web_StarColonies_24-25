@@ -6,4 +6,7 @@ public class TypeResource
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
+    
+    // Clé étrangère
+    public IList<Resource> Resources { get; set; } = new List<Resource>();
 }

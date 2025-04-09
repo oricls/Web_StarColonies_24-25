@@ -9,10 +9,7 @@ public class Mission
     public string Description { get; set; } = String.Empty;
     
     // clés
-    public List<Team> Equipe { get; set; } = new List<Team>();
+    public IList<ResultatMission> ResultatMissions { get; set; } = null!;
     
-    public ResultatMission Resultat { get; set; } = null!;
-    public int IdResultat { get; set; }
-    
-    public List<Bestiaire> Bestiaire { get; set; } = new List<Bestiaire>();
+    public IList<Bestiaire> Bestiaires { get; set; } = new List<Bestiaire>();
 }

@@ -10,4 +10,6 @@ public class Resource
     // clés étrangères
     public int IdTypeResource { get; set; }
     public TypeResource TypeResource { get; set; } = null!;
+    
+    public IList<Colon> Colons { get; set; } = new List<Colon>();
 }

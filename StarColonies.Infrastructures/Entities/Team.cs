@@ -9,10 +9,10 @@ public class Team
     public string Baniere { get; set; } = String.Empty;
     
     // clés
-    public Colon Colon { get; set; } = null!;
-    public int IdColon { get; set; }
+    public Colon ColonCreator { get; set; } = null!;
+    public int IdColonCreator { get; set; }
 
-    public List<Colon> Colons { get; set; } = new List<Colon>();
+    public List<Colon> Members { get; set; } = new List<Colon>();
     
-    public List<ResultatMission> Missions { get; set; } = new List<ResultatMission>();
+    public List<ResultatMission> ResultatMissions { get; set; } = new List<ResultatMission>();
 }

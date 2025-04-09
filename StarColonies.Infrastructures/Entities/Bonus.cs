@@ -10,4 +10,5 @@ public class Bonus
     
     // clés
     public Colon Colon { get; set; } = null!;
+    public int IdColon { get; set; }
 }

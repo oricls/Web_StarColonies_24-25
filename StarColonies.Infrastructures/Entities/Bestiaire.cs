@@ -9,7 +9,7 @@ public class Bestiaire
     
     // clés étrangères
     public int IdMission { get; set; }
-    public Mission Mission { get; set; } = null!;
+    public IList<Mission> Missions { get; set; } = null!;
     
     public TypeBestiaire TypeBestiaire { get; set; } = null!;
     public int IdTypeBestiaire { get; set; }
