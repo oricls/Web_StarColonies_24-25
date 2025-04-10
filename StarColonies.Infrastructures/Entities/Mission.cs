@@ -10,5 +10,5 @@ public class Mission
     // clés
     public IList<ResultatMission> ResultatMissions { get; set; } = null!;
     
-    public IList<Bestiaire> Bestiaires { get; set; } = new List<Bestiaire>();
+    public IList<MissionBestiaire> MissionBestiaires { get; set; } = new List<MissionBestiaire>();
 }

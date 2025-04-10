@@ -18,20 +18,17 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
             .IsRequired()
             .HasMaxLength(200);
         
-        builder.Property(b => b.DateHeureAchat)
+        builder.Property(b => b.DureeParDefaut)
             .IsRequired();
         
-        builder.Property(b => b.DateHeureValidite)
-            .IsRequired();
+        builder.HasMany(b => b.ColonBonuses)
+            .WithOne(cb => cb.Bonus)
+            .HasForeignKey(cb => cb.BonusId)
+            .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasOne(b => b.Colon)
-            .WithMany(c => c.Bonuses)
-            .HasForeignKey(b => b.IdColon)
-            .OnDelete(DeleteBehavior.Cascade);
-        
-        builder.HasOne(b => b.Resource)
-            .WithMany()
-            .HasForeignKey(b => b.IdResource)
+        builder.HasMany(b => b.BonusResources)
+            .WithOne(br => br.Bonus)
+            .HasForeignKey(br => br.BonusId)
             .OnDelete(DeleteBehavior.Cascade);
         
         SeedBonus(builder);
@@ -39,6 +36,52 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
 
     private void SeedBonus(EntityTypeBuilder<Bonus> builder)
     {
-        builder.HasData();
+        var bonuses = new List<Bonus>
+        {
+            new Bonus
+            {
+                Id = 1,
+                Name = "Potion de force",
+                Description = "Augmente temporairement la force de tous les membres d'une équipe",
+                DureeParDefaut = TimeSpan.FromMinutes(20)
+            },
+            new Bonus
+            {
+                Id = 2,
+                Name = "Equipe de pouce",
+                Description = "Investit un soldat supplémentaire pour les 3 prochaines missions",
+                DureeParDefaut = TimeSpan.FromMinutes(3) // 3 missions comme durée
+            },
+            new Bonus
+            {
+                Id = 3,
+                Name = "Potion d'endurance",
+                Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
+                DureeParDefaut = TimeSpan.FromMinutes(20)
+            },
+            new Bonus
+            {
+                Id = 4,
+                Name = "Grâce de Midas",
+                Description = "Double le nombre de ressources obtenues pour 1 mission",
+                DureeParDefaut = TimeSpan.FromMinutes(10) // 1 mission comme durée
+            },
+            new Bonus
+            {
+                Id = 5,
+                Name = "Seconde chance",
+                Description = "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)",
+                DureeParDefaut = TimeSpan.FromMinutes(10) // 1 mission comme durée
+            },
+            new Bonus
+            {
+                Id = 6,
+                Name = "Litem trop cheats",
+                Description = "Elimine instantanément tous les ministres",
+                DureeParDefaut = TimeSpan.FromMinutes(100)
+            }
+        };
+
+        builder.HasData(bonuses);
     }
 }

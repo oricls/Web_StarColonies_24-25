@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StarColonies.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedMissionWithBestiaire : Migration
+    public partial class BonusEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,6 +23,21 @@ namespace StarColonies.Infrastructures.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ActivityLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bonus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    DureeParDefaut = table.Column<TimeSpan>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bonus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,6 +215,33 @@ namespace StarColonies.Infrastructures.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ColonBonus",
+                columns: table => new
+                {
+                    ColonId = table.Column<int>(type: "int", nullable: false),
+                    BonusId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    DateAchat = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateExpiration = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ColonBonus", x => new { x.ColonId, x.BonusId });
+                    table.ForeignKey(
+                        name: "FK_ColonBonus_Bonus_BonusId",
+                        column: x => x.BonusId,
+                        principalTable: "Bonus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ColonBonus_Colon_ColonId",
+                        column: x => x.ColonId,
+                        principalTable: "Colon",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Team",
                 columns: table => new
                 {
@@ -225,52 +267,48 @@ namespace StarColonies.Infrastructures.Migrations
                 name: "MissionBestiaire",
                 columns: table => new
                 {
-                    BestiaireId = table.Column<int>(type: "int", nullable: false),
-                    MissionId = table.Column<int>(type: "int", nullable: false)
+                    IdMission = table.Column<int>(type: "int", nullable: false),
+                    IdBestiaire = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MissionBestiaire", x => new { x.BestiaireId, x.MissionId });
+                    table.PrimaryKey("PK_MissionBestiaire", x => new { x.IdMission, x.IdBestiaire });
                     table.ForeignKey(
-                        name: "FK_MissionBestiaire_Bestiaire_BestiaireId",
-                        column: x => x.BestiaireId,
+                        name: "FK_MissionBestiaire_Bestiaire_IdBestiaire",
+                        column: x => x.IdBestiaire,
                         principalTable: "Bestiaire",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MissionBestiaire_Mission_MissionId",
-                        column: x => x.MissionId,
+                        name: "FK_MissionBestiaire_Mission_IdMission",
+                        column: x => x.IdMission,
                         principalTable: "Mission",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bonus",
+                name: "BonusResource",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    DateHeureAchat = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateHeureValidite = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdColon = table.Column<int>(type: "int", nullable: false),
-                    IdResource = table.Column<int>(type: "int", nullable: false),
-                    QuantiteResource = table.Column<int>(type: "int", nullable: false)
+                    BonusId = table.Column<int>(type: "int", nullable: false),
+                    ResourceId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Quantite = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bonus", x => x.Id);
+                    table.PrimaryKey("PK_BonusResource", x => new { x.BonusId, x.ResourceId });
                     table.ForeignKey(
-                        name: "FK_Bonus_Colon_IdColon",
-                        column: x => x.IdColon,
-                        principalTable: "Colon",
+                        name: "FK_BonusResource_Bonus_BonusId",
+                        column: x => x.BonusId,
+                        principalTable: "Bonus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bonus_Resource_IdResource",
-                        column: x => x.IdResource,
+                        name: "FK_BonusResource_Resource_ResourceId",
+                        column: x => x.ResourceId,
                         principalTable: "Resource",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -353,6 +391,19 @@ namespace StarColonies.Infrastructures.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Bonus",
+                columns: new[] { "Id", "Description", "DureeParDefaut", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Augmente temporairement la force de tous les membres d'une équipe", new TimeSpan(0, 0, 20, 0, 0), "Potion de force" },
+                    { 2, "Investit un soldat supplémentaire pour les 3 prochaines missions", new TimeSpan(3, 0, 0, 0, 0), "Equipe de pouce" },
+                    { 3, "Augmente temporairement l'endurance de tous les membres d'une équipe", new TimeSpan(0, 0, 20, 0, 0), "Potion d'endurance" },
+                    { 4, "Double le nombre de ressources obtenues pour 1 mission", new TimeSpan(1, 0, 0, 0, 0), "Grâce de Midas" },
+                    { 5, "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)", new TimeSpan(1, 0, 0, 0, 0), "Seconde chance" },
+                    { 6, "Elimine instantanément tous les ministres", new TimeSpan(1, 0, 0, 0, 0), "Litem trop cheats" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Mission",
                 columns: new[] { "Id", "Description", "Image", "Name" },
                 values: new object[,]
@@ -365,17 +416,40 @@ namespace StarColonies.Infrastructures.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Profession",
+                columns: new[] { "Id", "Description", "Icone", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Un ingénieur est une personne qui conçoit et construit des machines.", "avatars/engineer.png", "Ingénieur" },
+                    { 2, "Un médecin est une personne qui soigne les maladies.", "avatars/doctor.png", "Médecin" },
+                    { 3, "Un scientifique est une personne qui étudie la science.", "avatars/scientist.png", "Scientifique" },
+                    { 4, "Un soldat est une personne qui combat pour son pays.", "avatars/soldier.png", "Soldat" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "TypeBestiaire",
                 columns: new[] { "Id", "Avatar", "Description", "Name" },
                 values: new object[,]
                 {
                     { 1, "Avatar1.png", "Créations mécaniques ou cybernétiques, souvent conçues pour des tâches spécifiques. Peuvent aller des assistants domestiques aux machines de guerre autonomes.", "Robot" },
-                    { 2, "Avatar2.png", "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.", "Naturelle" },
-                    { 3, "Avatar3.png", "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.", "Extraterrestre" },
-                    { 4, "Avatar4.png", "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.", "Paranormal" },
-                    { 5, "Avatar5.png", "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.", "Animal" },
-                    { 6, "Avatar6.png", "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.", "Expérience" },
-                    { 7, "Avatar7.png", "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.", "Humanoïde" }
+                    { 2, "icons/naturelle.png", "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.", "Naturelle" },
+                    { 3, "icons/extraterrestre.png", "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.", "Extraterrestre" },
+                    { 4, "icons/paranormal.png", "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.", "Paranormal" },
+                    { 5, "icons/animal.png", "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.", "Animal" },
+                    { 6, "icons/experience.png", "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.", "Expérience" },
+                    { 7, "icons/humanoide.png", "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.", "Humanoïde" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TypeResource",
+                columns: new[] { "Id", "Description", "Icon", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Matériau de construction", "icons/materiau.png", "Matériau" },
+                    { 2, "Technologie avancée", "icons/technologie.png", "Technologie" },
+                    { 3, "Artefact ancien", "icons/artefact.png", "Artefact" },
+                    { 4, "Connaissance avancée", "icons/connaissance.png", "Connaissance" },
+                    { 5, "Consomable de base", "icons/consomable.png", "Consomable" }
                 });
 
             migrationBuilder.InsertData(
@@ -399,28 +473,55 @@ namespace StarColonies.Infrastructures.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "MissionBestiaire",
-                columns: new[] { "BestiaireId", "MissionId" },
+                table: "Resource",
+                columns: new[] { "Id", "Description", "IdTypeResource", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1 },
-                    { 1, 4 },
-                    { 2, 1 },
-                    { 2, 4 },
-                    { 3, 1 },
-                    { 3, 4 },
-                    { 4, 1 },
-                    { 4, 4 },
-                    { 5, 2 },
-                    { 5, 4 },
-                    { 6, 2 },
-                    { 7, 2 },
-                    { 8, 2 },
-                    { 9, 3 },
-                    { 10, 3 },
-                    { 11, 3 },
-                    { 12, 3 },
-                    { 13, 4 }
+                    { 1, "Matériau de protection léger", 1, "Elindage léger" },
+                    { 2, "Technologie de stockage d'énergie", 2, "Batterie compacte" },
+                    { 3, "Composant technologique avancé", 2, "Module quantique" },
+                    { 4, "Matériau haute résistance", 1, "Nanofibres" },
+                    { 5, "Matériau de protection renforcé", 1, "Elindage renforcé" },
+                    { 6, "Arme technologique", 2, "Mitraillette" },
+                    { 7, "Artefact mystérieux", 3, "Gros crâne d'Alex" },
+                    { 8, "Matériau suspect", 1, "Residus louches" },
+                    { 9, "Substance consommable dégradée", 5, "Vinade avariée" },
+                    { 10, "Matériau provenant de dents animales", 1, "Crocs tranchants" },
+                    { 11, "Substance consommable bioluminescente", 5, "Sang fluorescent" },
+                    { 12, "Connaissance génétique", 4, "ADN cryptoïen" },
+                    { 13, "Artefact de protection massive", 3, "Enorme casque" },
+                    { 14, "Boisson consommable", 5, "Petite bière" },
+                    { 15, "Matériau de protection naturelle", 1, "Ecaille solide" },
+                    { 16, "Substance consommable dangereuse", 5, "Venin mortel" },
+                    { 17, "Artefact énigmatique", 3, "Cœur de l'Hégémon" },
+                    { 18, "Connaissance stratégique", 4, "Plan d'attaque" },
+                    { 19, "Matériau spectral", 1, "Membrane fantomique" },
+                    { 20, "Connaissance extrasensorielle", 4, "Clairevoyance" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MissionBestiaire",
+                columns: new[] { "IdBestiaire", "IdMission", "Id" },
+                values: new object[,]
+                {
+                    { 1, 1, 0 },
+                    { 2, 1, 0 },
+                    { 3, 1, 0 },
+                    { 4, 1, 0 },
+                    { 5, 2, 0 },
+                    { 6, 2, 0 },
+                    { 7, 2, 0 },
+                    { 8, 2, 0 },
+                    { 9, 3, 0 },
+                    { 10, 3, 0 },
+                    { 11, 3, 0 },
+                    { 12, 3, 0 },
+                    { 1, 4, 0 },
+                    { 2, 4, 0 },
+                    { 3, 4, 0 },
+                    { 4, 4, 0 },
+                    { 5, 4, 0 },
+                    { 13, 4, 0 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -434,19 +535,19 @@ namespace StarColonies.Infrastructures.Migrations
                 column: "IdTypeBestiaire");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bonus_IdColon",
-                table: "Bonus",
-                column: "IdColon");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bonus_IdResource",
-                table: "Bonus",
-                column: "IdResource");
+                name: "IX_BonusResource_ResourceId",
+                table: "BonusResource",
+                column: "ResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Colon_IdProfession",
                 table: "Colon",
                 column: "IdProfession");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ColonBonus_BonusId",
+                table: "ColonBonus",
+                column: "BonusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ColonResource_ResourcesId",
@@ -459,9 +560,9 @@ namespace StarColonies.Infrastructures.Migrations
                 column: "ActivityLogId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MissionBestiaire_MissionId",
+                name: "IX_MissionBestiaire_IdBestiaire",
                 table: "MissionBestiaire",
-                column: "MissionId");
+                column: "IdBestiaire");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Resource_IdTypeResource",
@@ -496,7 +597,10 @@ namespace StarColonies.Infrastructures.Migrations
                 name: "Admin");
 
             migrationBuilder.DropTable(
-                name: "Bonus");
+                name: "BonusResource");
+
+            migrationBuilder.DropTable(
+                name: "ColonBonus");
 
             migrationBuilder.DropTable(
                 name: "ColonResource");
@@ -512,6 +616,9 @@ namespace StarColonies.Infrastructures.Migrations
 
             migrationBuilder.DropTable(
                 name: "TeamColon");
+
+            migrationBuilder.DropTable(
+                name: "Bonus");
 
             migrationBuilder.DropTable(
                 name: "Resource");

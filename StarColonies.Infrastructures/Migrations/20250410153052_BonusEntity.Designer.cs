@@ -12,8 +12,8 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    [Migration("20250410133015_SeedMissionWithBestiaire")]
-    partial class SeedMissionWithBestiaire
+    [Migration("20250410153052_BonusEntity")]
+    partial class BonusEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,113 +53,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("TeamsId");
 
                     b.ToTable("TeamColon", (string)null);
-                });
-
-            modelBuilder.Entity("MissionBestiaire", b =>
-                {
-                    b.Property<int>("BestiaireId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MissionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BestiaireId", "MissionId");
-
-                    b.HasIndex("MissionId");
-
-                    b.ToTable("MissionBestiaire");
-
-                    b.HasData(
-                        new
-                        {
-                            BestiaireId = 1,
-                            MissionId = 1
-                        },
-                        new
-                        {
-                            BestiaireId = 2,
-                            MissionId = 1
-                        },
-                        new
-                        {
-                            BestiaireId = 3,
-                            MissionId = 1
-                        },
-                        new
-                        {
-                            BestiaireId = 4,
-                            MissionId = 1
-                        },
-                        new
-                        {
-                            BestiaireId = 5,
-                            MissionId = 2
-                        },
-                        new
-                        {
-                            BestiaireId = 6,
-                            MissionId = 2
-                        },
-                        new
-                        {
-                            BestiaireId = 7,
-                            MissionId = 2
-                        },
-                        new
-                        {
-                            BestiaireId = 8,
-                            MissionId = 2
-                        },
-                        new
-                        {
-                            BestiaireId = 9,
-                            MissionId = 3
-                        },
-                        new
-                        {
-                            BestiaireId = 10,
-                            MissionId = 3
-                        },
-                        new
-                        {
-                            BestiaireId = 11,
-                            MissionId = 3
-                        },
-                        new
-                        {
-                            BestiaireId = 12,
-                            MissionId = 3
-                        },
-                        new
-                        {
-                            BestiaireId = 13,
-                            MissionId = 4
-                        },
-                        new
-                        {
-                            BestiaireId = 1,
-                            MissionId = 4
-                        },
-                        new
-                        {
-                            BestiaireId = 2,
-                            MissionId = 4
-                        },
-                        new
-                        {
-                            BestiaireId = 3,
-                            MissionId = 4
-                        },
-                        new
-                        {
-                            BestiaireId = 4,
-                            MissionId = 4
-                        },
-                        new
-                        {
-                            BestiaireId = 5,
-                            MissionId = 4
-                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
@@ -351,38 +244,87 @@ namespace StarColonies.Infrastructures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateHeureAchat")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateHeureValidite")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("IdColon")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdResource")
-                        .HasColumnType("int");
+                    b.Property<TimeSpan>("DureeParDefaut")
+                        .HasColumnType("time");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("QuantiteResource")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("IdColon");
-
-                    b.HasIndex("IdResource");
-
                     b.ToTable("Bonus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Augmente temporairement la force de tous les membres d'une équipe",
+                            DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
+                            Name = "Potion de force"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Investit un soldat supplémentaire pour les 3 prochaines missions",
+                            DureeParDefaut = new TimeSpan(3, 0, 0, 0, 0),
+                            Name = "Equipe de pouce"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
+                            DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
+                            Name = "Potion d'endurance"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Double le nombre de ressources obtenues pour 1 mission",
+                            DureeParDefaut = new TimeSpan(1, 0, 0, 0, 0),
+                            Name = "Grâce de Midas"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)",
+                            DureeParDefaut = new TimeSpan(1, 0, 0, 0, 0),
+                            Name = "Seconde chance"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Elimine instantanément tous les ministres",
+                            DureeParDefaut = new TimeSpan(1, 0, 0, 0, 0),
+                            Name = "Litem trop cheats"
+                        });
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusResource", b =>
+                {
+                    b.Property<int>("BonusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnType("int");
+
+                    b.HasKey("BonusId", "ResourceId");
+
+                    b.HasIndex("ResourceId");
+
+                    b.ToTable("BonusResource");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
@@ -435,6 +377,30 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("IdProfession");
 
                     b.ToTable("Colon");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ColonBonus", b =>
+                {
+                    b.Property<int>("ColonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BonusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAchat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateExpiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("ColonId", "BonusId");
+
+                    b.HasIndex("BonusId");
+
+                    b.ToTable("ColonBonus");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Log", b =>
@@ -533,6 +499,134 @@ namespace StarColonies.Infrastructures.Migrations
                         });
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionBestiaire", b =>
+                {
+                    b.Property<int>("IdMission")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdBestiaire")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdMission", "IdBestiaire");
+
+                    b.HasIndex("IdBestiaire");
+
+                    b.ToTable("MissionBestiaire");
+
+                    b.HasData(
+                        new
+                        {
+                            IdMission = 1,
+                            IdBestiaire = 1,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 1,
+                            IdBestiaire = 2,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 1,
+                            IdBestiaire = 3,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 1,
+                            IdBestiaire = 4,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 2,
+                            IdBestiaire = 5,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 2,
+                            IdBestiaire = 6,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 2,
+                            IdBestiaire = 7,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 2,
+                            IdBestiaire = 8,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 3,
+                            IdBestiaire = 9,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 3,
+                            IdBestiaire = 10,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 3,
+                            IdBestiaire = 11,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 3,
+                            IdBestiaire = 12,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 13,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 1,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 2,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 3,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 4,
+                            Id = 0
+                        },
+                        new
+                        {
+                            IdMission = 4,
+                            IdBestiaire = 5,
+                            Id = 0
+                        });
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
                 {
                     b.Property<int>("Id")
@@ -559,6 +653,36 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Profession");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Un ingénieur est une personne qui conçoit et construit des machines.",
+                            Icone = "avatars/engineer.png",
+                            Name = "Ingénieur"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Un médecin est une personne qui soigne les maladies.",
+                            Icone = "avatars/doctor.png",
+                            Name = "Médecin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Un scientifique est une personne qui étudie la science.",
+                            Icone = "avatars/scientist.png",
+                            Name = "Scientifique"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Un soldat est une personne qui combat pour son pays.",
+                            Icone = "avatars/soldier.png",
+                            Name = "Soldat"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
@@ -587,6 +711,148 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("IdTypeResource");
 
                     b.ToTable("Resource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Matériau de protection léger",
+                            IdTypeResource = 1,
+                            Name = "Elindage léger"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Technologie de stockage d'énergie",
+                            IdTypeResource = 2,
+                            Name = "Batterie compacte"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Composant technologique avancé",
+                            IdTypeResource = 2,
+                            Name = "Module quantique"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Matériau haute résistance",
+                            IdTypeResource = 1,
+                            Name = "Nanofibres"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Matériau de protection renforcé",
+                            IdTypeResource = 1,
+                            Name = "Elindage renforcé"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Arme technologique",
+                            IdTypeResource = 2,
+                            Name = "Mitraillette"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Artefact mystérieux",
+                            IdTypeResource = 3,
+                            Name = "Gros crâne d'Alex"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Matériau suspect",
+                            IdTypeResource = 1,
+                            Name = "Residus louches"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Substance consommable dégradée",
+                            IdTypeResource = 5,
+                            Name = "Vinade avariée"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Matériau provenant de dents animales",
+                            IdTypeResource = 1,
+                            Name = "Crocs tranchants"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Substance consommable bioluminescente",
+                            IdTypeResource = 5,
+                            Name = "Sang fluorescent"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Connaissance génétique",
+                            IdTypeResource = 4,
+                            Name = "ADN cryptoïen"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Artefact de protection massive",
+                            IdTypeResource = 3,
+                            Name = "Enorme casque"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Boisson consommable",
+                            IdTypeResource = 5,
+                            Name = "Petite bière"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Matériau de protection naturelle",
+                            IdTypeResource = 1,
+                            Name = "Ecaille solide"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Substance consommable dangereuse",
+                            IdTypeResource = 5,
+                            Name = "Venin mortel"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Artefact énigmatique",
+                            IdTypeResource = 3,
+                            Name = "Cœur de l'Hégémon"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Connaissance stratégique",
+                            IdTypeResource = 4,
+                            Name = "Plan d'attaque"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Matériau spectral",
+                            IdTypeResource = 1,
+                            Name = "Membrane fantomique"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Connaissance extrasensorielle",
+                            IdTypeResource = 4,
+                            Name = "Clairevoyance"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ResultatMission", b =>
@@ -691,42 +957,42 @@ namespace StarColonies.Infrastructures.Migrations
                         new
                         {
                             Id = 2,
-                            Avatar = "Avatar2.png",
+                            Avatar = "icons/naturelle.png",
                             Description = "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.",
                             Name = "Naturelle"
                         },
                         new
                         {
                             Id = 3,
-                            Avatar = "Avatar3.png",
+                            Avatar = "icons/extraterrestre.png",
                             Description = "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.",
                             Name = "Extraterrestre"
                         },
                         new
                         {
                             Id = 4,
-                            Avatar = "Avatar4.png",
+                            Avatar = "icons/paranormal.png",
                             Description = "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.",
                             Name = "Paranormal"
                         },
                         new
                         {
                             Id = 5,
-                            Avatar = "Avatar5.png",
+                            Avatar = "icons/animal.png",
                             Description = "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.",
                             Name = "Animal"
                         },
                         new
                         {
                             Id = 6,
-                            Avatar = "Avatar6.png",
+                            Avatar = "icons/experience.png",
                             Description = "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.",
                             Name = "Expérience"
                         },
                         new
                         {
                             Id = 7,
-                            Avatar = "Avatar7.png",
+                            Avatar = "icons/humanoide.png",
                             Description = "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.",
                             Name = "Humanoïde"
                         });
@@ -758,6 +1024,43 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeResource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Matériau de construction",
+                            Icon = "icons/materiau.png",
+                            Name = "Matériau"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Technologie avancée",
+                            Icon = "icons/technologie.png",
+                            Name = "Technologie"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Artefact ancien",
+                            Icon = "icons/artefact.png",
+                            Name = "Artefact"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Connaissance avancée",
+                            Icon = "icons/connaissance.png",
+                            Name = "Connaissance"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Consomable de base",
+                            Icon = "icons/consomable.png",
+                            Name = "Consomable"
+                        });
                 });
 
             modelBuilder.Entity("ColonResource", b =>
@@ -790,21 +1093,6 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MissionBestiaire", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.Bestiaire", null)
-                        .WithMany()
-                        .HasForeignKey("BestiaireId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", null)
-                        .WithMany()
-                        .HasForeignKey("MissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
@@ -827,21 +1115,21 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("TypeBestiaire");
                 });
 
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bonus", b =>
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusResource", b =>
                 {
-                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
-                        .WithMany("Bonuses")
-                        .HasForeignKey("IdColon")
+                    b.HasOne("StarColonies.Infrastructures.Entities.Bonus", "Bonus")
+                        .WithMany("BonusResources")
+                        .HasForeignKey("BonusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
                         .WithMany()
-                        .HasForeignKey("IdResource")
+                        .HasForeignKey("ResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Colon");
+                    b.Navigation("Bonus");
 
                     b.Navigation("Resource");
                 });
@@ -857,6 +1145,25 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Profession");
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ColonBonus", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Bonus", "Bonus")
+                        .WithMany("ColonBonuses")
+                        .HasForeignKey("BonusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
+                        .WithMany("ColonBonuses")
+                        .HasForeignKey("ColonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Bonus");
+
+                    b.Navigation("Colon");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Log", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
@@ -866,6 +1173,25 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
 
                     b.Navigation("ActivityLog");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionBestiaire", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Bestiaire", "Bestiaire")
+                        .WithMany("MissionBestiaires")
+                        .HasForeignKey("IdBestiaire")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", "Mission")
+                        .WithMany("MissionBestiaires")
+                        .HasForeignKey("IdMission")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bestiaire");
+
+                    b.Navigation("Mission");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
@@ -916,13 +1242,27 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Logs");
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
+                {
+                    b.Navigation("MissionBestiaires");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bonus", b =>
+                {
+                    b.Navigation("BonusResources");
+
+                    b.Navigation("ColonBonuses");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
                 {
-                    b.Navigation("Bonuses");
+                    b.Navigation("ColonBonuses");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Mission", b =>
                 {
+                    b.Navigation("MissionBestiaires");
+
                     b.Navigation("ResultatMissions");
                 });
 

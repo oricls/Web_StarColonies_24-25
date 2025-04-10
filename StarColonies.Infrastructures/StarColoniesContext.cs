@@ -26,8 +26,9 @@ public class StarColoniesContext  : DbContext
         modelBuilder.ApplyConfiguration(new MissionConfiguration());
     
         modelBuilder.ApplyConfiguration(new ResultatMissionConfiguration());
-        
-        MissionConfiguration.SeedMissionRelations(modelBuilder);
+        modelBuilder.ApplyConfiguration(new BonusResourceConfiguration());
+        modelBuilder.ApplyConfiguration(new MissionBestiaireConfiguration());
+        modelBuilder.ApplyConfiguration(new ColonBonusConfiguration());
         
         // Configurations pour le système d'administration
         modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());

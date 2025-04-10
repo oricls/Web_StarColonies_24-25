@@ -43,10 +43,11 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
             .WithOne(t => t.ColonCreator)
             .HasForeignKey(t => t.IdColonCreator)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasMany(c => c.Bonuses)
+        
+        builder.HasMany(cb => cb.ColonBonuses)
             .WithOne(b => b.Colon)
-            .HasForeignKey(b => b.IdColon);
+            .HasForeignKey(cb => cb.ColonId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(c => c.Resources)
             .WithMany(r => r.Colons)
