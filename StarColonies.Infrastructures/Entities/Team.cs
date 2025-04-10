@@ -12,7 +12,7 @@ public class Team
     public Colon ColonCreator { get; set; } = null!;
     public int IdColonCreator { get; set; }
 
-    public List<Colon> Members { get; set; } = new List<Colon>();
+    public IList<Colon> Members { get; set; } = new List<Colon>();
     
-    public List<ResultatMission> ResultatMissions { get; set; } = new List<ResultatMission>();
+    public IList<ResultatMission> ResultatMissions { get; set; } = new List<ResultatMission>();
 }
