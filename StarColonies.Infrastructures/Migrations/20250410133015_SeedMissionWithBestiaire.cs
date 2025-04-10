@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace StarColonies.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class SeedMissionWithBestiaire : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +32,6 @@ namespace StarColonies.Infrastructures.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DifficutyLevel = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
@@ -174,7 +175,7 @@ namespace StarColonies.Infrastructures.Migrations
                         column: x => x.IdTypeBestiaire,
                         principalTable: "TypeBestiaire",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,21 +225,21 @@ namespace StarColonies.Infrastructures.Migrations
                 name: "MissionBestiaire",
                 columns: table => new
                 {
-                    BestiairesId = table.Column<int>(type: "int", nullable: false),
-                    MissionsId = table.Column<int>(type: "int", nullable: false)
+                    BestiaireId = table.Column<int>(type: "int", nullable: false),
+                    MissionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MissionBestiaire", x => new { x.BestiairesId, x.MissionsId });
+                    table.PrimaryKey("PK_MissionBestiaire", x => new { x.BestiaireId, x.MissionId });
                     table.ForeignKey(
-                        name: "FK_MissionBestiaire_Bestiaire_BestiairesId",
-                        column: x => x.BestiairesId,
+                        name: "FK_MissionBestiaire_Bestiaire_BestiaireId",
+                        column: x => x.BestiaireId,
                         principalTable: "Bestiaire",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MissionBestiaire_Mission_MissionsId",
-                        column: x => x.MissionsId,
+                        name: "FK_MissionBestiaire_Mission_MissionId",
+                        column: x => x.MissionId,
                         principalTable: "Mission",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -351,6 +352,77 @@ namespace StarColonies.Infrastructures.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Mission",
+                columns: new[] { "Id", "Description", "Image", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Une ancienne base de recherche abandonnée recèle des créatures étranges et des technologies perdues.", "base_abandonnee.jpg", "Exploration de la base abandonnée" },
+                    { 2, "Un monstre marin légendaire menace les colonies côtières. Son élimination est primordiale.", "leviathan_abysses.jpg", "Chasse au Léviathan des abysses" },
+                    { 3, "Des scientifiques sont piégés dans une zone contaminée par des créatures expérimentales.", "quarantaine_zone.jpg", "Sauvetage dans la zone de quarantaine" },
+                    { 4, "Une entité extraterrestre intelligente a pris le contrôle d'un réacteur nucléaire.", "hegemon_reactor.jpg", "Désactivation du Hégémon" },
+                    { 5, "Des créatures extraterrestres ont infesté d'anciennes ruines découvertes sur une lune lointaine.", "ruines_aliennes.jpg", "Nettoyage des ruines aliennes" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TypeBestiaire",
+                columns: new[] { "Id", "Avatar", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Avatar1.png", "Créations mécaniques ou cybernétiques, souvent conçues pour des tâches spécifiques. Peuvent aller des assistants domestiques aux machines de guerre autonomes.", "Robot" },
+                    { 2, "Avatar2.png", "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.", "Naturelle" },
+                    { 3, "Avatar3.png", "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.", "Extraterrestre" },
+                    { 4, "Avatar4.png", "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.", "Paranormal" },
+                    { 5, "Avatar5.png", "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.", "Animal" },
+                    { 6, "Avatar6.png", "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.", "Expérience" },
+                    { 7, "Avatar7.png", "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.", "Humanoïde" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Bestiaire",
+                columns: new[] { "Id", "Endurance", "IdTypeBestiaire", "Name", "Strength" },
+                values: new object[,]
+                {
+                    { 1, 2, 1, "Drone", 2 },
+                    { 2, 3, 2, "Anomalie", 1 },
+                    { 3, 12, 3, "Cryptoïde", 4 },
+                    { 4, 1, 4, "Spectre", 7 },
+                    { 5, 2, 1, "Nanobot", 1 },
+                    { 6, 3, 5, "Prédateur", 4 },
+                    { 7, 4, 6, "Chimère", 4 },
+                    { 8, 3, 3, "Titan", 5 },
+                    { 9, 11, 4, "Entité", 5 },
+                    { 10, 4, 7, "Mutant", 2 },
+                    { 11, 7, 3, "Leviathan", 9 },
+                    { 12, 20, 3, "Hégémon", 20 },
+                    { 13, 15, 1, "Drone de combat", 10 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "MissionBestiaire",
+                columns: new[] { "BestiaireId", "MissionId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 4 },
+                    { 2, 1 },
+                    { 2, 4 },
+                    { 3, 1 },
+                    { 3, 4 },
+                    { 4, 1 },
+                    { 4, 4 },
+                    { 5, 2 },
+                    { 5, 4 },
+                    { 6, 2 },
+                    { 7, 2 },
+                    { 8, 2 },
+                    { 9, 3 },
+                    { 10, 3 },
+                    { 11, 3 },
+                    { 12, 3 },
+                    { 13, 4 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Admin_ActivityLogId",
                 table: "Admin",
@@ -387,9 +459,9 @@ namespace StarColonies.Infrastructures.Migrations
                 column: "ActivityLogId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MissionBestiaire_MissionsId",
+                name: "IX_MissionBestiaire_MissionId",
                 table: "MissionBestiaire",
-                column: "MissionsId");
+                column: "MissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Resource_IdTypeResource",

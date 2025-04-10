@@ -27,6 +27,8 @@ public class StarColoniesContext  : DbContext
     
         modelBuilder.ApplyConfiguration(new ResultatMissionConfiguration());
         
+        MissionConfiguration.SeedMissionRelations(modelBuilder);
+        
         // Configurations pour le système d'administration
         modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
         modelBuilder.ApplyConfiguration(new LogConfiguration());

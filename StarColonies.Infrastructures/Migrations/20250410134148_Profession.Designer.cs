@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250410134148_Profession")]
+    partial class Profession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -562,28 +565,28 @@ namespace StarColonies.Infrastructures.Migrations
                         {
                             Id = 1,
                             Description = "Un ingénieur est une personne qui conçoit et construit des machines.",
-                            Icone = "avatars/engineer.png",
+                            Icone = "engineer.png",
                             Name = "Ingénieur"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Un médecin est une personne qui soigne les maladies.",
-                            Icone = "avatars/doctor.png",
+                            Icone = "doctor.png",
                             Name = "Médecin"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Un scientifique est une personne qui étudie la science.",
-                            Icone = "avatars/scientist.png",
+                            Icone = "scientist.png",
                             Name = "Scientifique"
                         },
                         new
                         {
                             Id = 4,
                             Description = "Un soldat est une personne qui combat pour son pays.",
-                            Icone = "avatars/soldier.png",
+                            Icone = "soldier.png",
                             Name = "Soldat"
                         });
                 });
@@ -614,148 +617,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("IdTypeResource");
 
                     b.ToTable("Resource");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Matériau de protection léger",
-                            IdTypeResource = 1,
-                            Name = "Elindage léger"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Technologie de stockage d'énergie",
-                            IdTypeResource = 2,
-                            Name = "Batterie compacte"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Composant technologique avancé",
-                            IdTypeResource = 2,
-                            Name = "Module quantique"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Matériau haute résistance",
-                            IdTypeResource = 1,
-                            Name = "Nanofibres"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Matériau de protection renforcé",
-                            IdTypeResource = 1,
-                            Name = "Elindage renforcé"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Arme technologique",
-                            IdTypeResource = 2,
-                            Name = "Mitraillette"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Description = "Artefact mystérieux",
-                            IdTypeResource = 3,
-                            Name = "Gros crâne d'Alex"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Description = "Matériau suspect",
-                            IdTypeResource = 1,
-                            Name = "Residus louches"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Description = "Substance consommable dégradée",
-                            IdTypeResource = 5,
-                            Name = "Vinade avariée"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Description = "Matériau provenant de dents animales",
-                            IdTypeResource = 1,
-                            Name = "Crocs tranchants"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Description = "Substance consommable bioluminescente",
-                            IdTypeResource = 5,
-                            Name = "Sang fluorescent"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Description = "Connaissance génétique",
-                            IdTypeResource = 4,
-                            Name = "ADN cryptoïen"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Description = "Artefact de protection massive",
-                            IdTypeResource = 3,
-                            Name = "Enorme casque"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Description = "Boisson consommable",
-                            IdTypeResource = 5,
-                            Name = "Petite bière"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Description = "Matériau de protection naturelle",
-                            IdTypeResource = 1,
-                            Name = "Ecaille solide"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Description = "Substance consommable dangereuse",
-                            IdTypeResource = 5,
-                            Name = "Venin mortel"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Description = "Artefact énigmatique",
-                            IdTypeResource = 3,
-                            Name = "Cœur de l'Hégémon"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Description = "Connaissance stratégique",
-                            IdTypeResource = 4,
-                            Name = "Plan d'attaque"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Description = "Matériau spectral",
-                            IdTypeResource = 1,
-                            Name = "Membrane fantomique"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Description = "Connaissance extrasensorielle",
-                            IdTypeResource = 4,
-                            Name = "Clairevoyance"
-                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ResultatMission", b =>
@@ -860,42 +721,42 @@ namespace StarColonies.Infrastructures.Migrations
                         new
                         {
                             Id = 2,
-                            Avatar = "icons/naturelle.png",
+                            Avatar = "Avatar2.png",
                             Description = "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.",
                             Name = "Naturelle"
                         },
                         new
                         {
                             Id = 3,
-                            Avatar = "icons/extraterrestre.png",
+                            Avatar = "Avatar3.png",
                             Description = "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.",
                             Name = "Extraterrestre"
                         },
                         new
                         {
                             Id = 4,
-                            Avatar = "icons/paranormal.png",
+                            Avatar = "Avatar4.png",
                             Description = "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.",
                             Name = "Paranormal"
                         },
                         new
                         {
                             Id = 5,
-                            Avatar = "icons/animal.png",
+                            Avatar = "Avatar5.png",
                             Description = "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.",
                             Name = "Animal"
                         },
                         new
                         {
                             Id = 6,
-                            Avatar = "icons/experience.png",
+                            Avatar = "Avatar6.png",
                             Description = "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.",
                             Name = "Expérience"
                         },
                         new
                         {
                             Id = 7,
-                            Avatar = "icons/humanoide.png",
+                            Avatar = "Avatar7.png",
                             Description = "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.",
                             Name = "Humanoïde"
                         });
@@ -927,43 +788,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeResource");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Matériau de construction",
-                            Icon = "icons/materiau.png",
-                            Name = "Matériau"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Technologie avancée",
-                            Icon = "icons/technologie.png",
-                            Name = "Technologie"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Artefact ancien",
-                            Icon = "icons/artefact.png",
-                            Name = "Artefact"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Connaissance avancée",
-                            Icon = "icons/connaissance.png",
-                            Name = "Connaissance"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Consomable de base",
-                            Icon = "icons/consomable.png",
-                            Name = "Consomable"
-                        });
                 });
 
             modelBuilder.Entity("ColonResource", b =>

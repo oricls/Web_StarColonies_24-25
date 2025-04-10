@@ -12,8 +12,8 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    [Migration("20250410092633_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20250410133015_SeedMissionWithBestiaire")]
+    partial class SeedMissionWithBestiaire
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace StarColonies.Infrastructures.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BestiaireMission", b =>
-                {
-                    b.Property<int>("BestiairesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MissionsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BestiairesId", "MissionsId");
-
-                    b.HasIndex("MissionsId");
-
-                    b.ToTable("MissionBestiaire", (string)null);
-                });
 
             modelBuilder.Entity("ColonResource", b =>
                 {
@@ -68,6 +53,113 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("TeamsId");
 
                     b.ToTable("TeamColon", (string)null);
+                });
+
+            modelBuilder.Entity("MissionBestiaire", b =>
+                {
+                    b.Property<int>("BestiaireId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BestiaireId", "MissionId");
+
+                    b.HasIndex("MissionId");
+
+                    b.ToTable("MissionBestiaire");
+
+                    b.HasData(
+                        new
+                        {
+                            BestiaireId = 1,
+                            MissionId = 1
+                        },
+                        new
+                        {
+                            BestiaireId = 2,
+                            MissionId = 1
+                        },
+                        new
+                        {
+                            BestiaireId = 3,
+                            MissionId = 1
+                        },
+                        new
+                        {
+                            BestiaireId = 4,
+                            MissionId = 1
+                        },
+                        new
+                        {
+                            BestiaireId = 5,
+                            MissionId = 2
+                        },
+                        new
+                        {
+                            BestiaireId = 6,
+                            MissionId = 2
+                        },
+                        new
+                        {
+                            BestiaireId = 7,
+                            MissionId = 2
+                        },
+                        new
+                        {
+                            BestiaireId = 8,
+                            MissionId = 2
+                        },
+                        new
+                        {
+                            BestiaireId = 9,
+                            MissionId = 3
+                        },
+                        new
+                        {
+                            BestiaireId = 10,
+                            MissionId = 3
+                        },
+                        new
+                        {
+                            BestiaireId = 11,
+                            MissionId = 3
+                        },
+                        new
+                        {
+                            BestiaireId = 12,
+                            MissionId = 3
+                        },
+                        new
+                        {
+                            BestiaireId = 13,
+                            MissionId = 4
+                        },
+                        new
+                        {
+                            BestiaireId = 1,
+                            MissionId = 4
+                        },
+                        new
+                        {
+                            BestiaireId = 2,
+                            MissionId = 4
+                        },
+                        new
+                        {
+                            BestiaireId = 3,
+                            MissionId = 4
+                        },
+                        new
+                        {
+                            BestiaireId = 4,
+                            MissionId = 4
+                        },
+                        new
+                        {
+                            BestiaireId = 5,
+                            MissionId = 4
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
@@ -143,6 +235,112 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("IdTypeBestiaire");
 
                     b.ToTable("Bestiaire");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Endurance = 2,
+                            IdTypeBestiaire = 1,
+                            Name = "Drone",
+                            Strength = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Endurance = 3,
+                            IdTypeBestiaire = 2,
+                            Name = "Anomalie",
+                            Strength = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Endurance = 12,
+                            IdTypeBestiaire = 3,
+                            Name = "Cryptoïde",
+                            Strength = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Endurance = 1,
+                            IdTypeBestiaire = 4,
+                            Name = "Spectre",
+                            Strength = 7
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Endurance = 2,
+                            IdTypeBestiaire = 1,
+                            Name = "Nanobot",
+                            Strength = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Endurance = 3,
+                            IdTypeBestiaire = 5,
+                            Name = "Prédateur",
+                            Strength = 4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Endurance = 4,
+                            IdTypeBestiaire = 6,
+                            Name = "Chimère",
+                            Strength = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Endurance = 3,
+                            IdTypeBestiaire = 3,
+                            Name = "Titan",
+                            Strength = 5
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Endurance = 11,
+                            IdTypeBestiaire = 4,
+                            Name = "Entité",
+                            Strength = 5
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Endurance = 4,
+                            IdTypeBestiaire = 7,
+                            Name = "Mutant",
+                            Strength = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Endurance = 7,
+                            IdTypeBestiaire = 3,
+                            Name = "Leviathan",
+                            Strength = 9
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Endurance = 20,
+                            IdTypeBestiaire = 3,
+                            Name = "Hégémon",
+                            Strength = 20
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Endurance = 15,
+                            IdTypeBestiaire = 1,
+                            Name = "Drone de combat",
+                            Strength = 10
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bonus", b =>
@@ -283,9 +481,6 @@ namespace StarColonies.Infrastructures.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("DifficutyLevel")
-                        .HasColumnType("int");
-
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -299,6 +494,43 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mission");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Une ancienne base de recherche abandonnée recèle des créatures étranges et des technologies perdues.",
+                            Image = "base_abandonnee.jpg",
+                            Name = "Exploration de la base abandonnée"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Un monstre marin légendaire menace les colonies côtières. Son élimination est primordiale.",
+                            Image = "leviathan_abysses.jpg",
+                            Name = "Chasse au Léviathan des abysses"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Des scientifiques sont piégés dans une zone contaminée par des créatures expérimentales.",
+                            Image = "quarantaine_zone.jpg",
+                            Name = "Sauvetage dans la zone de quarantaine"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Une entité extraterrestre intelligente a pris le contrôle d'un réacteur nucléaire.",
+                            Image = "hegemon_reactor.jpg",
+                            Name = "Désactivation du Hégémon"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Des créatures extraterrestres ont infesté d'anciennes ruines découvertes sur une lune lointaine.",
+                            Image = "ruines_aliennes.jpg",
+                            Name = "Nettoyage des ruines aliennes"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
@@ -447,6 +679,57 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeBestiaire");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Avatar = "Avatar1.png",
+                            Description = "Créations mécaniques ou cybernétiques, souvent conçues pour des tâches spécifiques. Peuvent aller des assistants domestiques aux machines de guerre autonomes.",
+                            Name = "Robot"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Avatar = "Avatar2.png",
+                            Description = "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.",
+                            Name = "Naturelle"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Avatar = "Avatar3.png",
+                            Description = "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.",
+                            Name = "Extraterrestre"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Avatar = "Avatar4.png",
+                            Description = "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.",
+                            Name = "Paranormal"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Avatar = "Avatar5.png",
+                            Description = "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.",
+                            Name = "Animal"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Avatar = "Avatar6.png",
+                            Description = "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.",
+                            Name = "Expérience"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Avatar = "Avatar7.png",
+                            Description = "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.",
+                            Name = "Humanoïde"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.TypeResource", b =>
@@ -475,21 +758,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TypeResource");
-                });
-
-            modelBuilder.Entity("BestiaireMission", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.Bestiaire", null)
-                        .WithMany()
-                        .HasForeignKey("BestiairesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", null)
-                        .WithMany()
-                        .HasForeignKey("MissionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ColonResource", b =>
@@ -522,6 +790,21 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MissionBestiaire", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Bestiaire", null)
+                        .WithMany()
+                        .HasForeignKey("BestiaireId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", null)
+                        .WithMany()
+                        .HasForeignKey("MissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
@@ -538,7 +821,7 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasOne("StarColonies.Infrastructures.Entities.TypeBestiaire", "TypeBestiaire")
                         .WithMany("Bestiaire")
                         .HasForeignKey("IdTypeBestiaire")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TypeBestiaire");

@@ -33,6 +33,42 @@ public class TypeResourceConfiguration : IEntityTypeConfiguration<TypeResource>
 
     private void SeedTypeResources(EntityTypeBuilder<TypeResource> builder)
     {
-        builder.HasData();
+        builder.HasData(
+            new TypeResource
+            {
+                Id = 1,
+                Name = "Matériau",
+                Description = "Matériau de construction",
+                Icon = "icons/materiau.png"
+            },
+            new TypeResource
+            {
+                Id = 2,
+                Name = "Technologie",
+                Description = "Technologie avancée",
+                Icon = "icons/technologie.png"
+            },
+            new TypeResource
+            {
+                Id = 3,
+                Name = "Artefact",
+                Description = "Artefact ancien",
+                Icon = "icons/artefact.png"
+            },
+            new TypeResource
+            {
+                Id = 4,
+                Name = "Connaissance",
+                Description = "Connaissance avancée",
+                Icon = "icons/connaissance.png"
+            },
+            new TypeResource
+            {
+                Id = 5,
+                Name = "Consomable",
+                Description = "Consomable de base",
+                Icon = "icons/consomable.png"
+            }
+        );
     }
 }

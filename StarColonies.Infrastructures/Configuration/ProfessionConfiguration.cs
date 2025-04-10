@@ -27,6 +27,37 @@ public class ProfessionConfiguration : IEntityTypeConfiguration<Profession>
 
     private void SeedProfessions(EntityTypeBuilder<Profession> builder)
     {
-        builder.HasData();
+        var professions = new List<Profession>
+        {
+            new Profession
+            {
+                Id = 1,
+                Name = "Ingénieur",
+                Description = "Un ingénieur est une personne qui conçoit et construit des machines.",
+                Icone = "avatars/engineer.png"
+            },
+            new Profession
+            {
+                Id = 2,
+                Name = "Médecin",
+                Description = "Un médecin est une personne qui soigne les maladies.",
+                Icone = "avatars/doctor.png"
+            },
+            new Profession
+            {
+                Id = 3,
+                Name = "Scientifique",
+                Description = "Un scientifique est une personne qui étudie la science.",
+                Icone = "avatars/scientist.png"
+            },
+            new Profession
+            {
+                Id = 4,
+                Name = "Soldat",
+                Description = "Un soldat est une personne qui combat pour son pays.",
+                Icone = "avatars/soldier.png"
+            },
+        };
+        builder.HasData(professions);
     }
 }
