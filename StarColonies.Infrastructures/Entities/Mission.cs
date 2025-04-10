@@ -2,11 +2,14 @@
 
 public class Mission
 {
-    public int IdMission { get; set; }
-    public string Nom { get; set; }
-    public int Niveau { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = String.Empty;
+    public int DifficutyLevel { get; set; }
+    public string Image { get; set; } = String.Empty;
+    public string Description { get; set; } = String.Empty;
     
     // clés
-    public List<Equipe> Equipe { get; set; }
-    public ResultatMission Resultat { get; set; }
+    public IList<ResultatMission> ResultatMissions { get; set; } = null!;
+    
+    public IList<Bestiaire> Bestiaires { get; set; } = new List<Bestiaire>();
 }

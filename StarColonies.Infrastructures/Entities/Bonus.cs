@@ -2,12 +2,19 @@
 
 public class Bonus
 {
-    public int IdBonus { get; set; }
-    public string Nom { get; set; }
-    public string Description { get; set; }
-    public DateTime DateHeureValidite { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public DateTime DateHeureAchat { get; set; }
+    public DateTime DateHeureValidite { get; set; }
     
     // clés
-    public List<Colon> Colons { get; set; }
+    public Colon Colon { get; set; } = null!;
+    public int IdColon { get; set; }
+    
+    public Resource Resource { get; set; } = null!;
+    
+    public int IdResource { get; set; }
+    
+    public int QuantiteResource { get; set; }
 }

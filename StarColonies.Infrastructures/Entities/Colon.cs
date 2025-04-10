@@ -1,18 +1,24 @@
-﻿namespace StarColonies.Infrastructures.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace StarColonies.Infrastructures.Entities;
 
 public class Colon
 {
-    public int IdColon { get; set; }
-    
-    public string Nom { get; set; }
-    public string Prenom { get; set; }
-    public int Endurence { get; set; }
-    public int Niveau { get; set; }
-    public string Avatar { get; set; }
+    public int Id { get; set; }
+    public string NameColon { get; set; } = String.Empty;
+    public string Email { get; set; } = String.Empty;
+    public string Password { get; set; } = String.Empty;
+    public string DateBirth { get; set; } = String.Empty;
+    public int Endurance { get; set; }
+    public int Strength { get; set; }
+    public int Level { get; set; }
+    public string Avatar { get; set; } = String.Empty;
     
     // clés étrangères
-    public User IdUser { get; set; } // dans la cas où l'utilisateur serait séparé du colon
-    public Profession IdProfession { get; set; }
-    public List<Equipe> IdEquipes { get; set; }
-    public List<Bonus> IdBonuses { get; set; }
+    public int IdProfession { get; set; }
+    public Profession Profession { get; set; } = null!;
+    
+    public IList<Team> Teams { get; set; } = new List<Team>();
+    public IList<Bonus> Bonuses { get; set; } = new List<Bonus>();
+    public IList<Resource> Resources { get; set; } = new List<Resource>();
 }
