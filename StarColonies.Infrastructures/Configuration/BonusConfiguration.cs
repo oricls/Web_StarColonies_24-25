@@ -29,6 +29,11 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
             .HasForeignKey(b => b.IdColon)
             .OnDelete(DeleteBehavior.Cascade);
         
+        builder.HasOne(b => b.Resource)
+            .WithMany()
+            .HasForeignKey(b => b.IdResource)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         SeedBonus(builder);
     }
 

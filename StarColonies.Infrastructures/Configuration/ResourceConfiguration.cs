@@ -17,9 +17,6 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.Property(r => r.Description)
             .IsRequired()
             .HasMaxLength(200);
-
-        builder.Property(r => r.Quantity)
-            .IsRequired();
         
         builder.HasOne(r => r.TypeResource)
             .WithMany(tr => tr.Resources)

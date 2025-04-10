@@ -18,7 +18,7 @@ public class Colon
     public int IdProfession { get; set; }
     public Profession Profession { get; set; } = null!;
     
-    public List<Team> Teams { get; set; } = new List<Team>();
-    public List<Bonus> Bonuses { get; set; } = new List<Bonus>();
-    public List<Resource> Resources { get; set; } = new List<Resource>();
+    public IList<Team> Teams { get; set; } = new List<Team>();
+    public IList<Bonus> Bonuses { get; set; } = new List<Bonus>();
+    public IList<Resource> Resources { get; set; } = new List<Resource>();
 }

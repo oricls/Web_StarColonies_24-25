@@ -8,7 +8,6 @@ public class Bestiaire
     public int Endurance { get; set; }
     
     // clés étrangères
-    public int IdMission { get; set; }
     public IList<Mission> Missions { get; set; } = null!;
     
     public TypeBestiaire TypeBestiaire { get; set; } = null!;

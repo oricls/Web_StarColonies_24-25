@@ -11,4 +11,10 @@ public class Bonus
     // clés
     public Colon Colon { get; set; } = null!;
     public int IdColon { get; set; }
+    
+    public Resource Resource { get; set; } = null!;
+    
+    public int IdResource { get; set; }
+    
+    public int QuantiteResource { get; set; }
 }
