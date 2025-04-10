@@ -42,6 +42,8 @@
         <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">INSCRIPTION</h3>
 
         <form method="post" class="p-4">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
             <!-- Choix de profession -->
             <div class="row g-3 mb-5">
                 <!-- Ingénieur -->
@@ -49,7 +51,7 @@
                     <div class="profession-option" data-profession="ingenieur">
                         <div class="profession-card bg-dark rounded text-center p-3 border border-2 border-transparent">
                             <div class="profession-icon d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
-                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                <img src="~/icons/icon_58.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
                             </div>
                             <h5 class="font-barlow mb-1">Ingénieur</h5>
                             <p class="small text-muted mb-0">Expert dans la construction et la maintenance technologique</p>
@@ -62,7 +64,7 @@
                     <div class="profession-option" data-profession="medecin">
                         <div class="profession-card bg-dark rounded text-center p-3 border border-2 border-transparent">
                             <div class="profession-icon d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
-                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                <img src="~/icons/icon_86.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
                             </div>
                             <h5 class="font-barlow mb-1">Médecin</h5>
                             <p class="small text-muted mb-0">Spécialiste des soins et traitements médicaux en espace</p>
@@ -75,7 +77,7 @@
                     <div class="profession-option" data-profession="scientifique">
                         <div class="profession-card bg-dark rounded text-center p-3 border border-2 border-transparent">
                             <div class="profession-icon d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
-                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                <img src="~/icons/icon_15.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
                             </div>
                             <h5 class="font-barlow mb-1">Scientifique</h5>
                             <p class="small text-muted mb-0">Expert dans la recherche et les découvertes scientifiques</p>
@@ -88,7 +90,7 @@
                     <div class="profession-option" data-profession="soldat">
                         <div class="profession-card bg-dark rounded text-center p-3 border border-2 border-transparent">
                             <div class="profession-icon d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
-                                <img src="~/icons/icon_88.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                <img src="~/icons/icon_52.png" alt="Potion de force" class="rounded-3" style="width: 50px; height: 50px;"/>
                             </div>
                             <h5 class="font-barlow mb-1">Soldat</h5>
                             <p class="small text-muted mb-0">Expert en combat et protection des colonies spatiales</p>
@@ -101,20 +103,20 @@
             <div class="stats-section mb-4">
                 <!-- Force -->
                 <div class="stat-item d-flex align-items-center mb-3">
-                    <label class="me-2 font-barlow fw-bold" style="width: 120px;">FORCE</label>
+                    <label class="me-2 font-barlow fw-bold" asp-for="RegisterProfessionInputModel.Force" style="width: 120px;">FORCE</label>
                     <div class="w-100">
-                        <input type="range" class="form-range" id="forceRange" name="Force" min="1" max="6" value="2">
+                        <input type="range" class="form-range" asp-for="RegisterProfessionInputModel.Force" id="forceRange" min="1" max="6" value="2">
                     </div>
-                    <span class="ms-2 stat-value">2</span>
+                    <span class="ms-2 stat-value" id="forceValue">2</span>
                 </div>
 
                 <!-- Endurance -->
                 <div class="stat-item d-flex align-items-center">
-                    <label class="me-2 font-barlow fw-bold" style="width: 120px;">ENDURANCE</label>
+                    <label class="me-2 font-barlow fw-bold" style="width: 120px;" asp-for="RegisterProfessionInputModel.Endurance">ENDURANCE</label>
                     <div class="w-100">
-                        <input type="range" class="form-range" id="enduranceRange" name="Endurance" min="1" max="6" value="5">
+                        <input type="range" class="form-range" id="enduranceRange" asp-for="RegisterProfessionInputModel.Endurance" min="1" max="6" value="5">
                     </div>
-                    <span class="ms-2 stat-value">5</span>
+                    <span class="ms-2 stat-value" id="enduranceValue">5</span>
                 </div>
             </div>
 
@@ -125,20 +127,21 @@
                 <button type="submit" class="btn btn-special font-barlow fw-bold w-50 mx-3">COMMENCER L'AVENTURE</button>
             </div>
 
-            <input type="hidden" id="selectedProfession" name="SelectedProfession" value="" />
+            <input type="hidden" id="selectedProfession" asp-for="RegisterProfessionInputModel.SelectedProfession" value="" />
         </form>
     </div>
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const professionOptions = document.querySelectorAll('.profession-option');
             const selectedProfessionInput = document.getElementById('selectedProfession');
             const forceRange = document.getElementById('forceRange');
             const enduranceRange = document.getElementById('enduranceRange');
-            const forceValue = document.querySelector('.stat-item:nth-child(1) .stat-value');
-            const enduranceValue = document.querySelector('.stat-item:nth-child(2) .stat-value');
+            const forceValue = document.getElementById('forceValue');
+            const enduranceValue = document.getElementById('enduranceValue');
 
             // Définir la somme totale qui doit être maintenue
             const totalPoints = 7;
@@ -153,46 +156,41 @@
                     this.querySelector('.profession-card').classList.add('selected');
 
                     // Stocker la profession sélectionnée
-                    const professionId = this.getAttribute('data-profession');
-                    selectedProfessionInput.value = professionId;
+                    selectedProfessionInput.value = this.getAttribute('data-profession');
                 });
             });
 
             // Mise à jour des valeurs d'attributs lors du déplacement des curseurs
             forceRange.addEventListener('input', function() {
                 const forceVal = parseInt(this.value);
-                forceValue.textContent = forceVal;
+                forceValue.textContent = forceVal.toString();
 
                 // Calculer et définir la valeur d'endurance pour maintenir la somme à 7
                 const newEndurance = totalPoints - forceVal;
                 if (newEndurance >= 1 && newEndurance <= 6) {
                     enduranceRange.value = newEndurance;
-                    enduranceValue.textContent = newEndurance;
+                    enduranceValue.textContent = newEndurance.toString();
                 }
             });
 
             enduranceRange.addEventListener('input', function() {
                 const enduranceVal = parseInt(this.value);
-                enduranceValue.textContent = enduranceVal;
+                enduranceValue.textContent = enduranceVal.toString();
 
                 // Calculer et définir la valeur de force pour maintenir la somme à 7
                 const newForce = totalPoints - enduranceVal;
                 if (newForce >= 1 && newForce <= 6) {
                     forceRange.value = newForce;
-                    forceValue.textContent = newForce;
+                    forceValue.textContent = newForce.toString();
                 }
             });
 
-            // Initialiser les valeurs pour avoir une somme de 7
-            const initialForce = 2;
-            const initialEndurance = 5;
-            forceRange.value = initialForce;
-            enduranceRange.value = initialEndurance;
-            forceValue.textContent = initialForce;
-            enduranceValue.textContent = initialEndurance;
-
             // Sélectionner la première profession par défaut
-            professionOptions[0].click();
+            const defaultProfession = document.querySelector('.profession-option[data-profession="ingenieur"]');
+            if (defaultProfession) {
+                defaultProfession.querySelector('.profession-card').classList.add('selected');
+                selectedProfessionInput.value = "ingenieur";
+            }
         });
     </script>
 }
@@ -328,6 +326,6 @@
             text-align: center;
             font-weight: bold;
         }
-        
+
     </style>
 }
