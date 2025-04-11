@@ -1,18 +1,17 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StarColonies.Infrastructures.Configuration;
+using StarColonies.Infrastructures.Entities;
 
 namespace StarColonies.Infrastructures;
 
-public class StarColoniesContext  : DbContext
-{
+public class StarColoniesContext : IdentityDbContext<Colon> {
     public StarColoniesContext(DbContextOptions<StarColoniesContext> options) : base(options)
     {
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-        
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
         modelBuilder.ApplyConfiguration(new TypeBestiaireConfiguration());
         modelBuilder.ApplyConfiguration(new TypeResourceConfiguration());
@@ -34,5 +33,7 @@ public class StarColoniesContext  : DbContext
         modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
         modelBuilder.ApplyConfiguration(new LogConfiguration());
         modelBuilder.ApplyConfiguration(new AdminConfiguration());
+        
+        base.OnModelCreating(modelBuilder);
     }
 }

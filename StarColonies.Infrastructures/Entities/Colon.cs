@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace StarColonies.Infrastructures.Entities;
 
-public class Colon
+public class Colon : IdentityUser
 {
     public int Id { get; set; }
     public string NameColon { get; set; } = String.Empty;
-    public string Email { get; set; } = String.Empty;
-    public string Password { get; set; } = String.Empty;
     public string DateBirth { get; set; } = String.Empty;
     public int Endurance { get; set; }
     public int Strength { get; set; }

@@ -14,14 +14,6 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
             .IsRequired()
             .HasMaxLength(100);
                
-        builder.Property(c => c.Email)
-            .IsRequired()
-            .HasMaxLength(255);
-               
-        builder.Property(c => c.Password)
-            .IsRequired()
-            .HasMaxLength(255);
-               
         builder.Property(c => c.DateBirth)
             .IsRequired()
             .HasMaxLength(20);
