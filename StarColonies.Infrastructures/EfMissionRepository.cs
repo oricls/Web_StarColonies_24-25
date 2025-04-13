@@ -1,0 +1,250 @@
+using Microsoft.EntityFrameworkCore;
+using StarColonies.Domains;
+
+namespace StarColonies.Infrastructures;
+
+public class EfMissionRepository : IMissionRepository
+{
+    private readonly StarColoniesContext _context;
+
+    public EfMissionRepository(StarColoniesContext context)
+    {
+        _context = context;
+    }
+
+    public IReadOnlyList<Mission> GetAllMissions()
+    {
+        var missions = _context.Mission
+            .Include(m => m.MissionBestiaires)
+                .ThenInclude(mb => mb.Bestiaire)
+            .ToList();
+
+        return missions.Select(m => MapMissionEntityToDomain(m)).ToList();
+    }
+
+    public async Task<IReadOnlyList<Mission>> GetAllMissionsAsync()
+    {
+        var missions = await _context.Mission
+            .Include(m => m.MissionBestiaires)
+                .ThenInclude(mb => mb.Bestiaire)
+            .ToListAsync();
+
+        return missions.Select(m => MapMissionEntityToDomain(m)).ToList();
+    }
+
+    public Mission GetMissionById(int missionId)
+    {
+        var missionEntity = _context.Mission
+            .Include(m => m.MissionBestiaires)
+                .ThenInclude(mb => mb.Bestiaire)
+                    .ThenInclude(b => b!.TypeBestiaire)
+            .SingleOrDefault(m => m.Id == missionId);
+
+        if (missionEntity == null)
+            return null;
+
+        return MapMissionEntityToDomain(missionEntity);
+    }
+
+    public async Task<Mission> GetMissionByIdAsync(int missionId)
+    {
+        var missionEntity = await _context.Mission
+            .Include(m => m.MissionBestiaires)
+                .ThenInclude(mb => mb.Bestiaire)
+                    .ThenInclude(b => b.TypeBestiaire)
+            .SingleOrDefaultAsync(m => m.Id == missionId);
+
+        if (missionEntity == null)
+            return null;
+
+        return MapMissionEntityToDomain(missionEntity);
+    }
+
+    public IReadOnlyList<Mission> GetMissionsByTeamId(int teamId)
+    {
+        var resultats = _context.ResultatMission
+            .Where(rm => rm.IdTeam == teamId)
+            .Include(rm => rm.Mission)
+                .ThenInclude(m => m.MissionBestiaires)
+                    .ThenInclude(mb => mb.Bestiaire)
+            .Select(rm => rm.Mission)
+            .Distinct()
+            .ToList();
+
+        return resultats.Select(m => MapMissionEntityToDomain(m)).ToList();
+    }
+
+    public async Task<IReadOnlyList<Mission>> GetMissionsByTeamIdAsync(int teamId)
+    {
+        var resultats = await _context.ResultatMission
+            .Where(rm => rm.IdTeam == teamId)
+            .Include(rm => rm.Mission)
+                .ThenInclude(m => m.MissionBestiaires)
+                    .ThenInclude(mb => mb.Bestiaire)
+            .Select(rm => rm.Mission)
+            .Distinct()
+            .ToListAsync();
+
+        return resultats.Select(m => MapMissionEntityToDomain(m)).ToList();
+    }
+
+    public IReadOnlyList<Bestiaire> GetBestiairesByMissionId(int missionId)
+    {
+        return _context.MissionBestiaire
+            .Where(mb => mb.IdMission == missionId)
+            .Include(mb => mb.Bestiaire)
+            .ThenInclude(b => b.TypeBestiaire)
+            .Select(mb => new Bestiaire
+            {
+                Id = mb.Bestiaire.Id,
+                Name = mb.Bestiaire.Name,
+                Strength = mb.Bestiaire.Strength,
+                Endurance = mb.Bestiaire.Endurance,
+                TypeBestiaireName = mb.Bestiaire.TypeBestiaire.Name,
+                TypeBestiaireAvatar = mb.Bestiaire.TypeBestiaire.Avatar,
+                TypeBestiaireDescription = mb.Bestiaire.TypeBestiaire.Description
+            })
+            .ToList();
+    }
+
+    public async Task<IReadOnlyList<Bestiaire>> GetBestiairesByMissionIdAsync(int missionId)
+    {
+        return await _context.MissionBestiaire
+            .Where(mb => mb.IdMission == missionId)
+            .Include(mb => mb.Bestiaire)
+            .ThenInclude(b => b.TypeBestiaire)
+            .Select(mb => new Bestiaire
+            {
+                Id = mb.Bestiaire.Id,
+                Name = mb.Bestiaire.Name,
+                Strength = mb.Bestiaire.Strength,
+                Endurance = mb.Bestiaire.Endurance,
+                TypeBestiaireName = mb.Bestiaire.TypeBestiaire.Name,
+                TypeBestiaireAvatar = mb.Bestiaire.TypeBestiaire.Avatar,
+                TypeBestiaireDescription = mb.Bestiaire.TypeBestiaire.Description
+            })
+            .ToListAsync();
+    }
+
+    public IReadOnlyList<ResultatMission> GetResultatsByMissionId(int missionId)
+    {
+        return _context.ResultatMission
+            .Where(rm => rm.IdMission == missionId)
+            .Include(rm => rm.Team)
+            .Select(rm => new ResultatMission
+            {
+                Id = rm.Id,
+                Issue = rm.Issue,
+                Date = rm.Date,
+                MissionId = rm.IdMission,
+                TeamId = rm.IdTeam,
+                TeamName = rm.Team.Name,
+                TeamLogo = rm.Team.Logo
+            })
+            .ToList();
+    }
+
+    public async Task<IReadOnlyList<ResultatMission>> GetResultatsByMissionIdAsync(int missionId)
+    {
+        return await _context.ResultatMission
+            .Where(rm => rm.IdMission == missionId)
+            .Include(rm => rm.Team)
+            .Select(rm => new ResultatMission
+            {
+                Id = rm.Id,
+                Issue = rm.Issue,
+                Date = rm.Date,
+                MissionId = rm.IdMission,
+                TeamId = rm.IdTeam,
+                TeamName = rm.Team.Name,
+                TeamLogo = rm.Team.Logo
+            })
+            .ToListAsync();
+    }
+
+    public void SaveOrUpdateMission(Mission mission)
+    {
+        var missionEntity = _context.Mission
+            .Include(m => m.MissionBestiaires)
+            .FirstOrDefault(m => m.Id == mission.Id);
+
+        if (missionEntity == null)
+        {
+            // Nouvelle mission
+            missionEntity = new Entities.Mission
+            {
+                Name = mission.Name,
+                Image = mission.Image,
+                Description = mission.Description
+            };
+            _context.Mission.Add(missionEntity);
+        }
+        else
+        {
+            // Mise à jour d'une mission existante
+            missionEntity.Name = mission.Name;
+            missionEntity.Image = mission.Image;
+            missionEntity.Description = mission.Description;
+        }
+
+        _context.SaveChanges();
+    }
+
+    public async Task SaveOrUpdateMissionAsync(Mission mission)
+    {
+        var missionEntity = await _context.Mission
+            .Include(m => m.MissionBestiaires)
+            .FirstOrDefaultAsync(m => m.Id == mission.Id);
+
+        if (missionEntity == null)
+        {
+            // Nouvelle mission
+            missionEntity = new Entities.Mission
+            {
+                Name = mission.Name,
+                Image = mission.Image,
+                Description = mission.Description
+            };
+            await _context.Mission.AddAsync(missionEntity);
+        }
+        else
+        {
+            // Mise à jour d'une mission existante
+            missionEntity.Name = mission.Name;
+            missionEntity.Image = mission.Image;
+            missionEntity.Description = mission.Description;
+        }
+
+        await _context.SaveChangesAsync();
+    }
+    
+    // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
+    private Mission MapMissionEntityToDomain(Entities.Mission missionEntity)
+    {
+        int totalStrength = missionEntity.MissionBestiaires.Sum(mb => mb.Bestiaire?.Strength ?? 0);
+        int totalEndurance = missionEntity.MissionBestiaires.Sum(mb => mb.Bestiaire?.Endurance ?? 0);
+        
+        return new Mission
+        {
+            Id = missionEntity.Id,
+            Name = missionEntity.Name,
+            Image = missionEntity.Image,
+            Description = missionEntity.Description,
+            BestiaireCount = missionEntity.MissionBestiaires.Count,
+            TotalEndurance = totalEndurance,
+            TotalStrength = totalStrength,
+            Level = CalculateMissionLevel(totalStrength, totalEndurance)
+        };
+    }
+
+    // Méthode utilitaire pour calculer le niveau de difficulté d'une mission
+    private int CalculateMissionLevel(int totalStrength, int totalEndurance)
+    {
+        // Formule simple pour calculer le niveau basé sur la force et l'endurance
+        // Vous pouvez adapter cette formule selon vos besoins
+        int baseLevel = (totalStrength + totalEndurance) / 10;
+        
+        // Garantir un niveau minimum de 1
+        return Math.Max(1, baseLevel);
+    }
+}
