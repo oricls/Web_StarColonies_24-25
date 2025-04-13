@@ -233,18 +233,7 @@ public class EfMissionRepository : IMissionRepository
             BestiaireCount = missionEntity.MissionBestiaires.Count,
             TotalEndurance = totalEndurance,
             TotalStrength = totalStrength,
-            Level = CalculateMissionLevel(totalStrength, totalEndurance)
+            Level = totalStrength
         };
-    }
-
-    // Méthode utilitaire pour calculer le niveau de difficulté d'une mission
-    private int CalculateMissionLevel(int totalStrength, int totalEndurance)
-    {
-        // Formule simple pour calculer le niveau basé sur la force et l'endurance
-        // Vous pouvez adapter cette formule selon vos besoins
-        int baseLevel = (totalStrength + totalEndurance) / 10;
-        
-        // Garantir un niveau minimum de 1
-        return Math.Max(1, baseLevel);
     }
 }
