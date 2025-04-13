@@ -7,6 +7,6 @@ public class MissionBestiaire
     public int IdMission { get; set; }
     public int IdBestiaire { get; set; }
 
-    public Mission Mission { get; set; }
-    public Bestiaire Bestiaire { get; set; }
+    public Mission? Mission { get; set; }
+    public Bestiaire? Bestiaire { get; set; }
 }

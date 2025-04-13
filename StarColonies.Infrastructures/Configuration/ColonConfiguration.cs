@@ -8,7 +8,7 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
 {
     public void Configure(EntityTypeBuilder<Colon> builder)
     {
-        builder.HasKey(c => c.Id);
+        //builder.HasKey(c => c.Id); -> cf. Colon entity
         
         builder.Property(c => c.NameColon)
             .IsRequired()
@@ -50,6 +50,6 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
 
     private void SeedColons(EntityTypeBuilder<Colon> builder)
     {
-        builder.HasData();
+        //builder.HasData();  
     }
 }

@@ -5,7 +5,7 @@ namespace StarColonies.Infrastructures.Entities;
 
 public class Colon : IdentityUser
 {
-    public int Id { get; set; }
+    //public int Id { get; set; } -> géré par indentity
     public string NameColon { get; set; } = String.Empty;
     public string DateBirth { get; set; } = String.Empty;
     public int Endurance { get; set; }
