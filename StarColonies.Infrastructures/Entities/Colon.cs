@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace StarColonies.Infrastructures.Entities;
 
-public class Colon
+public class Colon : IdentityUser
 {
-    public int Id { get; set; }
+    //public int Id { get; set; } -> géré par indentity
     public string NameColon { get; set; } = String.Empty;
-    public string Email { get; set; } = String.Empty;
-    public string Password { get; set; } = String.Empty;
     public string DateBirth { get; set; } = String.Empty;
     public int Endurance { get; set; }
     public int Strength { get; set; }
@@ -19,6 +18,6 @@ public class Colon
     public Profession Profession { get; set; } = null!;
     
     public IList<Team> Teams { get; set; } = new List<Team>();
-    public IList<Bonus> Bonuses { get; set; } = new List<Bonus>();
+    public IList<ColonBonus> ColonBonuses { get; set; } = new List<ColonBonus>();
     public IList<Resource> Resources { get; set; } = new List<Resource>();
 }

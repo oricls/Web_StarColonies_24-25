@@ -26,10 +26,11 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
             .WithOne()
             .HasForeignKey(rm => rm.IdMission)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(m => m.Bestiaires)
-            .WithMany(b => b.Missions)
-            .UsingEntity(j => j.ToTable("MissionBestiaire"));
+        
+        builder.HasMany(m => m.MissionBestiaires)
+            .WithOne(mb => mb.Mission)
+            .HasForeignKey(mb => mb.IdMission)
+            .OnDelete(DeleteBehavior.Cascade);
 
         SeedMissions(builder);
     }
@@ -79,38 +80,5 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
         };
 
         builder.HasData(missions);
-    }
-    
-    public static void SeedMissionRelations(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Mission>()
-            .HasMany(m => m.Bestiaires)
-            .WithMany(b => b.Missions)
-            .UsingEntity<Dictionary<string, object>>("MissionBestiaire",
-                j => j.HasOne<Bestiaire>().WithMany().HasForeignKey("BestiaireId"),
-                j => j.HasOne<Mission>().WithMany().HasForeignKey("MissionId"))
-            .HasData(
-                new { MissionId = 1, BestiaireId = 1 },
-                new { MissionId = 1, BestiaireId = 2 },
-                new { MissionId = 1, BestiaireId = 3 },
-                new { MissionId = 1, BestiaireId = 4 },
-                
-                new { MissionId = 2, BestiaireId = 5 },
-                new { MissionId = 2, BestiaireId = 6 },
-                new { MissionId = 2, BestiaireId = 7 },
-                new { MissionId = 2, BestiaireId = 8 },
-                
-                new { MissionId = 3, BestiaireId = 9 },
-                new { MissionId = 3, BestiaireId = 10 },
-                new { MissionId = 3, BestiaireId = 11 },
-                new { MissionId = 3, BestiaireId = 12 },
-                
-                new { MissionId = 4, BestiaireId = 13 },
-                new { MissionId = 4, BestiaireId = 1 },
-                new { MissionId = 4, BestiaireId = 2 },
-                new { MissionId = 4, BestiaireId = 3 },
-                new { MissionId = 4, BestiaireId = 4 },
-                new { MissionId = 4, BestiaireId = 5 }
-            );
     }
 }

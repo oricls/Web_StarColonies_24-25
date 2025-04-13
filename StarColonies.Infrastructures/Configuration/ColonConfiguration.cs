@@ -8,19 +8,11 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
 {
     public void Configure(EntityTypeBuilder<Colon> builder)
     {
-        builder.HasKey(c => c.Id);
+        //builder.HasKey(c => c.Id); -> cf. Colon entity
         
         builder.Property(c => c.NameColon)
             .IsRequired()
             .HasMaxLength(100);
-               
-        builder.Property(c => c.Email)
-            .IsRequired()
-            .HasMaxLength(255);
-               
-        builder.Property(c => c.Password)
-            .IsRequired()
-            .HasMaxLength(255);
                
         builder.Property(c => c.DateBirth)
             .IsRequired()
@@ -43,10 +35,11 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
             .WithOne(t => t.ColonCreator)
             .HasForeignKey(t => t.IdColonCreator)
             .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasMany(c => c.Bonuses)
+        
+        builder.HasMany(cb => cb.ColonBonuses)
             .WithOne(b => b.Colon)
-            .HasForeignKey(b => b.IdColon);
+            .HasForeignKey(cb => cb.ColonId)
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasMany(c => c.Resources)
             .WithMany(r => r.Colons)
@@ -57,6 +50,6 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
 
     private void SeedColons(EntityTypeBuilder<Colon> builder)
     {
-        builder.HasData();
+        //builder.HasData();  
     }
 }

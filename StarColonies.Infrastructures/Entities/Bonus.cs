@@ -5,16 +5,11 @@ public class Bonus
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public DateTime DateHeureAchat { get; set; }
-    public DateTime DateHeureValidite { get; set; }
+    
+    public TimeSpan DureeParDefaut { get; set; } = TimeSpan.FromHours(24);
     
     // clés
-    public Colon Colon { get; set; } = null!;
-    public int IdColon { get; set; }
+    public IList<ColonBonus> ColonBonuses { get; set; } = new List<ColonBonus>();
     
-    public Resource Resource { get; set; } = null!;
-    
-    public int IdResource { get; set; }
-    
-    public int QuantiteResource { get; set; }
+    public IList<BonusResource> BonusResources { get; set; } = new List<BonusResource>();
 }

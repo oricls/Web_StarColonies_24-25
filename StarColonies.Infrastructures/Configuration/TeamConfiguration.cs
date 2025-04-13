@@ -41,6 +41,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
 
     private void SeedTeams(EntityTypeBuilder<Team> builder)
     {
-        builder.HasData();
+        //builder.HasData();
     }
 }
