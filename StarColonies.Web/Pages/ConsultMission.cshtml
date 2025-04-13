@@ -1,146 +1,203 @@
-@page
+@page "{slug:isSlug}"
 @model StarColonies.Web.Pages.ConsultMission
 
 @{
-    ViewData["Title"] = "ConsultMission";
+    ViewData["Title"] = "Exploration de la base abandonnée";
+    ViewData["HideNavButtons"] = true;
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <h3 class="display-3 fw-bold mb-4 font-barlow">
-            Exploration de la base abandonnée
-        </h3>
-        <div>
-            <button class="btn rounded-circle me-2" style="font-size: 1.5rem; padding: 1rem; color: white; background-color: var(--primary-color); border-color: var(--submit-button-color);">
+<div class="container-fluid mission-page py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-3 fw-bold font-barlow text-white">
+            @Model.Mission.Name
+        </h1>
+        <div class="d-flex">
+            <a asp-page="/Dashboard" class="btn rounded-circle btn-lg me-3" style="font-size: 1.8rem; padding: 1rem 1.2rem; color: white; background-color: #5a49ab;">
                 <i class="fas fa-home"></i>
-            </button>
-            <button class="btn rounded-circle" style="font-size: 1.5rem; padding: 1rem; color: white; background-color: var(--primary-color); border-color: var(--submit-button-color);">
+            </a>
+            <a asp-page="/Comptoir" class="btn rounded-circle btn-lg" style="font-size: 1.8rem; padding: 1rem 1.2rem; color: white; background-color: #5a49ab;">
                 <i class="fas fa-shopping-cart"></i>
-            </button>
+            </a>
         </div>
     </div>
-    <p class="fs-5 mx-auto mb-5">
-        Cette mission consiste à explorer une base abandonnée pour récupérer des ressources et des informations.
+    <p class="text-light fs-5 mb-5">
+        @Model.Mission.Description
     </p>
-</div>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-2 mx-2">
-            <div class="card text-center" style="background-color: var(--primary-color);">
-                <div class="card-body">
-                    <h1>12</h1>
-                    <p>Niveau de difficulté</p>
+    <!-- Mission stats -->
+    <div class="mb-5">
+        <div class="row border border-primary rounded p-2" style="background: rgba(0,88,255,0.1);">
+            <div class="col-md-3">
+                <div class="card text-center bg-transparent border-0 text-white">
+                    <div class="card-body">
+                        <h1 class="mb-0">@(Model.Mission?.Level)</h1>
+                        <p class="text-muted mb-0">Niveau de difficulté</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-2 mx-2">
-            <div class="card text-center" style="background-color: var(--primary-color);">
-                <div class="card-body">
-                    <h1>4</h1>
-                    <p>Nombres d'ennemis</p>
+            <div class="col-md-3">
+                <div class="card text-center bg-transparent border-0 text-white">
+                    <div class="card-body">
+                        <h1 class="mb-0">@(Model.Bestiaires?.Count)</h1>
+                        <p class="text-muted mb-0">Nombre d'ennemis</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-2 mx-2">
-            <div class="card text-center" style="background-color: var(--primary-color);">
-                <div class="card-body">
-                    <h1>24</h1>
-                    <p>Endurance totale</p>
+            <div class="col-md-3">
+                <div class="card text-center bg-transparent border-0 text-white">
+                    <div class="card-body">
+                        <h1 class="mb-0">@(Model.Bestiaires?.Sum(b => b.Endurance))</h1>
+                        <p class="text-muted mb-0">Endurance totale</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-2 mx-2">
-            <div class="card text-center" style="background-color: var(--primary-color);">
-                <div class="card-body">
-                    <h1>31</h1>
-                    <p>Force totale</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container mt-4 mt-5">
-    <h4 class="fw-bold mb-3">Monstres présents :</h4>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body" style="background-color: var(--tercary-bg-color)">
-                    <i class="fas fa-dragon"></i>
-                    <h5 class="pt-2" style="font-size: 2rem;">Dragon</h5>
-                    <p style="font-size: 1.5rem;">Feu</p>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card" style="background-color: var(--quaternary-bg-color)">
-                                <div class="card-body">
-                                    <h6 style="font-size: 1.5rem">50</h6>
-                                    <p>Force</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card" style="background-color: var(--quaternary-bg-color)">
-                                <div class="card-body">
-                                    <h6 style="font-size: 1.5rem">30</h6>
-                                    <p>Endurance</p>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-transparent border-0 text-white">
+                    <div class="card-body">
+                        <h1 class="mb-0">@(Model.Bestiaires?.Sum(b => b.Strength))</h1>
+                        <p class="text-muted mb-0">Force totale</p>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Ajoutez d'autres cartes de monstres ici si nécessaire -->
+    </div>
+
+    <!-- Monsters section -->
+    <div class="mb-5">
+        <h3 class="text-white fw-bold mb-4">Monstres présents :</h3>
+        <div class="row">
+            @if (Model.Bestiaires != null && Model.Bestiaires.Any())
+            {
+                @foreach (var monster in Model.Bestiaires)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="monster-card text-center">
+                            <div class="monster-icon-container mb-3">
+                                @if (!string.IsNullOrEmpty(monster.TypeBestiaireAvatar))
+                                {
+                                    <img src="~/@monster.TypeBestiaireAvatar" alt="@monster.TypeBestiaireName" class="monster-avatar">
+                                }
+                                else
+                                {
+                                    <i class="fas fa-skull monster-avatar-fallback"></i>
+                                }
+                            </div>
+                            <h4 class="text-white fw-bold mb-1">@monster.Name</h4>
+                            <p class="text-muted mb-3">@monster.TypeBestiaireName</p>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <div class="monster-stat-card">
+                                        <div class="card-body p-2">
+                                            <h5 class="text-white fw-bold mb-0">@monster.Strength</h5>
+                                            <p class="text-muted small mb-0">Force</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="monster-stat-card">
+                                        <div class="card-body p-2">
+                                            <h5 class="text-white fw-bold mb-0">@monster.Endurance</h5>
+                                            <p class="text-muted small mb-0">Endurance</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Rewards section -->
+    <div class="mb-5">
+        <h3 class="text-white fw-bold mb-4">Récompenses potentielles :</h3>
+        <div class="row">
+            @for (int i = 0; i < 7; i++)
+            {
+                <div class="col-auto mb-3">
+                    <div class="card bg-dark text-center border-0" style="width: 120px;">
+                        <div class="card-body">
+                            <div class="rounded-circle bg-black d-flex justify-content-center align-items-center mx-auto mb-2" style="width: 60px; height: 60px;">
+                                <i class="fas fa-skull text-primary" style="font-size: 1.8rem;"></i>
+                            </div>
+                            <h6 class="text-white">Gros crâne d'Alex</h6>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Team selection -->
+    <div class="mb-5">
+        <h3 class="text-white fw-bold mb-4">Sélectionner une équipe :</h3>
+        <div class="d-flex flex-wrap mb-5">
+            @for (int i = 0; i < 4; i++)
+            {
+                <div class="rounded-circle bg-dark d-flex justify-content-center align-items-center mb-3 me-3" style="width: 100px; height: 100px; overflow: hidden;">
+                    <img src="https://picsum.photos/100/100?random=@i" alt="Team Member" class="img-fluid">
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Start mission button -->
+    <div class="text-center mb-5">
+        <button class="btn btn-warning btn-lg fw-bold px-5 py-2" style="font-size: 1.3rem;">Commencer</button>
     </div>
 </div>
 
-<div class="container mt-4 mt-5">
-    <h4 class="fw-bold mb-3">Récompenses potentielles : </h4>
-    <div class="row">
-        <div class="col-md-2">
-            <div class="card text-center">
-                <div class="card-body" style="background-color: var(--tercary-bg-color)">
-                    <i class="fas fa-gem"></i>
-                    <h5>Gemmes</h5>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card text-center">
-                <div class="card-body" style="background-color: var(--tercary-bg-color)">
-                    <i class="fas fa-coins"></i>
-                    <h5>Pièces d'or</h5>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card text-center">
-                <div class="card-body" style="background-color: var(--tercary-bg-color)">
-                    <i class="fas fa-scroll"></i>
-                    <h5>Parchemins</h5>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section Styles {
+<style>
+    body {
+        background-color: #1a1627;
+        color: white;
+    }
 
-<div class="container mt-4 mt-5">
-    <h4 class="fw-bold mb-3">Sélectionner une équipe : </h4>
-    <div class="d-flex flex-wrap">
-        <div class="monster-icon d-flex justify-content-center align-items-center mx-2" style="font-size: 2rem;">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="monster-icon d-flex justify-content-center align-items-center mx-2" style="font-size: 2rem;">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="monster-icon d-flex justify-content-center align-items-center mx-2" style="font-size: 2rem;">
-            <i class="fas fa-user"></i>
-        </div>
-        <!-- Ajoutez d'autres icônes d'équipe ici si nécessaire -->
-    </div>
-</div>
+    .mission-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-<div class="container mt-4 mt-5 text-center">
-    <button class="btn btn-special btn-lg fw-bold fs-4 px-4 py-2">Commencer</button>
-</div>
+    /* Ces styles ont été remplacés par du Bootstrap inline */
+
+    .monster-card {
+        background-color: #131022;
+        border-radius: 10px;
+        padding: 1.5rem;
+        height: 100%;
+    }
+
+    .monster-icon-container {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #1d1935;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .monster-avatar {
+        max-width: 50px;
+        max-height: 50px;
+    }
+
+    .monster-avatar-fallback {
+        font-size: 2rem;
+        color: #0095ff;
+    }
+
+    .monster-stat-card {
+        background-color: #1d1935;
+        border-radius: 8px;
+        padding: 0.5rem;
+    }
+
+    .font-barlow {
+        font-family: 'Barlow Condensed', sans-serif;
+    }
+</style>
+}
