@@ -3,18 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace StarColonies.Infrastructures;
 
-public interface ITeamRepository
-{
-    void CreateTeam(Team team);
-    void DeleteTeam(Team team);
-    void UpdateTeamInfo(Team team);
-    public void AddMemberToTeam(Team team, Colon newMember);
-    public void RemoveMemberToTeam(Team team, Colon newMember);
-    Team GetTeamById(int id);
-    IList<Colon> GetMembersOfTeam(Team team);
-}
-
-
 public class TeamRepository : ITeamRepository
 {
     private readonly StarColoniesContext _context;
@@ -26,6 +14,7 @@ public class TeamRepository : ITeamRepository
 
     public  void CreateTeam(Team team)
     {
+        // faire validation de la création (envoi de message?)
         _context.Add(team);
         _context.SaveChanges();
     }
@@ -44,6 +33,14 @@ public class TeamRepository : ITeamRepository
         teamEntity.Baniere = team.Logo; // bannière ?
         teamEntity.Logo = team.Logo;
         _context.SaveChanges();
+    }
+
+    public IReadOnlyList<Team> GetAllTeams()
+    {
+        var teams = _context.Teams
+                                    .Include(t => t.Members)
+                                    .Include(rm => rm.ResultatMissions).ToList();
+        return teams.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
     public void AddMemberToTeam(Team team, Colon newMember)
@@ -83,7 +80,6 @@ public class TeamRepository : ITeamRepository
     {
         var team = _context.Teams.SingleOrDefault(t => t.Id == id);
         
-        
         if (team == null)
         {
             throw new KeyNotFoundException("Aucune equipe correspondante existente");
@@ -94,13 +90,21 @@ public class TeamRepository : ITeamRepository
 
     public IList<Colon> GetMembersOfTeam(Team team)
     {
-       var teamEntity = _context.Teams
-                       .Include(t => t.Members)
-                       .SingleOrDefault(t => t.Id == team.Id);
-
-       return teamEntity.Members.Select(c => MapColonEntityToDomain(c)).ToList();
+        var teamEntity = _context.Teams
+            .Include(t => t.Members)
+            .SingleOrDefault(t => t.Id == team.Id);
+        
+        return teamEntity.Members.Select(c => MapColonEntityToDomain(c)).ToList();
     }
-    
+
+    public List<Team> GetTeamByColon(Colon colon)
+    {
+        var teamWithColon = _context.Teams
+                                            .Include(t => t.Members)
+                                            .Where(t => t.Members.Any(m => m.Id == colon.Id.ToString())).ToList();
+        return teamWithColon.Select(t => MapTeamEntityToDomain(t)).ToList();
+    }
+
     private Team MapTeamEntityToDomain(Entities.Team teamEntity)
     {
         var avg = teamEntity.Members.Average(m => m.Level);
