@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StarColonies.Infrastructures;
+using StarColonies.Infrastructures.Entities;
 using StarColonies.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
 
+builder.Services
+.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie();
+
 builder.Services.AddDbContext<StarColoniesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") 
                          ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+
+builder.Services.AddIdentity<Colon,IdentityRole>()
+    .AddEntityFrameworkStores<StarColoniesContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -30,6 +41,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

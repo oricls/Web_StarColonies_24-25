@@ -10,7 +10,9 @@ public class Team
     
     // clés
     public Colon ColonCreator { get; set; } = null!;
-    public int IdColonCreator { get; set; }
+    
+    //D'un int à un string car géré par identity
+    public string IdColonCreator { get; set; } = string.Empty;
 
     public IList<Colon> Members { get; set; } = new List<Colon>();
     

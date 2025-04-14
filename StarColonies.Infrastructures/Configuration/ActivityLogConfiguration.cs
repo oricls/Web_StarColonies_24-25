@@ -25,6 +25,6 @@ public class ActivityLogConfiguration : IEntityTypeConfiguration<ActivityLog>
 
     private void SeedActivityLogs(EntityTypeBuilder<ActivityLog> builder)
     {
-        builder.HasData();
+        //builder.HasData();
     }
 }

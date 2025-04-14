@@ -32,6 +32,6 @@ public class AdminConfiguration : IEntityTypeConfiguration<Admin>
 
     private void SeedAdmins(EntityTypeBuilder<Admin> builder)
     {
-        builder.HasData();
+        //builder.HasData();
     }
 }

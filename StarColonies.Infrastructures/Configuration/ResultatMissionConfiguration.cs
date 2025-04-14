@@ -32,6 +32,6 @@ public class ResultatMissionConfiguration : IEntityTypeConfiguration<ResultatMis
 
     private void SeedResultatMission(EntityTypeBuilder<ResultatMission> builder)
     {
-        builder.HasData();
+        //builder.HasData();
     }
 }
