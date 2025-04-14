@@ -10,6 +10,13 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     {
     }
     
+    public DbSet<Mission> Mission { get; set; }
+    public DbSet<Bestiaire> Bestiaire { get; set; }
+    public DbSet<TypeBestiaire> TypeBestiaire { get; set; }
+    public DbSet<MissionBestiaire> MissionBestiaire { get; set; }
+    public DbSet<ResultatMission> ResultatMission { get; set; }
+    public DbSet<Team> Teams { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
