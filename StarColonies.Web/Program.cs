@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StarColonies.Domains;
 using StarColonies.Infrastructures;
 using StarColonies.Infrastructures.Entities;
+using StarColonies.Web.Constraints;
 using StarColonies.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ReverseProxyLinksMiddleware>();
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+    options.ConstraintMap.Add("isSlug", typeof(SlugConstraint));
+});
+
 
 builder.Services
 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -22,6 +30,8 @@ builder.Services.AddDbContext<StarColoniesContext>(options =>
 builder.Services.AddIdentity<Colon,IdentityRole>()
     .AddEntityFrameworkStores<StarColoniesContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
 
 var app = builder.Build();
 
