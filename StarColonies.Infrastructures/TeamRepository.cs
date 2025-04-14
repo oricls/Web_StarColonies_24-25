@@ -21,7 +21,7 @@ public class TeamRepository : ITeamRepository
     public async Task CreateTeamAsync(Team team)
     {
         // faire validation de la création (envoi de message?)
-        var TeamEntity = new Entities.Team
+        var teamEntity = new Entities.Team
         {
             Name = team.Name,
             Logo = team.Logo,
@@ -29,7 +29,7 @@ public class TeamRepository : ITeamRepository
             IdColonCreator = "testUser" // pour tester un user de base en netUsers
         };
            
-        await _context.Team.AddAsync(TeamEntity);
+        await _context.Team.AddAsync(teamEntity);
         await _context.SaveChangesAsync();
     }
     
@@ -41,13 +41,13 @@ public class TeamRepository : ITeamRepository
 
     public async Task DeleteTeamAsync(Team team)
     {
-        var TeamEntity = await _context.Team.FirstOrDefaultAsync(x => x.Id == team.Id);
-        if (TeamEntity == null)
+        var teamEntity = await _context.Team.FirstOrDefaultAsync(t => t.Id == team.Id);
+        if (teamEntity == null)
         {
             throw new NullReferenceException("Team inexistante");
         }
 
-        _context.Team.Remove(TeamEntity);
+        _context.Team.Remove(teamEntity);
         await _context.SaveChangesAsync();
     }
 
