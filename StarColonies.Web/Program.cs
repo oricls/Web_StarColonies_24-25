@@ -33,6 +33,7 @@ builder.Services.AddIdentity<Colon,IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 
 var app = builder.Build();
 

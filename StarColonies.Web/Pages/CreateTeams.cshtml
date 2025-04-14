@@ -22,14 +22,16 @@
                         </div>
                     </div>
 
-                    <div class="mb-4  d-flex flex-column gap-5">
-                        <div class="d-flex flex-column">
-                            <label class="form-label mb- text-secondary">Nom de l'équipe*</label>
-                            <input class="form-control login-input" placeholder="Ma super équipe"/>
+                    <form method="post">
+                        <div class="mb-4  d-flex flex-column gap-5">
+                            <div class="d-flex flex-column">
+                                <label class="form-label mb- text-secondary">Nom de l'équipe*</label>
+                                <input asp-for="TeamName" class="form-control login-input" placeholder="Ma super équipe"/>
+                            </div>
+                            <button type="submit" class="btn btn-purple w-100 mt-auto font-barlow fw-bold">CREER L'EQUIPE</button>
                         </div>
-                        <button class="btn btn-purple w-100 mt-auto font-barlow fw-bold">CREER L'EQUIPE</button>
-                    </div>
-
+                    </form>
+                    
                     <div class="alert-message alert alert-danger d-inline-block mt-3 px-3 py-2" role="alert">
                         <i class="fa-solid fa-triangle-exclamation me-2"></i>
                         Au moins un medecin, un soldat et un scientifique. 

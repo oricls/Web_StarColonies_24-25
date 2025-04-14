@@ -18,6 +18,20 @@ public class TeamRepository : ITeamRepository
         _context.Add(team);
         _context.SaveChanges();
     }
+    public async Task CreateTeamAsync(Team team)
+    {
+        // faire validation de la création (envoi de message?)
+        var TeamEntity = new Entities.Team
+        {
+            Name = team.Name,
+            Logo = team.Logo,
+            Baniere = team.Logo, // TODO a corriger si besoin
+            IdColonCreator = "testUser" // pour tester un user de base en netUsers
+        };
+           
+        await _context.Team.AddAsync(TeamEntity);
+        await _context.SaveChangesAsync();
+    }
     
     public void DeleteTeam(Team team)
     { 
@@ -25,9 +39,21 @@ public class TeamRepository : ITeamRepository
         _context.SaveChanges();
     }
 
+    public async Task DeleteTeamAsync(Team team)
+    {
+        var TeamEntity = await _context.Team.FirstOrDefaultAsync(x => x.Id == team.Id);
+        if (TeamEntity == null)
+        {
+            throw new NullReferenceException("Team inexistante");
+        }
+
+        _context.Team.Remove(TeamEntity);
+        await _context.SaveChangesAsync();
+    }
+
     public void UpdateTeamInfo(Team team)
     {
-        var teamEntity = _context.Teams.Include(t => t.Members).FirstOrDefault(t => t.Id == team.Id);
+        var teamEntity = _context.Team.Include(t => t.Members).FirstOrDefault(t => t.Id == team.Id);
         
         teamEntity.Name = team.Name;
         teamEntity.Baniere = team.Logo; // bannière ?
@@ -35,11 +61,11 @@ public class TeamRepository : ITeamRepository
         _context.SaveChanges();
     }
 
-    public IReadOnlyList<Team> GetAllTeams()
+    public async Task<IReadOnlyList<Team> >GetAllTeams()
     {
-        var teams = _context.Teams
+        var teams = await _context.Team
                                     .Include(t => t.Members)
-                                    .Include(rm => rm.ResultatMissions).ToList();
+                                    .Include(rm => rm.ResultatMissions).ToListAsync();
         return teams.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
@@ -50,8 +76,8 @@ public class TeamRepository : ITeamRepository
             throw new Exception("La team est complète, impossible d'ajouter un nouveau membre");
         }
         
-        var teamEntity = _context.Teams.SingleOrDefault(t => t.Id == team.Id);
-        var memberEntity = _context.colon.SingleOrDefault(c => c.Id == newMember.Id.ToString()); // TODO id à revoir
+        var teamEntity = _context.Team.SingleOrDefault(t => t.Id == team.Id);
+        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id.ToString()); // TODO id à revoir
 
         if (teamEntity.Members.Contains(memberEntity))
         {
@@ -64,8 +90,8 @@ public class TeamRepository : ITeamRepository
     
     public void RemoveMemberToTeam(Team team, Colon newMember)
     {
-        var teamEntity = _context.Teams.SingleOrDefault(t => t.Id == team.Id);
-        var memberEntity = _context.colon.SingleOrDefault(c => c.Id == newMember.Id.ToString());
+        var teamEntity = _context.Team.SingleOrDefault(t => t.Id == team.Id);
+        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id.ToString());
         
         if (!teamEntity.Members.Contains(memberEntity))
         {
@@ -76,9 +102,9 @@ public class TeamRepository : ITeamRepository
         _context.SaveChanges();
     }
 
-    public Team GetTeamById(int id)
+    public async Task<Team> GetTeamById(int id)
     {
-        var team = _context.Teams.SingleOrDefault(t => t.Id == id);
+        var team = await _context.Team.Include(m => m.Members).SingleOrDefaultAsync(t => t.Id == id);
         
         if (team == null)
         {
@@ -88,26 +114,26 @@ public class TeamRepository : ITeamRepository
         return MapTeamEntityToDomain(team);
     }
 
-    public IList<Colon> GetMembersOfTeam(Team team)
+    public async Task<IReadOnlyList<Colon>> GetMembersOfTeam(Team team)
     {
-        var teamEntity = _context.Teams
+        var teamEntity = await _context.Team
             .Include(t => t.Members)
-            .SingleOrDefault(t => t.Id == team.Id);
+            .SingleOrDefaultAsync(t => t.Id == team.Id);
         
         return teamEntity.Members.Select(c => MapColonEntityToDomain(c)).ToList();
     }
 
-    public List<Team> GetTeamByColon(Colon colon)
+    public async Task< IReadOnlyList<Team>> GetTeamByColon(Colon colon)
     {
-        var teamWithColon = _context.Teams
+        var teamWithColon = await _context.Team
                                             .Include(t => t.Members)
-                                            .Where(t => t.Members.Any(m => m.Id == colon.Id.ToString())).ToList();
+                                            .Where(t => t.Members.Any(m => m.Id == colon.Id.ToString())).ToListAsync();
         return teamWithColon.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
     private Team MapTeamEntityToDomain(Entities.Team teamEntity)
     {
-        var avg = teamEntity.Members.Average(m => m.Level);
+        var avg = (teamEntity.Members.Count == 0) ? 0:  teamEntity.Members.Average(m => m.Level);
 
         return new Team
         {
