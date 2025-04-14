@@ -17,6 +17,7 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<ResultatMission> ResultatMission { get; set; }
     public DbSet<Team> Teams { get; set; }
     
+    public DbSet<Colon> colon { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
