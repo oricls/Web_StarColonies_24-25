@@ -7,6 +7,7 @@ public interface ITeamRepository
 {
     void CreateTeam(Team team);
     void DeleteTeam(Team team);
+    void UpdateTeamInfo(Team team);
     public void AddMemberToTeam(Team team, Colon newMember);
     public void RemoveMemberToTeam(Team team, Colon newMember);
     Team GetTeamById(int id);
@@ -32,6 +33,16 @@ public class TeamRepository : ITeamRepository
     public void DeleteTeam(Team team)
     { 
         _context.Remove(team);
+        _context.SaveChanges();
+    }
+
+    public void UpdateTeamInfo(Team team)
+    {
+        var teamEntity = _context.Teams.Include(t => t.Members).FirstOrDefault(t => t.Id == team.Id);
+        
+        teamEntity.Name = team.Name;
+        teamEntity.Baniere = team.Logo; // bannière ?
+        teamEntity.Logo = team.Logo;
         _context.SaveChanges();
     }
 
