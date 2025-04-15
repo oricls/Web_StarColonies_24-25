@@ -10,5 +10,5 @@ public class Resource
     public int IdTypeResource { get; set; }
     public TypeResource TypeResource { get; set; } = null!;
     
-    public IList<Colon> Colons { get; set; } = new List<Colon>();
+    public IList<ColonResource> ColonResources { get; set; } = new List<ColonResource>();
 }
