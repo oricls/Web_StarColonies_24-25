@@ -6,6 +6,7 @@ using StarColonies.Infrastructures;
 using StarColonies.Infrastructures.Entities;
 using StarColonies.Web.Constraints;
 using StarColonies.Web.Middlewares;
+using Colon = StarColonies.Infrastructures.Entities.Colon;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddIdentity<Colon,IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 
 var app = builder.Build();
 

@@ -15,8 +15,9 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<TypeBestiaire> TypeBestiaire { get; set; }
     public DbSet<MissionBestiaire> MissionBestiaire { get; set; }
     public DbSet<ResultatMission> ResultatMission { get; set; }
-    public DbSet<Team> Teams { get; set; }
+    public DbSet<Team> Team { get; set; }
     
+    public DbSet<Colon> Colon { get; set; } // ? ou AspNetUsers ?
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
