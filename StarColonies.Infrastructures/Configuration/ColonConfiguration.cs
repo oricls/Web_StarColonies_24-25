@@ -10,9 +10,9 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
     {
         //builder.HasKey(c => c.Id); -> cf. Colon entity
         
-        builder.Property(c => c.NameColon)
-            .IsRequired()
-            .HasMaxLength(100);
+        // builder.Property(c => c.NameColon)
+        //     .IsRequired()
+        //     .HasMaxLength(100);
                
         builder.Property(c => c.DateBirth)
             .IsRequired()

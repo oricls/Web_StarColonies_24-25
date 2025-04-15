@@ -3,21 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace StarColonies.Infrastructures;
 
-public class TeamRepository : ITeamRepository
+public class EfTeamRepository : ITeamRepository
 {
     private readonly StarColoniesContext _context;
     
-    public TeamRepository(StarColoniesContext context)
+    public EfTeamRepository(StarColoniesContext context)
     {
         _context = context;
     }
-
-    public  void CreateTeam(Team team)
-    {
-        // faire validation de la création (envoi de message?)
-        _context.Add(team);
-        _context.SaveChanges();
-    }
+    
     public async Task CreateTeamAsync(Team team)
     {
         // faire validation de la création (envoi de message?)
@@ -31,12 +25,6 @@ public class TeamRepository : ITeamRepository
            
         await _context.Team.AddAsync(teamEntity);
         await _context.SaveChangesAsync();
-    }
-    
-    public void DeleteTeam(Team team)
-    { 
-        _context.Remove(team);
-        _context.SaveChanges();
     }
 
     public async Task DeleteTeamAsync(Team team)
@@ -142,15 +130,15 @@ public class TeamRepository : ITeamRepository
             Logo = teamEntity.Logo,
             MemberCount = teamEntity.Members.Count,
             AverageLevel = (int)avg,
-            IsSelectedForMissions = false, // TODO a modifier 
+            IsSelectedForMissions = false, // TODO : a modifier, je dirais même mieux : à implémenter 
         };
     }
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)
     {
         return new Colon
         {
-            Id = int.Parse(colonEntity.Id), // id en TKey, faudra peut etre revoir l'id de domains.colon
-            Name = colonEntity.NameColon,
+            Id = colonEntity.Id, // id en TKey, faudra peut etre revoir l'id de domains.colon -> oui j'ai revu
+            Name = colonEntity.UserName,
             Email = colonEntity.Email,
             Password = colonEntity.PasswordHash
         };
