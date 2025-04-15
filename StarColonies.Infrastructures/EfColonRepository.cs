@@ -222,6 +222,22 @@ public class EfColonRepository : IColonRepository
         await _context.SaveChangesAsync();
     }
 
+    
+    public async Task<IReadOnlyList<Profession>> GetAllProfessionsAsync()
+    {
+        var professions = await _context.Profession
+            .OrderBy(p => p.Name)
+            .Select(p => new Profession
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description
+            })
+            .ToListAsync();
+
+        return professions;
+    }
+
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)
     {
         return new Colon

@@ -12,4 +12,6 @@ public interface IColonRepository
     Task<IReadOnlyList<Bonus>> GetColonActiveBonusesAsync(string colonId);
     Task AddResourceToColonAsync(string colonId, int resourceId, int quantity);
     Task AddBonusToColonAsync(string colonId, int bonusId, TimeSpan duration);
+    Task<IReadOnlyList<Profession>> GetAllProfessionsAsync();
+
 }
