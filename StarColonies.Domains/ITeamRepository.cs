@@ -2,9 +2,9 @@
 
 public interface ITeamRepository
 {
-    void CreateTeam(Team team);
+    //void CreateTeam(Team team); -> utiliser async
     Task CreateTeamAsync(Team team);
-    void DeleteTeam(Team team);
+    //void DeleteTeam(Team team); -> utiliser async
     Task DeleteTeamAsync(Team team);
     void UpdateTeamInfo(Team team);
     Task<IReadOnlyList<Team>> GetAllTeams();
