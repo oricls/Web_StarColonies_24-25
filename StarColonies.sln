@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarColonies.Domains", "StarColonies.Domains\StarColonies.Domains.csproj", "{CDBC581E-5274-4D31-99C4-7A3EC27351B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarColonies.Infrastructures", "StarColonies.Infrastructures\StarColonies.Infrastructures.csproj", "{57E32A9E-7758-4CB2-A7A9-CD392CF93D58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarColonies.Web", "StarColonies.Web\StarColonies.Web.csproj", "{11DE2CAB-7B21-4AB5-87A8-5DCF94D0C9A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarColonies.Infrastructures.Tests", "StarColonies.Infrastructures.Tests\StarColonies.Infrastructures.Tests.csproj", "{6582E9AE-2BEF-4B7D-BF69-11BAB4F78EB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,9 @@ Global
 		{11DE2CAB-7B21-4AB5-87A8-5DCF94D0C9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11DE2CAB-7B21-4AB5-87A8-5DCF94D0C9A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11DE2CAB-7B21-4AB5-87A8-5DCF94D0C9A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6582E9AE-2BEF-4B7D-BF69-11BAB4F78EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6582E9AE-2BEF-4B7D-BF69-11BAB4F78EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6582E9AE-2BEF-4B7D-BF69-11BAB4F78EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6582E9AE-2BEF-4B7D-BF69-11BAB4F78EB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
