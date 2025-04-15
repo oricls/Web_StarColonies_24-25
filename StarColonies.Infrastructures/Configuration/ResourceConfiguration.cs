@@ -23,9 +23,10 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
             .HasForeignKey(r => r.IdTypeResource)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(r => r.Colons)
-            .WithMany(c => c.Resources)
-            .UsingEntity(j => j.ToTable("ColonResource"));
+        builder.HasMany(r => r.ColonResources)
+            .WithOne(cr => cr.Resource)
+            .HasForeignKey(cr => cr.ResourceId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         SeedResources(builder);
     }

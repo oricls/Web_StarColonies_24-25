@@ -18,5 +18,5 @@ public class Colon : IdentityUser
     
     public IList<Team> Teams { get; set; } = new List<Team>();
     public IList<ColonBonus> ColonBonuses { get; set; } = new List<ColonBonus>();
-    public IList<Resource> Resources { get; set; } = new List<Resource>();
+    public IList<ColonResource> ColonResources { get; set; } = new List<ColonResource>();
 }

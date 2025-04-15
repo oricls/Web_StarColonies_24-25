@@ -41,9 +41,10 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
             .HasForeignKey(cb => cb.ColonId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasMany(c => c.Resources)
-            .WithMany(r => r.Colons)
-            .UsingEntity(j => j.ToTable("ColonResource"));
+        builder.HasMany(c => c.ColonResources)
+            .WithOne(cr => cr.Colon)
+            .HasForeignKey(cr => cr.ColonId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         SeedColons(builder);
     }

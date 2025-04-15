@@ -16,8 +16,15 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<MissionBestiaire> MissionBestiaire { get; set; }
     public DbSet<ResultatMission> ResultatMission { get; set; }
     public DbSet<Team> Team { get; set; }
-    
     public DbSet<Colon> Colon { get; set; } // ? ou AspNetUsers ?
+    public DbSet<ColonResource> ColonResource { get; set; }
+    public DbSet<ColonBonus> ColonBonus { get; set; }
+    public DbSet<Bonus> Bonus { get; set; }
+    public DbSet<Resource> Resource { get; set; }
+    public DbSet<Profession> Profession { get; set; }
+    public DbSet<TypeResource> TypeResource { get; set; }
+    public DbSet<BonusResource> BonusResource { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
@@ -36,6 +43,7 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
         modelBuilder.ApplyConfiguration(new BonusResourceConfiguration());
         modelBuilder.ApplyConfiguration(new MissionBestiaireConfiguration());
         modelBuilder.ApplyConfiguration(new ColonBonusConfiguration());
+        modelBuilder.ApplyConfiguration(new ColonResourceConfiguration());
         
         // Configurations pour le système d'administration
         modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
