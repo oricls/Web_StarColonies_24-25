@@ -34,6 +34,7 @@ builder.Services.AddIdentity<Colon,IdentityRole>()
 
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
 builder.Services.AddScoped<ITeamRepository, EfTeamRepository>();
+builder.Services.AddScoped<IBonusRepository, EfBonusRepository>();
 
 var app = builder.Build();
 
