@@ -20,20 +20,26 @@ builder.Services.Configure<RouteOptions>(options =>
 });
 
 
-builder.Services
-.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login";
+    options.LogoutPath = "/Logout";
+});
 
 builder.Services.AddDbContext<StarColoniesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") 
                          ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
-builder.Services.AddIdentity<Colon,IdentityRole>()
+builder.Services.AddIdentity<Colon, IdentityRole>(options =>
+    {
+        options.Password.RequireDigit = false;
+    })
     .AddEntityFrameworkStores<StarColoniesContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
 builder.Services.AddScoped<ITeamRepository, EfTeamRepository>();
+builder.Services.AddScoped<IColonRepository, EfColonRepository>();
 
 var app = builder.Build();
 

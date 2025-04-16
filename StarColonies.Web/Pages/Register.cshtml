@@ -7,81 +7,150 @@
 }
 
 <div class="container d-flex flex-column align-items-center py-5">
-
-    <!-- Étapes d'inscription -->
-    <div class="registration-steps mb-4">
-        <!-- Étape 1 (active) -->
-        <div class="step-item active">
-            <div class="step-glow-wrapper">
-                <div class="step-circle">1</div>
-            </div>
-            <div class="step-label">Informations</div>
-        </div>
-
-        <!-- Ligne de connexion 1-2 -->
-        <div class="step-line"></div>
-
-        <!-- Étape 2 -->
-        <div class="step-item">
-            <div class="step-circle">2</div>
-            <div class="step-label">Avatar</div>
-        </div>
-
-        <!-- Ligne de connexion 2-3 -->
-        <div class="step-line"></div>
-
-        <!-- Étape 3 -->
-        <div class="step-item">
-            <div class="step-circle">3</div>
-            <div class="step-label">Profession</div>
-        </div>
-    </div>
-
-    <!-- Formulaire d'inscription -->
-    <div class="hall-of-fame w-100" style="max-width: 600px;">
+    <!-- Formulaire d'inscription unifié -->
+    <div class="hall-of-fame w-100" style="max-width: 650px;">
         <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">INSCRIPTION</h3>
 
-        <form method="post" class="p-4">
-            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+        <form method="post" class="p-4" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" asp-for="RegisterInput.Courriel">Courriel*</label>
-                    <input type="email" class="form-control login-input" asp-for="RegisterInput.Courriel" placeholder="mon@email.com" required />
-                    <span asp-validation-for="RegisterInput.Courriel" class="text-danger"></span>
+            <!-- Section 1: Informations de base -->
+            <div class="mb-5">
+                <h4 class="mb-4 text-accent">1. Informations personnelles</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="RegisterInput.Courriel">Courriel*</label>
+                        <input type="email" class="form-control login-input" asp-for="RegisterInput.Courriel" placeholder="mon@email.com" required />
+                        <span asp-validation-for="RegisterInput.Courriel" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="RegisterInput.NameOfColon">Nom de colon*</label>
+                        <input type="text" class="form-control login-input" asp-for="RegisterInput.NameOfColon" placeholder="Christophe (lol)" required />
+                        <span asp-validation-for="RegisterInput.NameOfColon" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" asp-for="RegisterInput.NameOfColon">Nom de colon*</label>
-                    <input type="text" class="form-control login-input" asp-for="RegisterInput.NameOfColon" placeholder="Christophe (lol)" required />
-                    <span asp-validation-for="RegisterInput.NameOfColon" class="text-danger"></span>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="RegisterInput.Password">Mot de passe*</label>
+                        <input type="password" class="form-control login-input" asp-for="RegisterInput.Password" placeholder="motdepasse123" required />
+                        <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="RegisterInput.ConfirmPassword">Confirmation du mot de passe*</label>
+                        <input type="password" class="form-control login-input" asp-for="RegisterInput.ConfirmPassword" placeholder="lamêmechose" required />
+                        <span asp-validation-for="RegisterInput.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RegisterInput.BirthDate">Date de naissance*</label>
+                    <input type="date" class="form-control login-input" asp-for="RegisterInput.BirthDate" required />
+                    <span asp-validation-for="RegisterInput.BirthDate" class="text-danger"></span>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" asp-for="RegisterInput.Password">Mot de passe*</label>
-                    <input type="password" class="form-control login-input" asp-for="RegisterInput.Password" placeholder="motdepasse123" required />
-                    <span asp-validation-for="RegisterInput.Password" class="text-danger"></span>
+            <!-- Section 2: Avatar -->
+            <div class="mb-5">
+                <h4 class="mb-4 text-accent">2. Avatar</h4>
+
+                <div class="row mb-4">
+                    <div class="col-md-5 d-flex align-items-center justify-content-center">
+                        <div id="avatarPreview" class="rounded overflow-hidden" style="width: 200px; height: 200px;">
+                            @if (!string.IsNullOrEmpty(Model.AvatarPreview))
+                            {
+                                <img src="@Model.AvatarPreview" class="w-100 h-100 object-fit-cover" alt="Avatar preview" />
+                            }
+                            else
+                            {
+                                <p class="text-center">Aperçu</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="avatar-grid">
+                            <div class="row g-2">
+                                <!-- Avatars par défaut -->
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <div class="col-4">
+                                        <div class="avatar-option rounded overflow-hidden @(Model.SelectedAvatarId == i.ToString() ? "selected" : "")" data-avatar="@i" style="aspect-ratio: 1;">
+                                            <img src="~/avatars/avatar_@(i).png" class="img-fluid w-100 h-100 object-fit-cover" alt="Avatar @i" />
+                                        </div>
+                                    </div>
+                                }
+                                <!-- Option d'importation -->
+                                <div class="col-4">
+                                    <label for="customAvatarInput" class="mb-0 w-100">
+                                        <div class="avatar-option import-avatar rounded overflow-hidden bg-accent d-flex flex-column align-items-center justify-content-center @(Model.SelectedAvatarId == "import" ? "selected" : "")" data-avatar="import" style="aspect-ratio: 1;">
+                                            <i class="fas fa-upload mb-1"></i>
+                                            <span class="small">Importer</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Champ de téléchargement caché -->
+                        <input type="file" id="customAvatarInput" class="d-none" asp-for="RegisterAvatarInput.CustomAvatar" accept="image/*" />
+                        <span asp-validation-for="RegisterAvatarInput.CustomAvatar" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" asp-for="RegisterInput.ConfirmPassword">Confirmation du mot de passe*</label>
-                    <input type="password" class="form-control login-input" asp-for="RegisterInput.ConfirmPassword" placeholder="lamêmechose" required />
-                    <span asp-validation-for="RegisterInput.ConfirmPassword" class="text-danger"></span>
-                </div>
+
+                <!-- Champ d'avatar par défaut caché -->
+                <input type="hidden" id="selectedAvatarId" asp-for="RegisterAvatarInput.SelectedAvatarId" value="@Model.SelectedAvatarId" />
             </div>
 
+            <!-- Section 3: Profession -->
             <div class="mb-4">
-                <label class="form-label" asp-for="RegisterInput.BirthDate">Date de naissance*</label>
-                <input type="date" class="form-control login-input" asp-for="RegisterInput.BirthDate" required />
-                <span asp-validation-for="RegisterInput.BirthDate" class="text-danger"></span>
+                <h4 class="mb-4 text-accent">3. Profession et compétences</h4>
+
+                <!-- Choix de profession -->
+                <div class="row g-3 mb-5">
+                    @foreach (var profession in Model.Profession)
+                    {
+                        <div class="col-md-3 col-6">
+                            <div class="profession-option" data-profession="@profession.Id">
+                                <div class="profession-card bg-dark rounded text-center p-3 border border-2 border-transparent @(Model.SelectedProfession == profession.Id ? "selected" : "")">
+                                    <div class="profession-icon d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
+                                        <img src="~/icons/icon_@(profession.Id).png" alt="@profession.Name" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                    </div>
+                                    <h5 class="font-barlow mb-1">@profession.Name</h5>
+                                    <p class="small text-muted mb-0">@profession.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Statistiques -->
+                <div class="stats-section mb-4">
+                    <!-- Force -->
+                    <div class="stat-item d-flex align-items-center mb-3">
+                        <label class="me-2 font-barlow fw-bold" asp-for="RegisterProfessionInput.Force" style="width: 120px;">FORCE</label>
+                        <div class="w-100">
+                            <input type="range" class="form-range" asp-for="RegisterProfessionInput.Force" id="forceRange" min="1" max="6" value="@(Model.Force > 0 ? Model.Force : 2)">
+                        </div>
+                        <span class="ms-2 stat-value" id="forceValue">@(Model.Force > 0 ? Model.Force : 2)</span>
+                    </div>
+
+                    <!-- Endurance -->
+                    <div class="stat-item d-flex align-items-center">
+                        <label class="me-2 font-barlow fw-bold" style="width: 120px;" asp-for="RegisterProfessionInput.Endurance">ENDURANCE</label>
+                        <div class="w-100">
+                            <input type="range" class="form-range" id="enduranceRange" asp-for="RegisterProfessionInput.Endurance" min="1" max="6" value="@(Model.Endurance > 0 ? Model.Endurance : 5)">
+                        </div>
+                        <span class="ms-2 stat-value" id="enduranceValue">@(Model.Endurance > 0 ? Model.Endurance : 5)</span>
+                    </div>
+                </div>
+
+                <input type="hidden" id="selectedProfession" asp-for="RegisterProfessionInput.SelectedProfession" value="@Model.SelectedProfession" />
             </div>
 
             <div class="d-flex justify-content-between mt-4">
-                @*
-                TODO: changer le href avec asp
-                *@
                 <a href="/" class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3">ANNULER</a>
-                <button type="submit" class="btn btn-purple font-barlow fw-bold w-50 mx-3 text-center">CONTINUER</button>
+                <button type="submit" class="btn btn-purple font-barlow fw-bold w-50 mx-3 text-center">S'INSCRIRE</button>
             </div>
 
             <div class="text-center mt-4">
@@ -91,90 +160,164 @@
     </div>
 </div>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Script pour la sélection d'avatar
+            const avatarOptions = document.querySelectorAll('.avatar-option:not(.import-avatar)');
+            const avatarPreview = document.getElementById('avatarPreview');
+            const selectedAvatarInput = document.getElementById('selectedAvatarId');
+            const customAvatarInput = document.getElementById('customAvatarInput');
+
+            avatarOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const avatarId = this.getAttribute('data-avatar');
+                    selectedAvatarInput.value = avatarId;
+                    customAvatarInput.value = '';
+                    const avatarImgSrc = `/avatars/avatar_${avatarId}.png`;
+                    avatarPreview.innerHTML = `<img src="${avatarImgSrc}" class="w-100 h-100 object-fit-cover" alt="Avatar ${avatarId}" />`;
+                });
+            });
+
+            customAvatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                    document.querySelector('.import-avatar').classList.add('selected');
+                    selectedAvatarInput.value = 'import';
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-100 h-100 object-fit-cover" alt="Avatar personnalisé" />`;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Script pour la sélection de profession
+            const professionOptions = document.querySelectorAll('.profession-option');
+            const selectedProfessionInput = document.getElementById('selectedProfession');
+            const forceRange = document.getElementById('forceRange');
+            const enduranceRange = document.getElementById('enduranceRange');
+            const forceValue = document.getElementById('forceValue');
+            const enduranceValue = document.getElementById('enduranceValue');
+            const totalPoints = 7;
+
+            professionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.profession-card').forEach(card => card.classList.remove('selected'));
+                    this.querySelector('.profession-card').classList.add('selected');
+                    selectedProfessionInput.value = this.getAttribute('data-profession');
+                });
+            });
+
+            if (forceRange && enduranceRange) {
+                forceRange.addEventListener('input', function() {
+                    const forceVal = parseInt(this.value);
+                    forceValue.textContent = forceVal.toString();
+                    const newEndurance = totalPoints - forceVal;
+                    if (newEndurance >= 1 && newEndurance <= 6) {
+                        enduranceRange.value = newEndurance;
+                        enduranceValue.textContent = newEndurance.toString();
+                    }
+                });
+
+                enduranceRange.addEventListener('input', function() {
+                    const enduranceVal = parseInt(this.value);
+                    enduranceValue.textContent = enduranceVal.toString();
+                    const newForce = totalPoints - enduranceVal;
+                    if (newForce >= 1 && newForce <= 6) {
+                        forceRange.value = newForce;
+                        forceValue.textContent = newForce.toString();
+                    }
+                });
+            }
+
+            // Sélectionner la première profession par défaut si aucune n'est sélectionnée
+            if (!selectedProfessionInput.value && professionOptions.length > 0) {
+                const defaultProfession = document.querySelector('.profession-option[data-profession="ingenieur"]');
+                if (defaultProfession) {
+                    defaultProfession.querySelector('.profession-card').classList.add('selected');
+                    selectedProfessionInput.value = "ingenieur";
+                }
+            }
+        });
+    </script>
+}
+
 @section Styles {
     <style>
-        /* Styles pour les étapes d'inscription avec effet de halo */
-        .registration-steps {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            width: 100%;
-            max-width: 500px;
+        /* Styles pour la sélection d'avatar */
+        .avatar-option {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
         }
 
-        .step-item {
+        .avatar-option:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--accent-color);
+        }
+
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+
+        .object-fit-cover {
+            object-fit: cover;
+        }
+
+        /* Styles pour la sélection de profession */
+        .profession-option {
+            cursor: pointer;
+            height: 15rem;
+        }
+
+        .profession-card {
+            transition: all 0.2s ease;
+            height: 100%;
+            min-height: 215px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 2;
         }
 
-        .step-glow-wrapper {
-            position: relative;
-            margin-bottom: 8px;
+        .profession-option:hover .profession-card {
+            transform: translateY(-5px);
         }
 
-        .step-item.active .step-glow-wrapper::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 5rem;
-            height: 5rem;
-            background: radial-gradient(
-                circle,
-                rgba(59, 130, 246, 0.6) 0%,
-                rgba(59, 130, 246, 0.3) 20%,
-                rgba(59, 130, 246, 0.1) 40%,
-                rgba(59, 130, 246, 0) 70%
-            );
-            z-index: -1;
-            border-radius: 50%;
-            filter: blur(10px);
+        .profession-card.selected {
+            border-color: var(--accent-color) !important;
+            background-color: var(--quaternary-bg-color) !important;
         }
 
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #25192f;
-            color: #a0a0a0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Styles pour les curseurs */
+        .form-range {
+            height: 8px;
+        }
+
+        .form-range::-webkit-slider-thumb {
+            background-color: var(--accent-color);
+        }
+
+        .form-range::-moz-range-thumb {
+            background-color: var(--accent-color);
+        }
+
+        .stat-value {
+            width: 30px;
+            text-align: center;
             font-weight: bold;
         }
 
-        .step-item.active .step-circle {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.85rem;
-            color: #a0a0a0;
-            text-align: center;
-        }
-
-        .step-item.active .step-label {
-            color: white;
-        }
-
-        .step-line {
-            height: 2px;
-            background-color: transparent;
-            width: 100%;
-            max-width: 120px;
-            margin: 0 5px;
-            position: relative;
-            top: -20px;
-            z-index: 1;
+        /* Style pour les sections */
+        .text-accent {
+            color: var(--accent-color);
         }
     </style>
-}
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
 }
