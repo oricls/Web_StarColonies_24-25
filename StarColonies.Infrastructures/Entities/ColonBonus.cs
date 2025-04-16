@@ -1,7 +1,7 @@
 namespace StarColonies.Infrastructures.Entities;
 
 /**
- * Correspond aux bonsu d'un colon
+ * Correspond aux bonus d'un colon
  */
 public class ColonBonus
 {

@@ -1,7 +1,7 @@
 namespace StarColonies.Infrastructures.Entities;
 
 /**
- * Correspond aux ressource àé changer pour obtenir un bonus en particulierr
+ * Correspond aux ressources àé changer pour obtenir un bonus en particulierr
  */
 public class BonusResource
 {

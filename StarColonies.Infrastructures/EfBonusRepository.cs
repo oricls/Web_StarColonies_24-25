@@ -11,7 +11,6 @@ public class EfBonusRepository : IBonusRepository
     {
         _context = context;
     }
-
     
     public async Task CreateBonusAsync(Bonus bonus)
     {
