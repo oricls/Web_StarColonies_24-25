@@ -140,7 +140,8 @@ public class EfTeamRepository : ITeamRepository
             Id = colonEntity.Id, // id en TKey, faudra peut etre revoir l'id de domains.colon -> oui j'ai revu
             Name = colonEntity.UserName,
             Email = colonEntity.Email,
-            Password = colonEntity.PasswordHash
+            Password = colonEntity.PasswordHash,
+            Avatar = colonEntity.Avatar
         };
     }
 }
