@@ -58,7 +58,7 @@ public class EfColonRepository : IColonRepository
         {
             UserName = colon.Name,
             Email = colon.Email,
-            DateBirth = String.Empty,
+            DateBirth = DateTime.Now,
             Endurance = 0,
             Strength = 0,
             Level = 1,

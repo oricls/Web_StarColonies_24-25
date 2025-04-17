@@ -2,7 +2,7 @@
 @model StarColonies.Web.Pages.Login
 @{
     ViewData["Title"] = "Connexion";
-    ViewData["HideNavButtons"] = true; // Variable pour indiquer au layout de ne pas afficher les boutons login/register
+    ViewData["HideNavButtons"] = true;
 }
 
 <div class="d-flex justify-content-center align-items-center py-5">
@@ -11,6 +11,8 @@
 
         <div class="p-4">
             <form method="post" class="mt-3">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class="mb-4">
                     <label asp-for="Input.Identifiant" class="form-label">Identifiant</label>
                     <input asp-for="Input.Identifiant" class="form-control login-input" placeholder="Mail ou nom du colon" />
@@ -23,6 +25,11 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
+                <div class="mb-3 form-check">
+                    <input asp-for="Input.RememberMe" class="form-check-input" />
+                    <label asp-for="Input.RememberMe" class="form-check-label">Se souvenir de moi</label>
+                </div>
+
                 <div class="mt-5">
                     <button type="submit" class="btn btn-login w-100 py-2">
                         SE CONNECTER
@@ -31,8 +38,8 @@
             </form>
 
             <div class="text-center mt-4">
-                <p class="mb-1">Vous n'avez pas de compte ? <a href="/Register" class="text-accent-link">Créer un compte</a></p>
-                <p><a href="/ForgotPassword" class="text-accent-link">Mot de passe oublié ?</a></p>
+                <p class="mb-1">Vous n'avez pas de compte ? <a asp-page="/Register" class="text-accent-link">Créer un compte</a></p>
+                <p><a asp-page="/ForgotPassword" class="text-accent-link">Mot de passe oublié ?</a></p>
             </div>
         </div>
     </div>
