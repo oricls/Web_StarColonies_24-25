@@ -1,5 +1,8 @@
 namespace StarColonies.Infrastructures.Entities;
 
+/**
+ * Correspond aux ressources àé changer pour obtenir un bonus en particulierr
+ */
 public class BonusResource
 {
     public int Id { get; set; }

@@ -65,7 +65,7 @@ public class EfTeamRepository : ITeamRepository
         }
         
         var teamEntity = _context.Team.SingleOrDefault(t => t.Id == team.Id);
-        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id.ToString()); // TODO id à revoir
+        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id); // TODO id à revoir
 
         if (teamEntity.Members.Contains(memberEntity))
         {
@@ -79,7 +79,7 @@ public class EfTeamRepository : ITeamRepository
     public void RemoveMemberToTeam(Team team, Colon newMember)
     {
         var teamEntity = _context.Team.SingleOrDefault(t => t.Id == team.Id);
-        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id.ToString());
+        var memberEntity = _context.Colon.SingleOrDefault(c => c.Id == newMember.Id);
         
         if (!teamEntity.Members.Contains(memberEntity))
         {
