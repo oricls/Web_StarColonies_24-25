@@ -19,6 +19,7 @@ public class EfBonusRepository : IBonusRepository
             Name = bonus.Name,
             Description = bonus.Description,
             DureeParDefaut = (bonus.DateExpiration - bonus.DateAchat).Duration(),
+            
             BonusResources = bonus.Resources.Select(r => new Entities.BonusResource {
                 ResourceId = r.ResourceId,
                 Quantite = (int)r.Multiplier
@@ -67,7 +68,34 @@ public class EfBonusRepository : IBonusRepository
         return bonusActifs.ToList();
     }
 
-    // TODO get ressouces necessaires pour avoir bonus
+    public async Task<TimeSpan> getDurationOfBonus(Bonus bonus)
+    {
+        var bonusEntity = await _context.Bonus.SingleOrDefaultAsync(b => b.Id == bonus.Id);
+        if (bonusEntity == null)
+        {
+            throw new NullReferenceException("Bonus inexistant");
+        }
+
+        return bonusEntity.DureeParDefaut;
+    }
+    
+    public async Task<IReadOnlyList<BonusResource>> GetBonusResources(Bonus bonus)
+    {
+        var bonusEntity = await _context.Bonus.Include(b => b.BonusResources)
+            .ThenInclude(br => br.Resource).SingleOrDefaultAsync(b => b.Id == bonus.Id);
+
+        if (bonusEntity == null)
+        {
+            throw new NullReferenceException("Bonus inexistant");
+        }
+
+        return bonusEntity.BonusResources.Select(br => new BonusResource
+        {
+            ResourceId = br.ResourceId,
+            ResourceName = br.Resource.Name,
+            Multiplier = br.Quantite
+        }).ToList();
+    }
 
     private Bonus MapBonusEntityToDomain(Entities.Bonus bonusEntity)
     {

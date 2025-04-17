@@ -7,6 +7,8 @@ public interface IBonusRepository
     Task<IReadOnlyList<Bonus>> GetAllBonusAsync();
     Task<Bonus> GetBonusByName(string name);
     Task<IReadOnlyList<Bonus>> GetActivesBonuses();
+
+    Task<TimeSpan> getDurationOfBonus(Bonus bonus);
     
-    
+    Task<IReadOnlyList<BonusResource>> GetBonusResources(Bonus bonus);
 }
