@@ -1,0 +1,68 @@
+@model StarColonies.Web.ViewModels.ColonCardVm
+
+@{
+    var cardClasses = "card bg-dark border-0 shadow mb-3";
+    var cardStyle = "";
+    
+    if (Model.IsCurrentUser) {
+        cardClasses += " no-select";
+        cardStyle = "border: 1px solid var(--accent-color) !important;";
+    } else if (Model.IsSelected) {
+        cardClasses += " selectable-card selected-colon";
+        cardStyle = "border: 1px solid var(--accent-color) !important; cursor: pointer;";
+    } else if (Model.IsSelectable) {
+        cardClasses += " selectable-card";
+        cardStyle = "cursor: pointer;";
+    }
+}
+
+<div class="@cardClasses" style="@cardStyle">
+    <div class="card-body">
+        @if (Model.IsSelectable)
+        {
+            <!-- Checkbox caché mais fonctionnel pour les membres sélectionnables -->
+            <input class="form-check-input colon-checkbox" type="checkbox"
+                   name="SelectedColonIds" value="@Model.Colon.Id"
+                   id="colon-@Model.Colon.Id"
+                   data-profession="@Model.Colon.ProfessionName"
+                   @(Model.IsSelected ? "checked" : "")
+                   style="position: absolute; opacity: 0;">
+        }
+        
+        <div class="d-flex align-items-center mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <img src="@Model.Colon.Avatar" alt="@Model.Colon.Name" class="img-fluid rounded-circle" style="width: 50px; height: 50px;">
+                <div class="d-flex flex-column">
+                    <p class="mb-0 fw-bold text-light">@(Model.IsCurrentUser ? Model.UserLabel : Model.Colon.Name)</p>
+                    <p class="mb-0 text-secondary">@Model.Colon.ProfessionName</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center px-3 py-2">
+            <div class="d-flex flex-column align-items-center">
+                <div class="stat-card d-flex align-items-center gap-2">
+                    <i class="fa fa-star" style="color: var(--accent-color)"></i>
+                    <span class="fw-bold text-light">@Model.Colon.Level</span>
+                </div>
+                <span class="text-secondary">Niveau</span>
+            </div>
+
+            <div class="d-flex flex-column align-items-center">
+                <div class="stat-card d-flex align-items-center gap-2">
+                    <i class="fa fa-heart" style="color: var(--accent-color)"></i>
+                    <span class="fw-bold text-light">@Model.Colon.Endurance</span>
+                </div>
+                <span class="text-secondary">Endurance</span>
+            </div>
+
+            <div class="d-flex flex-column align-items-center">
+                <div class="stat-card d-flex align-items-center gap-2">
+                    <i class="fa fa-hand-fist" style="color: var(--accent-color)"></i>
+                    <span class="fw-bold text-light">@Model.Colon.Strength</span>
+                </div>
+                <span class="text-secondary">Force</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,20 +31,26 @@ public class Dashboard : PageModel
     
     public async Task OnGetAsync()
     {
-        // Utiliser le colon par défaut avec ID "testUser"
-        var colon = await _colonRepository.GetColonByIdAsync("testUser");
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
-        if (colon != null)
+        if (!string.IsNullOrEmpty(userId))
         {
+            // Récupérer le colon associé à l'utilisateur connecté
+            var colon = await _colonRepository.GetColonByIdAsync(userId);
+
             // Récupérer toutes les équipes dont l'utilisateur est membre
             UserTeams = await _teamRepository.GetTeamByColon(colon);
-            
+                
             // Pour chaque équipe, récupérer ses membres
             foreach (var team in UserTeams)
             {
                 var members = await _teamRepository.GetMembersOfTeam(team);
                 TeamMembers[team.Id] = members;
             }
+        }
+        else
+        {
+            // Ici on redirigera vers l'index je pense.
         }
 
         // Récupérer toutes les missions

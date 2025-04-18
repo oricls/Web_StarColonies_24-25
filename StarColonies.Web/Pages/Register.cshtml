@@ -161,7 +161,7 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Script pour la sélection d'avatar
@@ -237,10 +237,10 @@
 
             // Sélectionner la première profession par défaut si aucune n'est sélectionnée
             if (!selectedProfessionInput.value && professionOptions.length > 0) {
-                const defaultProfession = document.querySelector('.profession-option[data-profession="ingenieur"]');
-                if (defaultProfession) {
-                    defaultProfession.querySelector('.profession-card').classList.add('selected');
-                    selectedProfessionInput.value = "ingenieur";
+                const firstProfession = professionOptions[0];
+                if (firstProfession) {
+                    firstProfession.querySelector('.profession-card').classList.add('selected');
+                    selectedProfessionInput.value = firstProfession.getAttribute('data-profession');
                 }
             }
         });

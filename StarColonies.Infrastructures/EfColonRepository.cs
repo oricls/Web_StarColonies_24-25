@@ -244,10 +244,15 @@ public class EfColonRepository : IColonRepository
         return new Colon
         {
             Id = colonEntity.Id,
-            Name = colonEntity.UserName,
-            Email = colonEntity.Email,
+            Name = colonEntity.UserName!,
+            Email = colonEntity.Email!,
             Password = string.Empty, // Ne jamais renvoyer le mot de passe, même hashé mouhahaha !
-            Avatar = colonEntity.Avatar // Ajout de l'avatar
+            Avatar = colonEntity.Avatar,
+            DateBirth = colonEntity.DateBirth,
+            Endurance = colonEntity.Endurance,
+            Strength = colonEntity.Strength,
+            Level = colonEntity.Level,
+            ProfessionName = colonEntity.Profession.Name
         };
     }
 }

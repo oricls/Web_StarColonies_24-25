@@ -1,146 +1,158 @@
 ﻿@page
-@model StarColonies.Web.Pages.CreateTeams
+@using StarColonies.Web.ViewModels
+@model StarColonies.Web.Pages.CreateTeamModel
 
 @{
-    ViewData["Title"] = "CreateTeam";
+    ViewData["Title"] = "Créer une équipe";
     ViewData["HideNavButtons"] = true;
 }
 
 <div class="container mt-4">
-    <section class="mb-5 d-flex flex-column gap-5">
-        <h2 class="font-barlow fw-bold text-center">Créer une nouvelle équipe</h2>
+    <h2 class="font-barlow fw-bold text-center mb-4">Créer une nouvelle équipe</h2>
 
-        <!-- Création d'une équipe-->
-        <div class="row g-5  justify-content-center align-items-center">
-            
-            <!-- détail equipe-->
+    <form method="post">
+        <div class="row g-5 justify-content-center ">
+            <!-- Détails de l'équipe -->
             <div class="col-lg-4 col-md-6">
-                <div class="card-body d-flex flex-column">
-                    <div class="d-flex justify-content-center align-items-center mb-3">
-                        <div class="teams-preview-logo me-3 d-flex align-items-center w-150">
-                            <img src="" alt="Team's logo">
-                        </div>
-                    </div>
-
-                    <form method="post">
-                        <div class="mb-4  d-flex flex-column gap-5">
-                            <div class="d-flex flex-column">
-                                <label class="form-label mb- text-secondary">Nom de l'équipe*</label>
-                                <input asp-for="TeamName" class="form-control login-input" placeholder="Ma super équipe"/>
+                <div style="top: 2rem;" class="sticky-top card bg-dark border-0 shadow">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-center align-items-center mb-4">
+                            <div class="teams-preview-logo me-3 d-flex align-items-center w-150">
+                                <img id="logoPreview" src="@Model.Logo" alt="Logo de l'équipe">
                             </div>
-                            <button type="submit" class="btn btn-purple w-100 mt-auto font-barlow fw-bold">CREER L'EQUIPE</button>
                         </div>
-                    </form>
-                    
-                    <div class="alert-message alert alert-danger d-inline-block mt-3 px-3 py-2" role="alert">
-                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                        Au moins un medecin, un soldat et un scientifique. 
-                        Maximum deux membres de la même profession
+
+                        
+                        <input type="hidden" asp-for="CreatorId" />
+                        <input type="hidden" asp-for="SelectedProfessions" id="selectedProfessions" />
+
+                        <div class="mb-4 d-flex flex-column gap-4">
+                            <div class="d-flex flex-column">
+                                <label asp-for="TeamName" class="form-label mb-2 text-secondary"></label>
+                                <input asp-for="TeamName" class="form-control login-input" placeholder="Ma super équipe" required />
+                                <span asp-validation-for="TeamName" class="text-danger"></span>
+                            </div>
+
+                            <div class="visually-hidden d-flex flex-column">
+                                <label asp-for="Logo" class="form-label mb-2 text-secondary">Logo de l'équipe</label>
+                                <div class="input-group">
+                                    <input asp-for="Logo" class="form-control login-input" />
+                                    <button type="button" class="btn btn-outline-secondary" id="selectLogoBtn">
+                                        <i class="fa fa-image"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="visually-hidden d-flex flex-column">
+                                <label asp-for="Baniere" class="form-label mb-2 text-secondary">Bannière de l'équipe</label>
+                                <div class="input-group">
+                                    <input asp-for="Baniere" class="form-control login-input" />
+                                    <button type="button" class="btn btn-outline-secondary" id="selectBannerBtn">
+                                        <i class="fa fa-image"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <img id="bannerPreview" src="@Model.Baniere" alt="Bannière de l'équipe" class="img-thumbnail" style="max-height: 80px; max-width: 100%;" />
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-purple w-100 mt-4 font-barlow fw-bold">CRÉER L'ÉQUIPE</button>
+                        </div>
+
+                        @if (!ModelState.IsValid)
+                        {
+                            <div class="alert-message alert alert-danger d-inline-block mt-3 px-3 py-2" role="alert">
+                                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                <span asp-validation-for="SelectedProfessions"></span>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
 
-            <!--membre equipe-->
+            <!-- Membres d'équipe -->
             <div class="col-lg-4 col-md-6 d-flex flex-column gap-3">
                 <div class="login-container hall-of-fame">
                     <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">MEMBRES</h3>
                 </div>
 
-                <div class="card bg-dark h-100 border-0 shadow">
-                    <div class="card-body d-flex flex-column">
-                        <div class="card-body d-flex flex-row">
+                <!-- Votre carte (utilisateur actuel) -->
+                @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(Model.CurrentUser, true))
 
-                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://picsum.photos/seed/team1/50" alt="User profil" class="img-fluid rounded-circle">
-                                    <div class="d-flex flex-column">
-                                        <p class="mb-0 fw-bold text-light">Vous</p>
-                                        <p class="mb-0 text-secondary">Soldat</p>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Autres membres sélectionnables -->
+                @foreach (var professionGroup in Model.ColonsByProfession)
+                {
+                    @if (professionGroup.Value.Count > 0)
+                    {
+                        <div class="mb-2">
+                            <h6 class="text-accent mb-2">@professionGroup.Key</h6>
+
+                            @foreach (var colon in professionGroup.Value)
+                            {
+                                var isSelected = Model.SelectedColonIds?.Contains(colon.Id) == true;
+                                @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(colon, false, isSelected))
+                            }
                         </div>
-
-                        <!-- utilisateur -->
-                        <div class="card-body d-flex justify-content-between align-items-center px-3 py-2">
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-star" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Niveau</span>
-                            </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-heart" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Endurence</span>
-                            </div>
-
-                            <div class="d-flex flex-column  align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-hand-fist" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Force</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <div class="card bg-dark h-100 border-0 shadow">
-                    <div class="card-body d-flex flex-column">
-                        <div class="card-body d-flex flex-row">
-
-                            <div class="d-flex justify-content-center align-items-center mb-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <img src="https://picsum.photos/seed/team1/50" alt="User profil" class="img-fluid rounded-circle">
-                                    <div class="d-flex flex-column">
-                                        <p class="mb-0 fw-bold text-light">Vous</p>
-                                        <p class="mb-0 text-secondary">Soldat</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- utilisateur -->
-                        <div class="card-body d-flex justify-content-between align-items-center px-3 py-2">
-                            <div class="d-flex flex-column  align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-star" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Niveau</span>
-                            </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-heart" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Endurence</span>
-                            </div>
-
-                            <div class="d-flex flex-column align-items-center">
-                                <div class="stat-card d-flex align-items-center gap-2">
-                                    <i class="fa fa-hand-fist" style="color: var(--accent-color)"></i>
-                                    <span class="fw-bold text-light">2</span>
-                                </div>
-                                <span class="text-secondary">Force</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <button class="btn btn-purple w-100 mt-auto font-barlow fw-bold">Ajouter un membre</button>
-
+                    }
+                }
             </div>
         </div>
-    </section>
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Mettre à jour la liste des professions lors de la sélection des colons
+            const checkboxes = document.querySelectorAll('.colon-checkbox');
+            const currentUserProfession = "@Model.CurrentUser.ProfessionName";
+
+            function updateSelectedProfessions() {
+                const professions = [currentUserProfession]; // Toujours inclure l'utilisateur actuel
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        professions.push(checkbox.dataset.profession);
+                        // Ajouter une bordure pour les cartes sélectionnées
+                        checkbox.closest('.card').style.border = "1px solid var(--accent-color) !important";
+                        checkbox.closest('.card').classList.add('selected-colon');
+                    } else {
+                        // Enlever le style pour les cartes désélectionnées
+                        checkbox.closest('.card').style.border = "";
+                        checkbox.closest('.card').classList.remove('selected-colon');
+                    }
+                });
+
+                document.getElementById('selectedProfessions').value = JSON.stringify(professions);
+            }
+
+            // Initialiser la valeur au chargement de la page
+            updateSelectedProfessions();
+
+            // Mettre à jour à chaque changement de sélection
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedProfessions();
+                });
+            });
+
+            // Cliquer sur la carte sélectionne aussi la case à cocher
+            document.querySelectorAll('.selectable-card').forEach(card => {
+                card.addEventListener('click', function(event) {
+                    // Ne pas déclencher si on clique sur la case à cocher directement
+                    if (!event.target.classList.contains('form-check-input')) {
+                        const checkbox = card.querySelector('.colon-checkbox');
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            // Déclencher l'événement change pour mettre à jour les professions
+                            const changeEvent = new Event('change');
+                            checkbox.dispatchEvent(changeEvent);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

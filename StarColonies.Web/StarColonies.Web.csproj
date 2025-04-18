@@ -21,4 +21,8 @@
       <ProjectReference Include="..\StarColonies.Infrastructures\StarColonies.Infrastructures.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Teams\create.cshtml" />
+    </ItemGroup>
+
 </Project>

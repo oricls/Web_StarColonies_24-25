@@ -29,6 +29,11 @@
         public async Task OnGetAsync()
         {
             Profession = await colonRepository.GetAllProfessionsAsync();
+            
+            if (Profession.Any())
+            {
+                SelectedProfession = Profession.First().Id;
+            }
         }
         
         public async Task<IActionResult> OnPostAsync()

@@ -1,44 +1,176 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
-using StarColonies.Infrastructures;
+using StarColonies.Web.Validators;
 
-namespace StarColonies.Web.Pages;
-
-public class CreateTeams : PageModel
+namespace StarColonies.Web.Pages
 {
-    private readonly ILogger<CreateTeams> _logger;
-    private readonly ITeamRepository _teamRepository;
-
-    public CreateTeams(ITeamRepository repository, ILogger<CreateTeams> logger)
+    [Authorize]
+    public class CreateTeamModel : PageModel
     {
-        _logger = logger;
-        _teamRepository = repository;
-    }
-    
+        private readonly ITeamRepository _teamRepository;
+        private readonly IColonRepository _colonRepository;
 
-    [BindProperty]
-    public string TeamName { get; set; } = string.Empty;
-    
-    public IActionResult OnPost()
-    {
-        // C'était pour vérifier si les requetes focntionnent bien
-        var team = new Team
+        public CreateTeamModel(ITeamRepository teamRepository, IColonRepository colonRepository)
         {
-            Name = TeamName,
-            Logo = "",
-        };
-        _teamRepository.CreateTeamAsync(team);
-        
+            _teamRepository = teamRepository;
+            _colonRepository = colonRepository;
+        }
 
-        var teamVerif = _teamRepository.GetTeamById(team.Id);
-        _logger.LogInformation($"Team {teamVerif.Id}");
+        // Propriétés liées au formulaire
+        [BindProperty]
+        [Required(ErrorMessage = "Le nom de l'équipe est obligatoire.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Le nom de l'équipe doit contenir entre 3 et 50 caractères.")]
+        [Display(Name = "Nom de l'équipe")]
+        public string TeamName { get; set; }
 
-        
-        _teamRepository.DeleteTeamAsync(team);
-        _logger.LogInformation($"Team est supprimée");
-        
-        return Page();
+        [Display(Name = "Logo de l'équipe")]
+        public string Logo { get; set; } = "/img/rocket.png";
+
+        [Display(Name = "Bannière de l'équipe")]
+        public string Baniere { get; set; } = "/img/rocket.png";
+
+        // ID du créateur (utilisateur connecté)
+        [BindProperty]
+        public string CreatorId { get; set; }
+
+        // Liste des colons sélectionnés pour faire partie de l'équipe
+        [BindProperty]
+        [Display(Name = "Membres de l'équipe")]
+        public List<string> SelectedColonIds { get; set; } = new List<string>();
+
+        // Nouveau champ pour la validation par professions
+        [BindProperty]
+        [ProfessionCompositionValidator(ErrorMessage = "La composition de l'équipe n'est pas valide.")]
+        public string SelectedProfessions { get; set; }
+
+        // Liste des colons disponibles - maintenu pour la rétrocompatibilité
+        public IEnumerable<Colon> AvailableColons { get; set; } = new List<Colon>();
+
+        // Informations sur l'utilisateur connecté
+        public Colon CurrentUser { get; set; }
+
+        // Regroupement des colons par profession
+        public Dictionary<string, List<Colon>> ColonsByProfession { get; set; } = new Dictionary<string, List<Colon>>();
+
+        // État du traitement
+        public string StatusMessage { get; set; }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            // Récupérer l'ID de l'utilisateur connecté
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToPage("/Login");
+            }
+
+            CreatorId = userId;
+
+            // Récupérer les informations de l'utilisateur connecté
+            CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
+
+            // Récupérer tous les colons disponibles pour former une équipe
+            var allColons = await _colonRepository.GetAllColonsAsync();
+            AvailableColons = allColons.Where(c => c.Id != userId); // Exclure l'utilisateur connecté
+
+            // Initialiser SelectedColonIds comme une liste vide
+            SelectedColonIds = new List<string>();
+
+            // Regrouper les colons par profession
+            ColonsByProfession = AvailableColons
+                .GroupBy(c => c.ProfessionName)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Initialiser le champ SelectedProfessions avec la profession du CurrentUser
+            if (CurrentUser != null)
+            {
+                SelectedProfessions = JsonSerializer.Serialize(new List<string> { CurrentUser.ProfessionName });
+            }
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            // Récupérer l'ID de l'utilisateur connecté
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            // Récupérer les informations de l'utilisateur connecté
+            CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
+            
+            // Vérifier que SelectedColonIds n'est pas null
+            if (SelectedColonIds == null)
+            {
+                SelectedColonIds = new List<string>();
+            }
+            
+            // Récupérer tous les colons disponibles
+            var allColons = await _colonRepository.GetAllColonsAsync();
+            AvailableColons = allColons.Where(c => c.Id != userId);
+            
+            // Regrouper les colons par profession
+            ColonsByProfession = AvailableColons
+                .GroupBy(c => c.ProfessionName)
+                .ToDictionary(g => g.Key, g => g.ToList());
+            
+            // Mettre à jour SelectedProfessions avec les valeurs actuelles
+            List<string> professions = new List<string>();
+            if (CurrentUser != null)
+            {
+                professions.Add(CurrentUser.ProfessionName);
+            }
+            
+            foreach (var colonId in SelectedColonIds)
+            {
+                var colon = AvailableColons.FirstOrDefault(c => c.Id == colonId);
+                if (colon != null)
+                {
+                    professions.Add(colon.ProfessionName);
+                }
+            }
+            
+            SelectedProfessions = JsonSerializer.Serialize(professions);
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            try
+            {
+                // Créer l'équipe
+                var team = new Team
+                {
+                    Name = TeamName,
+                    Logo = Logo ?? "/images/default-logo.png",
+                    Baniere = Baniere ?? "/images/default-banner.png",
+                    CreatorId = CreatorId
+                };
+
+                // Enregistrer l'équipe dans la base de données
+                await _teamRepository.CreateTeamAsync(team);
+
+                // Ajouter les membres à l'équipe (y compris le créateur)
+                await _teamRepository.AddMemberToTeamAsync(team.Id, CreatorId);
+                
+                foreach (var colonId in SelectedColonIds)
+                {
+                    await _teamRepository.AddMemberToTeamAsync(team.Id, colonId);
+                }
+
+                StatusMessage = "Équipe créée avec succès !";
+                return RedirectToPage("/Dashboard");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"Erreur lors de la création de l'équipe: {ex.Message}");
+                return Page();
+            }
+        }
     }
-
 }

@@ -14,17 +14,20 @@ public class EfTeamRepository : ITeamRepository
     
     public async Task CreateTeamAsync(Team team)
     {
-        // faire validation de la création (envoi de message?)
+        // Correction pour utiliser le CreatorId fourni au lieu de la valeur codée en dur
         var teamEntity = new Entities.Team
         {
             Name = team.Name,
             Logo = team.Logo,
-            Baniere = team.Logo, // TODO a corriger si besoin
-            IdColonCreator = "testUser" // pour tester un user de base en netUsers
+            Baniere = team.Baniere, // Utiliser la valeur bannière correcte
+            IdColonCreator = team.CreatorId // Utiliser l'ID du créateur fourni
         };
-           
+       
         await _context.Team.AddAsync(teamEntity);
         await _context.SaveChangesAsync();
+    
+        // Récupérer l'id
+        team.Id = teamEntity.Id;
     }
 
     public async Task DeleteTeamAsync(Team team)
@@ -119,6 +122,33 @@ public class EfTeamRepository : ITeamRepository
         return teamWithColon.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
+    // Ici on utilise l'id directement
+    public async Task AddMemberToTeamAsync(int teamId, string colonId)
+    {
+        // Vérifier si l'équipe existe
+        var teamEntity = await _context.Team
+            .Include(t => t.Members)
+            .SingleOrDefaultAsync(t => t.Id == teamId);
+            
+        if (teamEntity == null)
+            throw new KeyNotFoundException($"Équipe avec ID {teamId} non trouvée");
+            
+        // Vérifier si le colon existe
+        var colon = await _context.Users
+            .SingleOrDefaultAsync(c => c.Id == colonId);
+            
+        if (colon == null)
+            throw new KeyNotFoundException($"Colon avec ID {colonId} non trouvé");
+            
+        // Vérifier si le colon est déjà membre de l'équipe
+        if (teamEntity.Members.Any(c => c.Id == colonId))
+            return; // Le colon est déjà membre de l'équipe
+            
+        // Ajouter le colon à l'équipe
+        teamEntity.Members.Add(colon);
+        await _context.SaveChangesAsync();
+    }
+
     private Team MapTeamEntityToDomain(Entities.Team teamEntity)
     {
         var avg = (teamEntity.Members.Count == 0) ? 0:  teamEntity.Members.Average(m => m.Level);
@@ -129,7 +159,7 @@ public class EfTeamRepository : ITeamRepository
             Name = teamEntity.Name,
             Logo = teamEntity.Logo,
             MemberCount = teamEntity.Members.Count,
-            AverageLevel = (int)avg,
+            AverageLevel = (int)Math.Round(avg),
             IsSelectedForMissions = false, // TODO : a modifier, je dirais même mieux : à implémenter 
         };
     }
