@@ -10,7 +10,6 @@
     <!-- Section Mes ressources -->
     <section class="mb-5">
         <h2 class="font-barlow text-white fw-bold mb-4">Mes ressources :</h2>
-
         
         <div class="d-flex flex-wrap gap-3">
             @if (Model.ResourcesOfColon.Any())
@@ -47,7 +46,7 @@
                                         <h5 class="font-barlow text-white fw-bold mb-0">@bonus.Name</h5>
                                         <div class="d-flex align-items-center text-muted small">
                                             <i class="far fa-clock me-1"></i>
-                                            <span>@Model.BonusDuration</span>
+                                            <span>@Model.BonusDuration[bonus.Id]</span>
                                         </div>
                                     </div>
                                 </div>

@@ -12,13 +12,14 @@ public class Comptoir : PageModel
 
     public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
     public IReadOnlyList<Resource> ResourcesOfColon { get; private set; }
-    public TimeSpan BonusDuration { get; private set; }
+    public Dictionary<int, TimeSpan> BonusDuration { get; private set; }
     
     public Comptoir(IBonusRepository repositoryBonus, IColonRepository repositoryColon, ILogger<ConsultMission> logger)
     {
         _repositoryBonus = repositoryBonus;
         _repositoryColon = repositoryColon;
         _logger = logger;
+        BonusDuration = new Dictionary<int, TimeSpan>();
     }
 
     public async Task<IActionResult> OnGetAsync()
@@ -29,7 +30,7 @@ public class Comptoir : PageModel
             ResourcesOfColon = await _repositoryColon.GetColonResourcesAsync("testUser");
             foreach (var bonus in Bonuses)
             {
-                BonusDuration = await _repositoryBonus.getDurationOfBonus(bonus);
+                BonusDuration[bonus.Id] = await _repositoryBonus.getDurationOfBonus(bonus);
             }
             
         }
