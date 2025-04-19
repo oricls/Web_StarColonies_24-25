@@ -1,5 +1,8 @@
 ﻿namespace StarColonies.Infrastructures.Entities;
 
+/**
+ * Correspond à un bonus
+ */
 public class Bonus
 {
     public int Id { get; set; }
