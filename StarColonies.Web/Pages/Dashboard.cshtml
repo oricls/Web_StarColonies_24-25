@@ -11,101 +11,89 @@
         <h2 class="font-barlow text-white fw-bold mb-4">Mes équipes</h2>
 
         <div class="row g-4">
-            <!-- Équipe Alpha striker -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="me-3">
-                                <img src="https://picsum.photos/50/50" alt="Avatar Alpha striker" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                            </div>
-                            <div>
-                                <h5 class="font-barlow text-white fw-bold mb-0">Alpha striker</h5>
-                                <div class="d-flex align-items-center text-success small">
-                                    <span>Sélectionnée pour les missions</span>
+            @if (Model.UserTeams.Any())
+            {
+                @foreach (var team in Model.UserTeams)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        @if (!string.IsNullOrEmpty(team.Logo))
+                                        {
+                                            <img src="@team.Logo" alt="Avatar @team.Name"  style="width: 50px; height: 50px; object-fit: cover;">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                <span class="text-white fw-bold">@(team.Name.Substring(0, 1))</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <h5 class="font-barlow text-white fw-bold mb-0">@team.Name</h5>
+                                        @if (team.IsSelectedForMissions)
+                                        {
+                                            <div class="d-flex align-items-center text-success small">
+                                                <span>Sélectionnée pour les missions</span>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="bg-quaternary-bg-color p-3 rounded text-center">
+                                            <h3 class="font-barlow text-white mb-0">@team.MemberCount</h3>
+                                            <small class="text-white-50">Membres</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="bg-quaternary-bg-color p-3 rounded text-center">
+                                            <h3 class="font-barlow text-white mb-0">@team.AverageLevel</h3>
+                                            <small class="text-white-50">Niveau moyen</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p class="small text-white mb-3">Composition :</p>
+                                <div class="d-flex align-items-center mb-3">
+                                    @if (Model.TeamMembers.ContainsKey(team.Id))
+                                    {
+                                        var members = Model.TeamMembers[team.Id];
+                                        var displayMembers = members.Take(4).ToList();
+                                        
+                                        @foreach (var member in displayMembers)
+                                        {
+                                            <div class="me-2" style="width: 40px; height: 40px;">
+                                                @if (!string.IsNullOrEmpty(member.Avatar))
+                                                {
+                                                    <img src="@member.Avatar" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                }
+                                                else
+                                                {
+                                                    <img src="/avatars/avatar_5.png" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                }
+                                            </div>
+                                        }
+                                        
+                                        @if (members.Count > 4)
+                                        {
+                                            <div class="text-white fw-bold">+@(members.Count - 4)</div>
+                                        }
+                                    }
+                                </div>
+
+                                <a href="/teams/@team.Id" class="btn btn-purple w-100">CONSULTER</a>
                             </div>
                         </div>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <div class="bg-quaternary-bg-color p-3 rounded text-center">
-                                    <h3 class="font-barlow text-white mb-0">7</h3>
-                                    <small class="text-white-50">Membres</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="bg-quaternary-bg-color p-3 rounded text-center">
-                                    <h3 class="font-barlow text-white mb-0">2</h3>
-                                    <small class="text-white-50">Niveau moyen</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="small text-white mb-3">Composition :</p>
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-danger rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <span class="text-white fw-bold">S</span>
-                            </div>
-                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <span class="text-white fw-bold">M</span>
-                            </div>
-                            <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <span class="text-white fw-bold">O</span>
-                            </div>
-                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <span class="text-white fw-bold">M</span>
-                            </div>
-                            <div class="text-white fw-bold">+3</div>
-                        </div>
-
-                        <button class="btn btn-purple w-100">CONSULTER</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Équipe John doe's -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="me-3">
-                                <img src="https://picsum.photos/50/50?random=2" alt="Avatar John doe's" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                            </div>
-                            <div>
-                                <h5 class="font-barlow text-white fw-bold mb-0">John doe's</h5>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <div class="bg-quaternary-bg-color p-3 rounded text-center">
-                                    <h3 class="font-barlow text-white mb-0">1</h3>
-                                    <small class="text-white-50">Membres</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="bg-quaternary-bg-color p-3 rounded text-center">
-                                    <h3 class="font-barlow text-white mb-0">99</h3>
-                                    <small class="text-white-50">Niveau moyen</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="small text-white mb-3">Composition :</p>
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
-                                <span class="text-white fw-bold">S</span>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-purple w-100">CONSULTER</button>
-                    </div>
-                </div>
-            </div>
+                }
+            }
 
             <!-- Nouvelle équipe -->
-            <div class="col-md-6 col-lg-4">
+            <a asp-page="/createteams" class="col-md-6 text-decoration-none col-lg-4">
                 <div class="card h-100 rounded-3 shadow d-flex align-items-center justify-content-center" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
                     <div class="text-center p-5">
                         <div class="rounded-circle border border-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
@@ -114,7 +102,7 @@
                         <h5 class="font-barlow text-white fw-bold">Nouvelle équipe</h5>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -122,7 +110,7 @@
     <section class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="font-barlow text-white fw-bold mb-0">Missions suggérées</h2>
-            <a href="#" class="btn btn-purple">Voir tous</a>
+            <a href="/Missions" class="btn btn-purple">Voir tous</a>
         </div>
 
         <div class="row g-4">
@@ -167,11 +155,9 @@
 
 @section Styles {
     <style>
-
         /* Style pour l'arrière-plan quaternaire (comme dans la page Comptoir) */
         .bg-quaternary-bg-color {
             background-color: var(--quaternary-bg-color);
         }
-        
     </style>
 }

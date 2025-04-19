@@ -13,4 +13,5 @@ public interface ITeamRepository
     Task<Team> GetTeamById(int id);
     Task<IReadOnlyList<Colon>> GetMembersOfTeam(Team team);
     Task<IReadOnlyList<Team>> GetTeamByColon(Colon colon);
+    Task AddMemberToTeamAsync(int teamId, string userId);
 }

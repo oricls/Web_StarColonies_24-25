@@ -176,6 +176,8 @@ public class EfTeamRepositoryTests
         {
             Name = "Nouvelle Équipe",
             Logo = "nouvelle-equipe.png",
+            Baniere = "deuxieme-equipe-banner.png",
+            CreatorId = _testColonId,
             MemberCount = 0,
             AverageLevel = 0,
             IsSelectedForMissions = false
@@ -191,32 +193,6 @@ public class EfTeamRepositoryTests
         var retrievedTeam = _context.Team.FirstOrDefault(t => t.Name == "Nouvelle Équipe");
         Assert.IsNotNull(retrievedTeam);
         Assert.AreEqual("nouvelle-equipe.png", retrievedTeam.Logo);
-    }
-    
-    [TestMethod]
-    public void CreateTeam_ShouldAddNewTeam()
-    {
-        // Arrange
-        var countBefore = _context.Team.Count();
-        var newTeam = new Team
-        {
-            Name = "Deuxième Équipe",
-            Logo = "deuxieme-equipe.png",
-            MemberCount = 0,
-            AverageLevel = 0,
-            IsSelectedForMissions = false
-        };
-        
-        // Act
-        _repository.CreateTeamAsync(newTeam);
-        
-        // Assert
-        var countAfter = _context.Team.Count();
-        Assert.AreEqual(countBefore + 1, countAfter);
-        
-        var retrievedTeam = _context.Team.FirstOrDefault(t => t.Name == "Deuxième Équipe");
-        Assert.IsNotNull(retrievedTeam);
-        Assert.AreEqual("deuxieme-equipe.png", retrievedTeam.Logo);
     }
 
     #endregion

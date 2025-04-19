@@ -58,11 +58,11 @@ public class EfColonRepository : IColonRepository
         {
             UserName = colon.Name,
             Email = colon.Email,
-            DateBirth = String.Empty,
+            DateBirth = DateTime.Now,
             Endurance = 0,
             Strength = 0,
             Level = 1,
-            Avatar = String.Empty,
+            Avatar = colon.Avatar, // Utilisation de l'avatar fourni par le domaine
             IdProfession = 1 // Valeur par défaut, à ajuster selon votre système
         };
 
@@ -85,6 +85,7 @@ public class EfColonRepository : IColonRepository
 
         colonEntity.UserName = colon.Name;
         colonEntity.Email = colon.Email;
+        colonEntity.Avatar = colon.Avatar; // Mise à jour de l'avatar
         // Ne pas mettre à jour le mot de passe ici, utiliser UserManager.ChangePasswordAsync
 
         await _context.SaveChangesAsync();
@@ -243,9 +244,15 @@ public class EfColonRepository : IColonRepository
         return new Colon
         {
             Id = colonEntity.Id,
-            Name = colonEntity.UserName,
-            Email = colonEntity.Email,
-            Password = string.Empty // Ne jamais renvoyer le mot de passe, même hashé mouhahaha !
+            Name = colonEntity.UserName!,
+            Email = colonEntity.Email!,
+            Password = string.Empty, // Ne jamais renvoyer le mot de passe, même hashé mouhahaha !
+            Avatar = colonEntity.Avatar,
+            DateBirth = colonEntity.DateBirth,
+            Endurance = colonEntity.Endurance,
+            Strength = colonEntity.Strength,
+            Level = colonEntity.Level,
+            ProfessionName = colonEntity.Profession.Name
         };
     }
 }

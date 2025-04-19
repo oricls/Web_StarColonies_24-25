@@ -70,7 +70,7 @@ public class EfColonRepositoryTests
             UserName = "Test Colon",
             Email = "test@colon.com",
             PasswordHash = "HashedPassword",
-            DateBirth = "2000-01-01",
+            DateBirth = new DateTime(2000, 1, 1),
             Endurance = 15,
             Strength = 20,
             Level = 10,
