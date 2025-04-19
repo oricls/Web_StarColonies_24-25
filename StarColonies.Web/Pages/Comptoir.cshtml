@@ -11,46 +11,20 @@
     <section class="mb-5">
         <h2 class="font-barlow text-white fw-bold mb-4">Mes ressources :</h2>
 
+        
         <div class="d-flex flex-wrap gap-3">
-            <!-- Ressource 1 (Marteau/Outil) -->
-            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-hammer text-info"></i>
-                </div>
-                <span class="text-white font-barlow fw-bold">x 10</span>
-            </div>
-
-            <!-- Ressource 2 (Ampoule) -->
-            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-lightbulb text-info"></i>
-                </div>
-                <span class="text-white font-barlow fw-bold">x 10</span>
-            </div>
-
-            <!-- Ressource 3 (Pomme) -->
-            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-apple-alt text-info"></i>
-                </div>
-                <span class="text-white font-barlow fw-bold">x 10</span>
-            </div>
-
-            <!-- Ressource 4 (Pistolet) -->
-            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-gun text-info"></i>
-                </div>
-                <span class="text-white font-barlow fw-bold">x 10</span>
-            </div>
-
-            <!-- Ressource 5 (Cerveau) -->
-            <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                    <i class="fas fa-brain text-info"></i>
-                </div>
-                <span class="text-white font-barlow fw-bold">x 10</span>
-            </div>
+            @if (Model.ResourcesOfColon.Any())
+            {
+                foreach (var resource in Model.ResourcesOfColon)
+                {
+                    <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="fas fa-hammer text-info"></i>
+                        </div>
+                        <span class="text-white font-barlow fw-bold">x @resource.Quantity</span>
+                    </div>
+                }
+            }
         </div>
     </section>
 
@@ -62,41 +36,40 @@
             @if (Model.Bonuses.Any()) {
                 foreach (var bonus in Model.Bonuses)
                 {
-                <!-- Potion de force -->
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="me-3">
-                                    <img src="~/icons/icon_88.png" alt=@bonus.Name class="rounded-3" style="width: 50px; height: 50px;"/>
-                                </div>
-                                <div>
-                                    <h5 class="font-barlow text-white fw-bold mb-0">@bonus.Name</h5>
-                                    <div class="d-flex align-items-center text-muted small">
-                                        <i class="far fa-clock me-1"></i>
-                                        <span>@Model.BonusDuration</span>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <img src="~/icons/icon_88.png" alt="@bonus.Name" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-barlow text-white fw-bold mb-0">@bonus.Name</h5>
+                                        <div class="d-flex align-items-center text-muted small">
+                                            <i class="far fa-clock me-1"></i>
+                                            <span>@Model.BonusDuration</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <p class="small text-white mb-3">@bonus.Description</p>
+                                <p class="small text-white mb-3">@bonus.Description</p>
 
-                            <!-- Coût en ressources -->
-                            <div class="d-flex mb-3">
-                                @foreach (var ressource in @bonus.Resources)
-                                { 
-                                    <div class="me-3 d-flex align-items-center">
-                                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
-                                            <i class="fas fa-hammer text-info small"></i>
+                                <!-- Coût en ressources -->
+                                <div class="d-flex mb-3">
+                                    @foreach (var ressource in @bonus.Resources)
+                                    {
+                                        <div class="me-3 d-flex align-items-center">
+                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
+                                                <i class="fas fa-hammer text-info small"></i>
+                                            </div>
+                                            <span class="text-white">x @ressource.Multiplier</span>
                                         </div>
-                                        <span class="text-white">x @ressource.Multiplier</span>
-                                    </div> 
-                                }
+                                    }
+                                </div>
+                                <button class="btn btn-purple w-100">ÉCHANGER</button>
                             </div>
-                            <button class="btn btn-purple w-100">ÉCHANGER</button>
                         </div>
                     </div>
-                </div>
                 }
             }
             else

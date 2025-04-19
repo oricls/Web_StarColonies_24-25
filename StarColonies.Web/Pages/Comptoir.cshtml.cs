@@ -7,17 +7,17 @@ namespace StarColonies.Web.Pages;
 public class Comptoir : PageModel
 {
     private readonly ILogger<ConsultMission> _logger;
-    private readonly IBonusRepository _repository;
+    private readonly IBonusRepository _repositoryBonus;
+    private readonly IColonRepository _repositoryColon;
 
     public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
-    //public IReadOnlyList<BonusResource> BonusesResources { get; private set; } -> plus utilsie si on fait une itération dans comptoir.html
+    public IReadOnlyList<Resource> ResourcesOfColon { get; private set; }
     public TimeSpan BonusDuration { get; private set; }
     
-    
-
-    public Comptoir(IBonusRepository repository, ILogger<ConsultMission> logger)
+    public Comptoir(IBonusRepository repositoryBonus, IColonRepository repositoryColon, ILogger<ConsultMission> logger)
     {
-        _repository = repository;
+        _repositoryBonus = repositoryBonus;
+        _repositoryColon = repositoryColon;
         _logger = logger;
     }
 
@@ -25,15 +25,13 @@ public class Comptoir : PageModel
     {
         try
         {
-            Bonuses = await _repository.GetAllBonusAsync();
+            Bonuses = await _repositoryBonus.GetAllBonusAsync();
+            ResourcesOfColon = await _repositoryColon.GetColonResourcesAsync("testUser");
             foreach (var bonus in Bonuses)
             {
-                //BonusesResources = await _repository.GetBonusResources(bonus);
-                BonusDuration = await _repository.getDurationOfBonus(bonus);
-
+                BonusDuration = await _repositoryBonus.getDurationOfBonus(bonus);
             }
-
-           
+            
         }
         catch (Exception ex)
         {
