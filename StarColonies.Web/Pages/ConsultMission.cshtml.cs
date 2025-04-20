@@ -24,6 +24,8 @@ public class ConsultMission(
     public IReadOnlyList<Team> UserTeams { get; private set; } = new List<Team>();
     public IReadOnlyList<Bestiaire> Bestiaires { get; private set; } = new List<Bestiaire>();
     
+    public IReadOnlyList<Resource> Resources { get; private set; } = new List<Resource>();
+    
     [BindProperty]
     [Required(ErrorMessage = "Sélectionnez une équipe")]
     [Display(Name = "Équipe")]
@@ -50,6 +52,9 @@ public class ConsultMission(
             // Récupérer les teams auxquelles l'utilisateur est associé
             var colon = new Domains.Colon() { Id = userManager.GetUserId(User) };
             UserTeams = await teamRepository.GetTeamByColon(colon);
+            
+            // Récupérer les ressources disponibles
+            Resources = await missionRepository.GetAllResources();
             
             return Page();
         }
@@ -95,18 +100,9 @@ public class ConsultMission(
             var result = missionEngine.ExecuteMission(Mission, team);
             
             missionRepository.SaveMissionResult(result);
-            
-            // Multiplicateur de 1.5 à 2.5
-            if (result.IsSuccess)
-            {
-                // TODO: Augmenter le niveau de chaque colon de l'équipe
-                teamRepository.LevelUpTeam(team);
-                
-                // Monter les colons de niveau, gagner des ressources...
-                return RedirectToPage("/MissionSucessful", new { slug });
-            }
 
-            return RedirectToPage("/ResultMissionFailed", new { slug });
+            // 3. En cas d'échec de la mission, on redirige vers la page de mission échouée
+            return !result.IsSuccess ? RedirectToPage("/ResultMissionFailed", new { slug }) : RedirectToPage("/MissionSucessful", new { idMission = Mission.Id, teamId = team.Id });
         }
         catch (Exception ex)
         {

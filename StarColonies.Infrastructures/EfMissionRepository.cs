@@ -235,6 +235,21 @@ public class EfMissionRepository : IMissionRepository
         _context.SaveChanges();
     }
 
+    public async Task<IReadOnlyList<Resource>> GetAllResources()
+    {
+        var resourceEntities = await _context.Resource
+            .Include(r => r.TypeResource) // Inclure le type de ressource
+            .ToListAsync();
+        return resourceEntities.Select(resourceEntity => new Resource
+        {
+            Id = resourceEntity.Id,
+            Name = resourceEntity.Name,
+            Description = resourceEntity.Description,
+            IconUrl = resourceEntity.TypeResource.Icon,
+            TypeName = resourceEntity.TypeResource.Name, // Ajouter le nom du type
+        }).ToList();
+    }
+
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
     private Mission MapMissionEntityToDomain(Entities.Mission missionEntity)
     {
