@@ -37,6 +37,7 @@ builder.Services.AddIdentity<Colon, IdentityRole>(options =>
     .AddEntityFrameworkStores<StarColoniesContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<IColonRepository, EfColonRepository>();
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
 builder.Services.AddScoped<ITeamRepository, EfTeamRepository>();
 builder.Services.AddScoped<IColonRepository, EfColonRepository>();

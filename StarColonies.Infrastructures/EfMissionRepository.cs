@@ -37,7 +37,7 @@ public class EfMissionRepository : IMissionRepository
         var missionEntity = _context.Mission
             .Include(m => m.MissionBestiaires)
                 .ThenInclude(mb => mb.Bestiaire)
-                    .ThenInclude(b => b!.TypeBestiaire)
+                    .ThenInclude(b => b.TypeBestiaire)
             .SingleOrDefault(m => m.Id == missionId);
 
         if (missionEntity == null)

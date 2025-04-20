@@ -41,7 +41,7 @@ namespace StarColonies.Web.Pages
         // Liste des colons sélectionnés pour faire partie de l'équipe
         [BindProperty]
         [Display(Name = "Membres de l'équipe")]
-        public List<string> SelectedColonIds { get; set; } = new List<string>();
+        public List<string> SelectedColonIds { get; set; } = [];
 
         // Nouveau champ pour la validation par professions
         [BindProperty]
@@ -55,10 +55,7 @@ namespace StarColonies.Web.Pages
         public Colon CurrentUser { get; set; }
 
         // Regroupement des colons par profession
-        public Dictionary<string, List<Colon>> ColonsByProfession { get; set; } = new Dictionary<string, List<Colon>>();
-
-        // État du traitement
-        public string StatusMessage { get; set; }
+        public Dictionary<string, List<Colon>> ColonsByProfession { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -87,10 +84,7 @@ namespace StarColonies.Web.Pages
                 .ToDictionary(g => g.Key, g => g.ToList());
 
             // Initialiser le champ SelectedProfessions avec la profession du CurrentUser
-            if (CurrentUser != null)
-            {
-                SelectedProfessions = JsonSerializer.Serialize(new List<string> { CurrentUser.ProfessionName });
-            }
+            SelectedProfessions = JsonSerializer.Serialize(new List<string> { CurrentUser.ProfessionName });
 
             return Page();
         }
@@ -101,39 +95,29 @@ namespace StarColonies.Web.Pages
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
             // Récupérer les informations de l'utilisateur connecté
-            CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
-            
-            // Vérifier que SelectedColonIds n'est pas null
-            if (SelectedColonIds == null)
+            if (userId != null)
             {
-                SelectedColonIds = new List<string>();
+                CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
+
+                // Récupérer tous les colons disponibles
+                var allColons = await _colonRepository.GetAllColonsAsync();
+                AvailableColons = allColons.Where(c => c.Id != userId);
             }
-            
-            // Récupérer tous les colons disponibles
-            var allColons = await _colonRepository.GetAllColonsAsync();
-            AvailableColons = allColons.Where(c => c.Id != userId);
-            
+
             // Regrouper les colons par profession
-            ColonsByProfession = AvailableColons
+            var availableColons = AvailableColons.ToList();
+            ColonsByProfession = availableColons
                 .GroupBy(c => c.ProfessionName)
                 .ToDictionary(g => g.Key, g => g.ToList());
             
             // Mettre à jour SelectedProfessions avec les valeurs actuelles
-            List<string> professions = new List<string>();
-            if (CurrentUser != null)
-            {
-                professions.Add(CurrentUser.ProfessionName);
-            }
-            
-            foreach (var colonId in SelectedColonIds)
-            {
-                var colon = AvailableColons.FirstOrDefault(c => c.Id == colonId);
-                if (colon != null)
-                {
-                    professions.Add(colon.ProfessionName);
-                }
-            }
-            
+            var professions = new List<string> { CurrentUser.ProfessionName };
+            professions.AddRange(SelectedColonIds
+                .Select(colonId => availableColons
+                    .FirstOrDefault(c => c.Id == colonId))
+                .OfType<Colon>()
+                .Select(colon => colon.ProfessionName));
+
             SelectedProfessions = JsonSerializer.Serialize(professions);
 
             if (!ModelState.IsValid)
@@ -147,8 +131,8 @@ namespace StarColonies.Web.Pages
                 var team = new Team
                 {
                     Name = TeamName,
-                    Logo = Logo ?? "/images/default-logo.png",
-                    Baniere = Baniere ?? "/images/default-banner.png",
+                    Logo = Logo,
+                    Baniere = Baniere,
                     CreatorId = CreatorId
                 };
 
@@ -163,7 +147,6 @@ namespace StarColonies.Web.Pages
                     await _teamRepository.AddMemberToTeamAsync(team.Id, colonId);
                 }
 
-                StatusMessage = "Équipe créée avec succès !";
                 return RedirectToPage("/Dashboard");
             }
             catch (Exception ex)
