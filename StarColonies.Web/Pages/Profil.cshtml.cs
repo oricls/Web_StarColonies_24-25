@@ -26,7 +26,7 @@ public class Profil : PageModel
         } 
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Comptoir");
+            _logger.LogError(ex, "Profil");
         }
         return Page();
         
