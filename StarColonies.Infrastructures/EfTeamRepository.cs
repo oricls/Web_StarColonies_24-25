@@ -178,8 +178,8 @@ public class EfTeamRepository : ITeamRepository
             MemberCount = teamEntity.Members.Count,
             AverageLevel = (int)Math.Round(avg),
             IsSelectedForMissions = false, // TODO : a modifier, je dirais même mieux : à implémenter 
-            TotalStrength = teamEntity.Members.Sum(m => m.Strength),
-            TotalEndurance = teamEntity.Members.Sum(m => m.Endurance),
+            TotalStrength = teamEntity.Members.Sum(m => m.Strength + m.Level),
+            TotalEndurance = teamEntity.Members.Sum(m => m.Endurance + m.Level),
             Baniere = teamEntity.Baniere,
         };
     }
