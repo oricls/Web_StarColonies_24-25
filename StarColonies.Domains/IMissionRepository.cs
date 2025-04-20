@@ -15,4 +15,5 @@ public interface IMissionRepository
     void SaveOrUpdateMission(Mission mission);
     Task SaveOrUpdateMissionAsync(Mission mission);
     void SaveMissionResult(ResultatMission missionResult);
+    Task<IReadOnlyList<Resource>> GetAllResources();
 }

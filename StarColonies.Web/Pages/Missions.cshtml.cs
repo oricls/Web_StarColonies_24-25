@@ -7,7 +7,7 @@ namespace StarColonies.Web.Pages;
 
 public class Missions(IMissionRepository missionRepository) : PageModel
 {
-    public List<MissionCardVm> SuggestedMissions { get; set; } = [];
+    public List<MissionCardVm> AllMissions { get; set; } = [];
 
     public async Task OnGetAsync()
     {
@@ -20,7 +20,7 @@ public class Missions(IMissionRepository missionRepository) : PageModel
             missionsList.Add(await ToMissionCardVm(mission));
         }
         
-        SuggestedMissions = missionsList;
+        AllMissions = missionsList;
     }
     private async Task<MissionCardVm> ToMissionCardVm(Mission mission)
     {
