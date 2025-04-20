@@ -3,8 +3,9 @@
 public class ResultatMission
 {
     public int Id { get; set; }
-    public int Issue {get; set;}
-    public string Date { get; set; } = String.Empty;
+    public double IssueEndurance {get; set;}
+    public double IssueStrength {get; set;}
+    public DateTime Date { get; set; } = DateTime.Now;
     
     // clés étrangères
     public int IdMission { get; set; }

@@ -1,0 +1,45 @@
+@page
+@model StarColonies.Web.Pages.Missions
+
+@{
+    ViewData["Title"] = "Missions";
+    ViewData["ActivePage"] = "Missions";
+}
+
+<div class="row g-4">
+    @foreach (var mission in Model.SuggestedMissions)
+    {
+        <div class="col-md-6">
+            <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h3 class="font-barlow text-white fw-bold mb-0">@mission.Name</h3>
+                        <div class="bg-primary px-3 py-1 rounded">
+                            <span class="text-white fw-bold">Nv. @mission.Level</span>
+                        </div>
+                    </div>
+
+                    <p class="h6 opacity-75 text-white mb-4">@mission.Description</p>
+
+                    <div class="mb-4">
+                        <h4 class="font-barlow text-white mb-2">Monstres présents :</h4>
+                        <div class="d-flex">
+                            @foreach (var bestiaire in mission.BestiaireIcons)
+                            {
+                                <div class="me-2">
+                                    <img class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                         style="width: 40px; height: 40px; object-fit: cover;"
+                                         src="@bestiaire.Avatar"
+                                         alt="@bestiaire.Name"
+                                         title="@bestiaire.Name (@bestiaire.TypeName)" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <a href="@mission.Target" class="btn btn-warning w-100 text-dark fw-bold mt-auto">CONSULTER LA MISSION</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

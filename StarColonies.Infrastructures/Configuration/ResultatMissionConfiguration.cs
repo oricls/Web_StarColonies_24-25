@@ -10,7 +10,10 @@ public class ResultatMissionConfiguration : IEntityTypeConfiguration<ResultatMis
     {
         builder.HasKey(rm => rm.Id);
 
-        builder.Property(rm => rm.Issue)
+        builder.Property(rm => rm.IssueStrength)
+            .IsRequired();
+        
+        builder.Property(rm => rm.IssueEndurance)
             .IsRequired();
 
         builder.Property(rm => rm.Date)

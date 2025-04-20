@@ -149,6 +149,23 @@ public class EfTeamRepository : ITeamRepository
         await _context.SaveChangesAsync();
     }
 
+    public void LevelUpTeam(Team team)
+    {
+        var teamEntity = _context.Team.Include(t => t.Members).FirstOrDefault(t => t.Id == team.Id);
+        
+        if (teamEntity == null)
+        {
+            throw new NullReferenceException("Team inexistante");
+        }
+
+        foreach (var member in teamEntity.Members)
+        {
+            member.Level++;
+        }
+        
+        _context.SaveChanges();
+    }
+
     private Team MapTeamEntityToDomain(Entities.Team teamEntity)
     {
         var avg = (teamEntity.Members.Count == 0) ? 0:  teamEntity.Members.Average(m => m.Level);
@@ -161,6 +178,9 @@ public class EfTeamRepository : ITeamRepository
             MemberCount = teamEntity.Members.Count,
             AverageLevel = (int)Math.Round(avg),
             IsSelectedForMissions = false, // TODO : a modifier, je dirais même mieux : à implémenter 
+            TotalStrength = teamEntity.Members.Sum(m => m.Strength),
+            TotalEndurance = teamEntity.Members.Sum(m => m.Endurance),
+            Baniere = teamEntity.Baniere,
         };
     }
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)
