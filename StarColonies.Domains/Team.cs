@@ -77,7 +77,7 @@ public class Team
         try
         {
             var professions = JsonSerializer.Deserialize<List<string>>(professionsJson);
-            return ValidateTeamProfessions(professions!);
+            return ValidateTeamProfessions(professions);
         }
         catch (Exception ex)
         {

@@ -9,8 +9,8 @@ public class ResultatMission
     
     // clés étrangères
     public int IdMission { get; set; }
-    public Mission Mission { get; set; } = null!;
+    public Mission Mission { get; set; } = null;
     
     public int IdTeam { get; set; }
-    public Team Team { get; set; } = null!;
+    public Team Team { get; set; } = null;
 }
