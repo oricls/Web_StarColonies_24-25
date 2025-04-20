@@ -16,7 +16,9 @@ public class Team
     public string CreatorId { get; set; }
 
     public bool IsSelectedForMissions { get; set; }
-    
+    public int TotalStrength { get; set; }
+    public int TotalEndurance { get; set; }
+
     /// <summary>
     /// Vérifie si la composition d'une équipe est valide en utilisant directement les professions
     /// </summary>

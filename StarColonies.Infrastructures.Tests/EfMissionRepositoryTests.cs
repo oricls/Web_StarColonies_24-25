@@ -346,8 +346,9 @@ public class EfMissionRepositoryTests
                    
             var resultatMission = new Entities.ResultatMission
             {
-                Issue = 1, // Success
-                Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                IssueStrength = 1, // Success
+                IssueEndurance = 1, // Success
+                Date = DateTime.Now,
                 IdMission = _testMissionId,
                 Mission = _context.Mission.Find(_testMissionId),
                 IdTeam = team.Id,
@@ -391,8 +392,9 @@ public class EfMissionRepositoryTests
                        
                 var resultatMission = new Entities.ResultatMission
                 {
-                    Issue = 1,
-                    Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                    IssueStrength = 1, // Success
+                    IssueEndurance = 1,
+                    Date = DateTime.Now,
                     IdMission = _testMissionId,
                     Mission = await _context.Mission.FindAsync(_testMissionId),
                     IdTeam = team.Id,
@@ -437,8 +439,9 @@ public class EfMissionRepositoryTests
                        
                 var resultatMission = new Entities.ResultatMission
                 {
-                    Issue = 1,
-                    Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                    IssueStrength = 1,
+                    IssueEndurance = 1,
+                    Date = DateTime.Now,
                     IdMission = _testMissionId,
                     Mission = _context.Mission.Find(_testMissionId),
                     IdTeam = team.Id,
@@ -454,7 +457,7 @@ public class EfMissionRepositoryTests
             // Assert
             Assert.IsNotNull(resultats);
             Assert.AreEqual(1, resultats.Count);
-            Assert.AreEqual(1, resultats[0].Issue);
+            Assert.AreEqual(1, resultats[0].IssueStrength);
             Assert.AreEqual("Équipe de test", resultats[0].TeamName);
         }
         catch (Exception ex)
@@ -484,8 +487,9 @@ public class EfMissionRepositoryTests
                        
                 var resultatMission = new Entities.ResultatMission
                 {
-                    Issue = 1,
-                    Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                    IssueStrength = 1,
+                    IssueEndurance = 1,
+                    Date = DateTime.Now,
                     IdMission = _testMissionId,
                     Mission = await _context.Mission.FindAsync(_testMissionId),
                     IdTeam = team.Id,

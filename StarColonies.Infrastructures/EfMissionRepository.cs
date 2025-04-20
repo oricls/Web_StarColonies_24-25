@@ -134,7 +134,8 @@ public class EfMissionRepository : IMissionRepository
             .Select(rm => new ResultatMission
             {
                 Id = rm.Id,
-                Issue = rm.Issue,
+                IssueStrength = rm.IssueStrength,
+                IssueEndurance = rm.IssueEndurance,
                 Date = rm.Date,
                 MissionId = rm.IdMission,
                 TeamId = rm.IdTeam,
@@ -152,7 +153,8 @@ public class EfMissionRepository : IMissionRepository
             .Select(rm => new ResultatMission
             {
                 Id = rm.Id,
-                Issue = rm.Issue,
+                IssueStrength = rm.IssueStrength,
+                IssueEndurance = rm.IssueEndurance,
                 Date = rm.Date,
                 MissionId = rm.IdMission,
                 TeamId = rm.IdTeam,
@@ -218,9 +220,19 @@ public class EfMissionRepository : IMissionRepository
         await _context.SaveChangesAsync();
     }
 
-    public Task<int> GetSuccessfulMissionsCount(int teamId)
+    public void SaveMissionResult(ResultatMission missionResult)
     {
-        throw new NotImplementedException();
+        var missionResultEntity = new Entities.ResultatMission
+        {
+            IssueStrength = missionResult.IssueStrength,
+            IssueEndurance = missionResult.IssueEndurance,
+            Date = missionResult.Date,
+            IdMission = missionResult.MissionId,
+            IdTeam = missionResult.TeamId
+        };
+
+        _context.ResultatMission.Add(missionResultEntity);
+        _context.SaveChanges();
     }
 
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
