@@ -1,0 +1,143 @@
+@page "{slug:isSlug}"
+@using StarColonies.Web.ViewModels
+@model StarColonies.Web.Pages.ConsultTeamModel
+
+@{
+    ViewData["Title"] = "Équipe " + Model.Team.Name;
+}
+
+<div class="container mt-4">
+    <div class="row g-5 justify-content-center">
+        <!-- Détails de l'équipe -->
+        <div class="col-lg-4 col-md-6">
+            <div style="top: 2rem;" class="sticky-top card bg-dark border-0 shadow">
+                <!-- Bannière d'arrière-plan -->
+                <div class="banner-container position-relative overflow-hidden rounded-top" style="height: 120px;">
+                    <img src="@(string.IsNullOrEmpty(Model.Team.Baniere) ? Model.Team.Logo : Model.Team.Baniere)" alt="Bannière de l'équipe" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                    <div class="banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)); z-index: 2;"></div>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <!-- Logo avec positionnement amélioré -->
+                    <div class="d-flex justify-content-center position-relative" style="margin-top: -50px; margin-bottom: 20px; z-index: 3;">
+                        <div class="teams-preview-logo d-flex align-items-center" style="width: 100px; height: 100px;">
+                            <div class="position-relative rounded-circle overflow-hidden bg-dark shadow" style="width: 100px; height: 100px;">
+                                <img src="@Model.Team.Logo" alt="Logo de l'équipe" class="w-100 h-100 object-fit-cover">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 d-flex flex-column gap-4">
+                        <h2 class="font-barlow fw-bold text-center">@Model.Team.Name</h2>
+
+                        <!-- Statistiques en cartes -->
+                        <div class="row g-3">
+                            <!-- Missions réussies -->
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-light h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center py-3">
+                                        <h2 class="display-6 font-barlow fw-bold text-white mb-0">@Model.SuccessfulMissions</h2>
+                                        <p class="text-center mb-0">Missions réussies</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Niveau moyen -->
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-light h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center py-3">
+                                        <h2 class="display-6 font-barlow fw-bold text-white mb-0">@Model.Team.AverageLevel</h2>
+                                        <p class="text-center mb-0">Niveau moyen</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Force totale -->
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-light h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center py-3">
+                                        <h2 class="display-6 font-barlow fw-bold text-white mb-0">@Model.TotalForce</h2>
+                                        <p class="text-center mb-0">Force totale</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Endurance totale -->
+                            <div class="col-md-6">
+                                <div class="card bg-dark border-light h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center py-3">
+                                        <h2 class="display-6 font-barlow fw-bold text-white mb-0">@Model.TotalEndurance</h2>
+                                        <p class="text-center mb-0">Endurance totale</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.IsCreator)
+                        {
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="/EditTeam/@Model.Team.Name.ToKebab()" class="btn btn-outline-accent flex-grow-1">
+                                    <i class="fa-solid fa-pen-to-square me-2"></i>Modifier
+                                </a>
+                                <button type="button" class="btn btn-outline-danger flex-grow-1" data-bs-toggle="modal" data-bs-target="#deleteTeamModal">
+                                    <i class="fa-solid fa-trash me-2"></i>Supprimer
+                                </button>
+                            </div>
+                        }
+
+                        <a asp-page="/Dashboard" class="btn btn-outline-secondary mt-3">
+                            <i class="fa-solid fa-arrow-left me-2"></i>Retour
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membres d'équipe -->
+        <div class="col-lg-4 col-md-6 d-flex flex-column gap-3">
+            <div class="login-container hall-of-fame">
+                <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">MEMBRES</h3>
+            </div>
+
+            <!-- Cartes des membres de l'équipe -->
+            @foreach (var colon in Model.TeamMembers)
+            {
+                @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(colon, colon.Id == Model.CurrentUserId))
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+@if (Model.IsCreator)
+{
+    <div class="modal fade" id="deleteTeamModal" tabindex="-1" aria-labelledby="deleteTeamModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="deleteTeamModalLabel">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Êtes-vous sûr de vouloir supprimer l'équipe <strong>@Model.Team.Name</strong>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="post" asp-page-handler="DeleteTeam" asp-route-teamId="@Model.Team.Id">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Styles
+{
+    <style>
+        .object-fit-cover {
+            object-fit: cover;
+        }
+    </style>
+}
+

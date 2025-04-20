@@ -14,5 +14,6 @@ public interface IMissionRepository
     Task<IReadOnlyList<ResultatMission>> GetResultatsByMissionIdAsync(int missionId);
     void SaveOrUpdateMission(Mission mission);
     Task SaveOrUpdateMissionAsync(Mission mission);
-    
+
+    Task<int> GetSuccessfulMissionsCount(int teamId);
 }

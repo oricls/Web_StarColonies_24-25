@@ -208,6 +208,7 @@ public class EfTeamRepositoryTests
             Id = _testTeamId,
             Name = "Équipe mise à jour",
             Logo = "logo-updated.png",
+            Baniere = "baniere-updated.png",
             MemberCount = 1,
             AverageLevel = 10,
             IsSelectedForMissions = true
@@ -221,7 +222,7 @@ public class EfTeamRepositoryTests
         Assert.IsNotNull(updatedTeam);
         Assert.AreEqual("Équipe mise à jour", updatedTeam.Name);
         Assert.AreEqual("logo-updated.png", updatedTeam.Logo);
-        Assert.AreEqual("logo-updated.png", updatedTeam.Baniere); // La bannière est mise à jour avec le logo
+        Assert.AreEqual("baniere-updated.png", updatedTeam.Baniere); // La bannière est mise à jour avec le logo
     }
 
     #endregion
