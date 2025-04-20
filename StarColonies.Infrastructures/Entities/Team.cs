@@ -9,7 +9,7 @@ public class Team
     public string Baniere { get; set; } = String.Empty;
     
     // clés
-    public Colon ColonCreator { get; set; } = null!;
+    public Colon ColonCreator { get; set; }
     
     //D'un int à un string car géré par identity
     public string IdColonCreator { get; set; } = string.Empty;

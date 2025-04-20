@@ -37,7 +37,7 @@ public class EfMissionRepository : IMissionRepository
         var missionEntity = _context.Mission
             .Include(m => m.MissionBestiaires)
                 .ThenInclude(mb => mb.Bestiaire)
-                    .ThenInclude(b => b!.TypeBestiaire)
+                    .ThenInclude(b => b.TypeBestiaire)
             .SingleOrDefault(m => m.Id == missionId);
 
         if (missionEntity == null)
@@ -217,7 +217,12 @@ public class EfMissionRepository : IMissionRepository
 
         await _context.SaveChangesAsync();
     }
-    
+
+    public Task<int> GetSuccessfulMissionsCount(int teamId)
+    {
+        throw new NotImplementedException();
+    }
+
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
     private Mission MapMissionEntityToDomain(Entities.Mission missionEntity)
     {

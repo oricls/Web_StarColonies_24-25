@@ -47,7 +47,7 @@ public class EfTeamRepository : ITeamRepository
         var teamEntity = _context.Team.Include(t => t.Members).FirstOrDefault(t => t.Id == team.Id);
         
         teamEntity.Name = team.Name;
-        teamEntity.Baniere = team.Logo; // bannière ?
+        teamEntity.Baniere = team.Baniere; // bannière ?
         teamEntity.Logo = team.Logo;
         _context.SaveChanges();
     }
@@ -56,7 +56,8 @@ public class EfTeamRepository : ITeamRepository
     {
         var teams = await _context.Team
                                     .Include(t => t.Members)
-                                    .Include(rm => rm.ResultatMissions).ToListAsync();
+                                    //.Include(rm => rm.ResultatMissions)
+                                    .ToListAsync();
         return teams.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
@@ -158,9 +159,11 @@ public class EfTeamRepository : ITeamRepository
             Id = teamEntity.Id,
             Name = teamEntity.Name,
             Logo = teamEntity.Logo,
+            Baniere = teamEntity.Baniere,
             MemberCount = teamEntity.Members.Count,
             AverageLevel = (int)Math.Round(avg),
             IsSelectedForMissions = false, // TODO : a modifier, je dirais même mieux : à implémenter 
+            CreatorId = teamEntity.IdColonCreator
         };
     }
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)
@@ -168,10 +171,26 @@ public class EfTeamRepository : ITeamRepository
         return new Colon
         {
             Id = colonEntity.Id, // id en TKey, faudra peut etre revoir l'id de domains.colon -> oui j'ai revu
-            Name = colonEntity.UserName,
-            Email = colonEntity.Email,
-            Password = colonEntity.PasswordHash,
-            Avatar = colonEntity.Avatar
+            Name = colonEntity.UserName ?? "Inconnu",
+            Email = colonEntity.Email ?? "Inconnue",
+            Password = colonEntity.PasswordHash ?? "",
+            Avatar = colonEntity.Avatar,
+            Level = colonEntity.Level,
+            Strength = colonEntity.Strength,
+            Endurance = colonEntity.Endurance,
+            ProfessionName = GetProfessionName(colonEntity.IdProfession)
         };
+    }
+    
+    private string GetProfessionName(int? professionId)
+    {
+        if (!professionId.HasValue)
+        {
+            return "Inconnue";
+        }
+
+        // Utiliser une méthode pour récupérer le nom de la profession à partir de l'ID
+        var profession = _context.Profession.FirstOrDefault(p => p.Id == professionId.Value);
+        return profession?.Name ?? "Inconnue";
     }
 }

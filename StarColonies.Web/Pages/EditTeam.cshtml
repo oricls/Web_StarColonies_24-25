@@ -1,0 +1,241 @@
+@page "{slug:isSlug}"
+@using StarColonies.Web.ViewModels
+@model StarColonies.Web.Pages.EditTeamModel
+
+@{
+    ViewData["Title"] = "Modifier l'équipe " + Model.TeamName;
+    ViewData["HideNavButtons"] = true;
+}
+
+<div class="container mt-4">
+    <h2 class="font-barlow fw-bold text-center mb-4">Modifier l'équipe @Model.TeamName</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="row g-5 justify-content-center">
+            <!-- Détails de l'équipe -->
+            <div class="col-lg-4 col-md-6">
+                <div style="top: 2rem;" class="sticky-top card bg-dark border-0 shadow">
+                    <!-- Bannière d'arrière-plan -->
+                    <div class="banner-container position-relative overflow-hidden rounded-top" style="height: 120px;">
+                        <img id="bannerPreview" src="@Model.Baniere" alt="Bannière de l'équipe" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                        <div class="banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7)); z-index: 2;"></div>
+
+                        <!-- Bouton d'upload de bannière -->
+                        <label for="BaniereFile" class="btn btn-sm btn-outline-light position-absolute" style="right: 10px; top: 10px; z-index: 3;">
+                            <i class="fa fa-image me-1"></i> Changer
+                        </label>
+                        <input type="file" id="BaniereFile" name="BaniereFile" accept="image/*" class="d-none">
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <!-- Logo avec positionnement amélioré -->
+                        <div class="d-flex justify-content-center position-relative" style="margin-top: -50px; margin-bottom: 20px; z-index: 3;">
+                            <div class="teams-preview-logo d-flex align-items-center" style="width: 100px; height: 100px;">
+                                <div class="position-relative rounded-circle overflow-hidden bg-dark shadow" style="width: 100px; height: 100px;">
+                                    <img id="logoPreview" src="@Model.Logo" alt="Logo de l'équipe" class="w-100 h-100 object-fit-cover">
+
+                                    <!-- Bouton d'upload de logo -->
+                                    <label for="LogoFile" class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 opacity-0 hover-opacity-100 transition-opacity" style="top: 0; left: 0; cursor: pointer;">
+                                        <i class="fa fa-camera text-white fs-4"></i>
+                                    </label>
+                                    <input type="file" id="LogoFile" name="LogoFile" accept="image/*" class="d-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" asp-for="TeamId" />
+                        <input type="hidden" asp-for="CreatorId" />
+                        <input type="hidden" asp-for="SelectedProfessions" id="selectedProfessions" />
+                        <input type="hidden" asp-for="Logo" />
+                        <input type="hidden" asp-for="Baniere" />
+
+                        <div class="mb-4 d-flex flex-column gap-4">
+                            <div class="d-flex flex-column">
+                                <label asp-for="TeamName" class="form-label mb-2 text-secondary"></label>
+                                <input asp-for="TeamName" class="form-control login-input" required />
+                                <span asp-validation-for="TeamName" class="text-danger"></span>
+                            </div>
+
+                            <div class="py-2">
+                                <div class="d-flex flex-column">
+                                    <p class="small text-secondary text-center">
+                                        <i class="fa fa-info-circle me-1"></i> Cliquez sur le logo ou la bannière pour les modifier<br>
+                                        Formats recommandés: PNG ou JPG, max 2 Mo
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-purple w-100 mt-4 font-barlow fw-bold">
+                                <i class="fa-solid fa-save me-2"></i>METTRE À JOUR L'ÉQUIPE
+                            </button>
+
+                            <a asp-page="/ConsultTeam" asp-route-slug="@Model.OriginalSlug" class="btn btn-outline-secondary mt-3">
+                                <i class="fa-solid fa-arrow-left me-2"></i>Annuler
+                            </a>
+                        </div>
+
+                        @if (!ModelState.IsValid)
+                        {
+                            <div class="alert-message alert alert-danger d-inline-block mt-3 px-3 py-2" role="alert">
+                                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                        {
+                            <div class="alert-message alert alert-success d-inline-block mt-3 px-3 py-2" role="alert">
+                                <i class="fa-solid fa-check-circle me-2"></i>
+                                @Model.StatusMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membres d'équipe -->
+            <div class="col-lg-4 col-md-6 d-flex flex-column gap-3">
+                <div class="login-container hall-of-fame">
+                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">MEMBRES</h3>
+                </div>
+
+                <!-- Membres actuels (non modifiables) -->
+                <div class="mb-2">
+                    <h6 class="text-accent mb-2">Membres actuels</h6>
+
+                    <!-- Créateur (toujours présent) -->
+                    @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(Model.CurrentUser, true))
+
+                    <!-- Autres membres actuels -->
+                    @foreach (var member in Model.CurrentMembers.Where(m => m.Id != Model.CurrentUser.Id))
+                    {
+                        var isSelected = true; // Déjà membre
+                        @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(member, false, isSelected))
+                    }
+                </div>
+
+                <!-- Autres membres sélectionnables -->
+                @foreach (var professionGroup in Model.ColonsByProfession)
+                {
+                    @if (professionGroup.Value.Count > 0)
+                    {
+                        <div class="mb-2">
+                            <h6 class="text-accent mb-2">@professionGroup.Key</h6>
+
+                            @foreach (var colon in professionGroup.Value)
+                            {
+                                var isSelected = Model.SelectedColonIds?.Contains(colon.Id) == true;
+                                @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(colon, false, isSelected))
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Styles
+{
+    <style>
+        .hover-opacity-100:hover {
+            opacity: 1 !important;
+        }
+
+        .transition-opacity {
+            transition: opacity 0.3s ease;
+        }
+
+        .object-fit-cover {
+            object-fit: cover;
+        }
+    </style>
+}
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prévisualisation du logo
+            const logoInput = document.getElementById('LogoFile');
+            const logoPreview = document.getElementById('logoPreview');
+
+            logoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        logoPreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Prévisualisation de la bannière
+            const baniereInput = document.getElementById('BaniereFile');
+            const banierePreview = document.getElementById('bannerPreview');
+
+            baniereInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        banierePreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Mettre à jour la liste des professions lors de la sélection des colons
+            const checkboxes = document.querySelectorAll('.colon-checkbox');
+
+            // Récupérer la profession de l'utilisateur courant qui ne peut pas être désélectionné
+            const fixedProfessions = ["@Model.CurrentUser.ProfessionName"];
+
+            function updateSelectedProfessions() {
+                // Commencer avec les professions fixes
+                const professions = [...fixedProfessions];
+
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        professions.push(checkbox.dataset.profession);
+                        // Ajouter une bordure pour les cartes sélectionnées
+                        checkbox.closest('.card').style.border = "1px solid var(--accent-color) !important";
+                        checkbox.closest('.card').classList.add('selected-colon');
+                    } else {
+                        // Enlever le style pour les cartes désélectionnées
+                        checkbox.closest('.card').style.border = "";
+                        checkbox.closest('.card').classList.remove('selected-colon');
+                    }
+                });
+
+                document.getElementById('selectedProfessions').value = JSON.stringify(professions);
+            }
+
+            // Initialiser la valeur au chargement de la page
+            updateSelectedProfessions();
+
+            // Mettre à jour à chaque changement de sélection
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedProfessions();
+                });
+            });
+
+            // Cliquer sur la carte sélectionne aussi la case à cocher
+            document.querySelectorAll('.selectable-card').forEach(card => {
+                card.addEventListener('click', function(event) {
+                    // Ne pas déclencher si on clique sur la case à cocher directement
+                    if (!event.target.classList.contains('form-check-input')) {
+                        const checkbox = card.querySelector('.colon-checkbox');
+                        if (checkbox) {
+                            checkbox.checked = !checkbox.checked;
+                            // Déclencher l'événement change pour mettre à jour les professions
+                            const changeEvent = new Event('change');
+                            checkbox.dispatchEvent(changeEvent);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
