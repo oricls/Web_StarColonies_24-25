@@ -1,9 +1,7 @@
 ﻿@page
-@using StarColonies.Web.ViewModels
 @model StarColonies.Web.Pages.Profil
-
 @{
-    ViewData["Title"] = "Profil";
+    ViewData["Title"] = "Profile";
 }
 
 <div class="container mt-4">
@@ -13,9 +11,9 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-center align-items-center mb-4">
-                        <div class="profil-preview-logo me-3 d-flex align-items-center w-150">
-                            <img id="logoPreview" src="@Model.User.Avatar" alt="User's profil">
-                        </div>
+                         <div class="profil-preview-logo me-3 d-flex align-items-center w-150">
+                             <img id="logoPreview" src="@Model.User.Avatar" alt="User's profil">
+                         </div>
                     </div>
                 </div>
             </div>
@@ -36,13 +34,13 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label" asp-for="UpdateProfil.NomDeColon">Nom de colon*</label>
-                                    <input type="text" asp-for="UpdateProfil.NomDeColon" value="@Model.User.Name" class="form-control login-input" placeholder="trucmuche" required/>
+                                    <input type="text" asp-for="UpdateProfil.NomDeColon" value="@Model.User.Name" class="form-control login-input" placeholder="abc" required/>
                                     <span class="text-danger" asp-validation-for="UpdateProfil.NomDeColon"></span>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="UpdateProfil.DateDeNaissance">Date de naissance*</label>
-                                <input type="date" asp-for="UpdateProfil.DateDeNaissance" value="@Model.User.DateBirth" class="form-control login-input" placeholder="****" required/>
+                                <input type="date" asp-for="UpdateProfil.DateDeNaissance" class="form-control login-input" placeholder="****" required/>
                                 <span class="text-danger" asp-validation-for="UpdateProfil.DateDeNaissance"></span>
                             </div>
                             <div class="row">

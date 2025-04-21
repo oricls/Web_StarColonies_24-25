@@ -86,9 +86,21 @@ public class EfColonRepository : IColonRepository
         colonEntity.UserName = colon.Name;
         colonEntity.Email = colon.Email;
         colonEntity.Avatar = colon.Avatar; // Mise à jour de l'avatar
-        // Ne pas mettre à jour le mot de passe ici, utiliser UserManager.ChangePasswordAsync
+        // Ne pas mettre à jour le mot de passe ici, utiliser UserManager.ChangePasswordAsynd
 
         await _context.SaveChangesAsync();
+    }
+
+    public async Task ChangePassword(Colon colon, string newPswd)
+    {
+        var colonFind = await _userManager.FindByIdAsync(colon.Id);
+        if (colonFind == null)
+        {
+            throw new Exception("Colon n'existe pas");
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(colonFind);
+        await _userManager.ResetPasswordAsync(colonFind, token, colon.Password);
     }
 
     /**

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 
@@ -6,22 +7,25 @@ namespace StarColonies.Web.Pages;
 
 public class UpdateProfilViewModel
 {
-    public string Courriel { get; set; }
-    public string NomDeColon { get; set; }
-    public DateTime DateDeNaissance { get; set; }
-    public string NouveauMotDePasse { get; set; }
-    public string ConfirmationMotDePasse { get; set; }
+    public string Courriel { get; set; } = string.Empty;
+    public string NomDeColon { get; set; }  = string.Empty;
+    public DateTime DateDeNaissance { get; set; }  = DateTime.Today;
+    public string NouveauMotDePasse { get; set; }  = string.Empty;
+    public string ConfirmationMotDePasse { get; set; } = string.Empty;
+    public string AvatarActuel { get; set; } = string.Empty;
 }
+
 
 public class Profil : PageModel
 {
     private readonly IColonRepository _repository;
     private readonly ILogger<ConsultMission> _logger;
-
     public Colon User { get; private set; }
 
     [BindProperty]
-    public UpdateProfilViewModel UpdateProfil { get; set; }
+    public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
+    
+    private const string ColonId = "testUser"; // TODO a modifier
     
     public Profil(IColonRepository colonRepository, ILogger<ConsultMission> logger)
     {
@@ -29,48 +33,48 @@ public class Profil : PageModel
         _logger = logger;
     }
 
-
     public async Task<IActionResult> OnGet()
     {
         try
         {
-            User = await _repository.GetColonByIdAsync("testUser");
-        } 
+            User = await _repository.GetColonByIdAsync(ColonId);
+            UpdateProfil = new UpdateProfilViewModel
+            {
+                Courriel = User.Email,
+                NomDeColon = User.Name,
+                DateDeNaissance = User.DateBirth,
+                AvatarActuel = User.Avatar
+            };
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profile");
+            _logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
+            return RedirectToPage("/Error");
         }
         return Page();
-        
     }
 
-    public async Task<IActionResult> OnPost(string slug)
+    public async Task<IActionResult> OnPost()
     {
-        // faire vérifs
-        if (InputIsEmpty(UpdateProfil.NouveauMotDePasse) || InputIsEmpty(UpdateProfil.ConfirmationMotDePasse) ||
-            InputIsEmpty(UpdateProfil.Courriel) || InputIsEmpty(UpdateProfil.NomDeColon))
-        {
-            throw new Exception("Les champs doivent etre remplis");
-        }
-
         if (UpdateProfil.NouveauMotDePasse != UpdateProfil.ConfirmationMotDePasse)
         {
-            throw new Exception("Le mot de passe ne convient pas");
+            ModelState.AddModelError(UpdateProfil.ConfirmationMotDePasse, "Le nouveau mot de passe et la confirmation ne correspondent pas.");
         }
-
+        
         try
         {
-            var colonUpdate = await _repository.GetColonByIdAsync("testUser");
-            colonUpdate.Name = UpdateProfil.NomDeColon;
-            colonUpdate.Email = UpdateProfil.Courriel;
-            colonUpdate.DateBirth = UpdateProfil.DateDeNaissance;
-            colonUpdate.Password = UpdateProfil.NouveauMotDePasse;
+            var colon = await _repository.GetColonByIdAsync(ColonId);
+            colon.Name = UpdateProfil.NomDeColon;
+            colon.Email = UpdateProfil.Courriel;
+            colon.DateBirth = UpdateProfil.DateDeNaissance;
 
-            await _repository.UpdateColonAsync(colonUpdate);
+            await _repository.UpdateColonAsync(colon);
+            //await _repository.ChangePassword(colon, UpdateProfil.ConfirmationMotDePasse);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Profile");
+            return RedirectToPage("/Error");
         }
         return Page();
     }
@@ -80,14 +84,12 @@ public class Profil : PageModel
         // TODO : plutot ajt message de confrimation avant de suppr
         try
         {
-            await _repository.DeleteColonAsync("testUser");
-            _logger.LogInformation("user ${testUser} est supprimé");
+            await _repository.DeleteColonAsync(ColonId); 
             return RedirectToPage("/Index");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erreur lors de la suppression de ${testUser}");
-            return Page();
+            throw new Exception(ex.Message);
         }
     }
     
