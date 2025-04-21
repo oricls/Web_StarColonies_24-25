@@ -12,38 +12,80 @@
 </head>
 <body class="mh-100">
 <!-- Navigation Bar -->
-<nav class="navbar py-3">
+<nav class="navbar navbar-expand-lg py-2">
     <div class="container">
         @if (ViewData["HideNavButtons"] as bool? != true)
         {
             <!-- Mode normal avec logo à gauche et boutons à droite -->
             <a class="navbar-brand" asp-area="" asp-page="/Index">
-                <img src="~/img/logo.png" alt="Logo Starcolonies" height="80">
+                <img src="~/img/logo.png" alt="Logo Starcolonies" height="70">
             </a>
-            <div class="d-flex">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-page="/Index">
+                                <i class="fas fa-trophy nav-link-icon"></i>Classement
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-page="/DashBoard">
+                                <i class="fas fa-home nav-link-icon"></i>DashBoard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-page="/Comptoir">
+                                <i class="fas fa-shopping-cart nav-link-icon"></i>Comptoir
+                            </a>
+                        </li>
+                    }
+                </ul>
+
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <!-- Menu utilisateur connecté -->
-                    <div class="dropdown">
-                        <button class="btn btn-accent dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-2"></i>@User.Identity.Name
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" asp-page="/Profile">Mon profil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form asp-page="/Logout" method="post">
-                                    <button type="submit" class="dropdown-item text-danger">Déconnexion</button>
-                                </form>
-                            </li>
-                        </ul>
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown">
+                            <button class="btn btn-accent dropdown-toggle d-flex align-items-center" type="button" id="userMenu" data-bs-toggle="dropdown">
+                                <img src="~/img/default-avatar.jpg" class="user-avatar" alt="Avatar">
+                                <span>@User.Identity.Name</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" asp-page="/Profile">
+                                        <i class="fas fa-user-circle me-2"></i>Mon profil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-page="/Settings">
+                                        <i class="fas fa-cog me-2"></i>Paramètres
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-page="/Logout" method="post">
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 }
                 else
                 {
                     <!-- Boutons non connecté -->
-                    <a class="btn btn-outline-accent me-2" asp-page="/Login">Connexion</a>
-                    <a class="btn btn-accent" asp-page="/Register">Inscription</a>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-accent me-2" asp-page="/Login">Connexion</a>
+                        <a class="btn btn-accent" asp-page="/Register">Inscription</a>
+                    </div>
                 }
             </div>
         }
@@ -79,4 +121,32 @@
 @await RenderSectionAsync("Scripts", required: false)
 @await RenderSectionAsync("Styles", false)
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation supplémentaire pour les éléments de la navbar
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+
+            link.addEventListener('mouseleave', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+
+        // Animation pour le dropdown utilisateur
+        const userDropdown = document.querySelector('.dropdown');
+        if (userDropdown) {
+            userDropdown.addEventListener('mouseenter', function() {
+                this.querySelector('.dropdown-toggle').style.transform = 'translateY(-2px)';
+            });
+
+            userDropdown.addEventListener('mouseleave', function() {
+                this.querySelector('.dropdown-toggle').style.transform = 'translateY(0)';
+            });
+        }
+    });
+</script>
 </html>
