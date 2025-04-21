@@ -75,8 +75,21 @@ public class Profil : PageModel
         return Page();
     }
 
-    private bool InputIsEmpty(string intput)
+    public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
-        return string.IsNullOrWhiteSpace(intput);
+        // TODO : plutot ajt message de confrimation avant de suppr
+        try
+        {
+            await _repository.DeleteColonAsync("testUser");
+            _logger.LogInformation("user ${testUser} est supprimé");
+            return RedirectToPage("/Index");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la suppression de ${testUser}");
+            return Page();
+        }
     }
+    
+    private bool InputIsEmpty(string intput) => string.IsNullOrWhiteSpace(intput);
 }
