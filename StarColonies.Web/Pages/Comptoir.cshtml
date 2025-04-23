@@ -7,22 +7,40 @@
 }
 
 <div class="container-fluid py-4">
+    <!-- Notification de succès ou d'erreur -->
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert @(Model.StatusMessage.StartsWith("Erreur") ? "alert-danger" : "alert-success") alert-dismissible fade show" role="alert">
+            @Model.StatusMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <!-- Section Mes ressources -->
     <section class="mb-5">
         <h2 class="font-barlow text-white fw-bold mb-4">Mes ressources :</h2>
-        
+
         <div class="d-flex flex-wrap gap-3">
-            @if (Model.ResourcesOfColon.Any())
+            @if (Model.GroupedResources.Any())
             {
-                foreach (var resource in Model.ResourcesOfColon)
+                foreach (var resourceGroup in Model.GroupedResources)
                 {
-                    <div class="bg-quaternary-bg-color rounded p-3 d-flex align-items-center" style="min-width: 140px;">
-                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                            <i class="fas fa-hammer text-info"></i>
+                    <div class="bg-purple rounded p-2 d-flex align-items-center justify-content-center" style="min-width: 140px;">
+                        <div class="bg-dark rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            @if (!string.IsNullOrEmpty(resourceGroup.IconUrl))
+                            {
+                                <img src="@resourceGroup.IconUrl" alt="@resourceGroup.Type" style="width: 25px; height: 25px;"/>
+                            }
                         </div>
-                        <span class="text-white font-barlow fw-bold">x @resource.Quantity</span>
+                        <div>
+                            <span class="text-white font-barlow h4 m-0 d-block">x @resourceGroup.TotalQuantity</span>
+                        </div>
                     </div>
                 }
+            }
+            else
+            {
+                <p class="text-white">Aucune ressource disponible</p>
             }
         </div>
     </section>
@@ -35,18 +53,24 @@
             @if (Model.Bonuses.Any()) {
                 foreach (var bonus in Model.Bonuses)
                 {
+                    var isActive = Model.ActiveBonusStatus[bonus.Id];
+                    string cardClass = isActive ? "border-success" : "border-primary";
+
                     <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 bg-dark border-primary border-1 rounded-3 shadow">
+                        <div class="card h-100 bg-dark @cardClass border-1 rounded-3 shadow">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="me-3">
-                                        <img src="~/icons/icon_88.png" alt="@bonus.Name" class="rounded-3" style="width: 50px; height: 50px;"/>
+                                        <img src="@bonus.IconUrl" alt="@bonus.Name" class="rounded-3" style="width: 50px; height: 50px;"/>
                                     </div>
                                     <div>
                                         <h5 class="font-barlow text-white fw-bold mb-0">@bonus.Name</h5>
-                                        <div class="d-flex align-items-center text-muted small">
-                                            <i class="far fa-clock me-1"></i>
-                                            <span>@Model.BonusDuration[bonus.Id]</span>
+                                        <div class="d-flex align-items-center small">
+                                            @if (!isActive)
+                                            {
+                                                <i class="text-muted far fa-clock me-1"></i>
+                                                <span class="text-muted">@Model.BonusDuration[bonus.Id]</span>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -54,18 +78,41 @@
                                 <p class="small text-white mb-3">@bonus.Description</p>
 
                                 <!-- Coût en ressources -->
-                                <div class="d-flex mb-3">
+                                <div class="d-flex flex-wrap gap-2 mb-3 justify-content-center rounded-3 @(isActive ? "visually-hidden" : "bg-purple")">
                                     @foreach (var ressource in @bonus.Resources)
                                     {
-                                        <div class="me-3 d-flex align-items-center">
-                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-1" style="width: 30px; height: 30px;">
-                                                <i class="fas fa-hammer text-info small"></i>
+                                        <div class="d-flex align-items-center px-3 py-2">
+                                            <div class="d-flex align-items-center justify-content-center me-2">
+                                                @if (!string.IsNullOrEmpty(ressource.IconUrl))
+                                                {
+                                                    <img src="@ressource.IconUrl" alt="@ressource.ResourceType" class="bg-dark p-1 rounded-circle" style="width: 2rem; height: 2rem;"/>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fas fa-flask text-info small"></i>
+                                                }
                                             </div>
                                             <span class="text-white">x @ressource.Multiplier</span>
                                         </div>
                                     }
                                 </div>
-                                <button class="btn btn-purple w-100">ÉCHANGER</button>
+
+                                @if (isActive)
+                                {
+                                    <button type="button" class="btn btn-warning w-100" disabled>
+                                        <span class="countdown-timer"
+                                              data-expiration="@Model.ExpirationDates[bonus.Id].ToString("yyyy-MM-ddTHH:mm:ss")">
+                                                    Expire dans @Model.RemainingTime[bonus.Id]
+                                                </span>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-page-handler="AcheterBonus">
+                                        <input type="hidden" name="bonusId" value="@bonus.Id" />
+                                        <button type="submit" class="btn btn-purple w-100">ÉCHANGER</button>
+                                    </form>
+                                }
                             </div>
                         </div>
                     </div>
@@ -81,16 +128,73 @@
     </section>
 </div>
 
+@section Scripts {
+    <script>
+        // Fonction pour mettre à jour tous les timers
+        function updateCountdownTimers() {
+            const now = new Date();
+
+            document.querySelectorAll('.countdown-timer').forEach(element => {
+                // Récupérer la date d'expiration depuis l'attribut data
+                const expirationDate = new Date(element.getAttribute('data-expiration'));
+
+                // Calculer la différence en millisecondes
+                const diff = expirationDate - now;
+
+                // Si le bonus est expiré, recharger la page pour le retirer
+                if (diff <= 0) {
+                    window.location.reload();
+                    return;
+                }
+
+                // Calculer les jours, heures, minutes et secondes
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                // Formater le texte du timer
+                let timeText = '';
+                if (days > 0) {
+                    timeText = `${days}j ${hours}h`;
+                } else if (hours > 0) {
+                    timeText = `${hours}h ${minutes}m`;
+                } else {
+                    timeText = `${minutes}m ${seconds}s`;
+                }
+
+                // Mettre à jour le texte de l'élément
+                element.textContent = `Expire dans ${timeText}`;
+            });
+        }
+
+        // Mettre à jour les timers immédiatement, puis toutes les secondes
+        updateCountdownTimers();
+        setInterval(updateCountdownTimers, 1000);
+    </script>
+}
+
 @section Styles {
     <style>
-        /* Bordure spéciale pour les objets expirés */
-        .border-warning {
-            border-width: 2px !important;
-        }
 
         /* Style pour les ressources */
         .bg-quaternary-bg-color {
             background-color: var(--quaternary-bg-color);
+        }
+
+        /* Style pour les bonus actifs */
+        .border-success {
+            border-color: var(--special-color) !important;
+            border-width: 2px !important;
+        }
+
+        .btn-warning:disabled {
+            background: rgba(248, 213, 3, 0.32);
+            border-color: var(--special-color);
+            opacity: 1;
+            padding: 1rem;
+            color: #fff;
+            font-weight: bold;
         }
     </style>
 }

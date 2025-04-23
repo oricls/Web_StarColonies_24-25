@@ -19,6 +19,8 @@ public class EfBonusRepository : IBonusRepository
             Name = bonus.Name,
             Description = bonus.Description,
             DureeParDefaut = (bonus.DateExpiration - bonus.DateAchat).Duration(),
+            IconUrl = bonus.IconUrl,
+            EffectTypeId = (int)bonus.EffectType, 
             
             BonusResources = bonus.Resources.Select(r => new Entities.BonusResource {
                 ResourceId = r.ResourceId,
@@ -43,13 +45,22 @@ public class EfBonusRepository : IBonusRepository
 
     public async Task<IReadOnlyList<Bonus>> GetAllBonusAsync()
     {
-        var allBonusEntities = await _context.Bonus.Include(b => b.BonusResources).ToListAsync();
+        var allBonusEntities = await _context.Bonus
+            .Include(b => b.BonusResources)
+            .ThenInclude(br => br.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .ToListAsync();
+            
         return allBonusEntities.Select(b => MapBonusEntityToDomain(b)).ToList();
     }
 
     public async Task<Bonus> GetBonusByName(string name)
     {
-        var bonus = await _context.Bonus.Include(b => b.BonusResources).SingleOrDefaultAsync(b => b.Name == name);
+        var bonus = await _context.Bonus
+            .Include(b => b.BonusResources)
+            .ThenInclude(br => br.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .SingleOrDefaultAsync(b => b.Name == name);
 
         if (bonus == null)
         {
@@ -62,7 +73,11 @@ public class EfBonusRepository : IBonusRepository
     public async Task<IReadOnlyList<Bonus>> GetActivesBonuses()
     {
         var now = DateTime.Now;
-        var bonusEntity = await _context.Bonus.Include(b => b.BonusResources).ToListAsync();
+        var bonusEntity = await _context.Bonus
+            .Include(b => b.BonusResources)
+            .ThenInclude(br => br.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .ToListAsync();
 
         var bonusActifs = bonusEntity.Select(be => MapBonusEntityToDomain(be)).Where(be =>  be.DateAchat <= now  && be.DateExpiration >= now);
         return bonusActifs.ToList();
@@ -81,8 +96,11 @@ public class EfBonusRepository : IBonusRepository
     
     public async Task<IReadOnlyList<BonusResource>> GetBonusResources(Bonus bonus)
     {
-        var bonusEntity = await _context.Bonus.Include(b => b.BonusResources)
-            .ThenInclude(br => br.Resource).SingleOrDefaultAsync(b => b.Id == bonus.Id);
+        var bonusEntity = await _context.Bonus
+            .Include(b => b.BonusResources)
+            .ThenInclude(br => br.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .SingleOrDefaultAsync(b => b.Id == bonus.Id);
 
         if (bonusEntity == null)
         {
@@ -93,13 +111,15 @@ public class EfBonusRepository : IBonusRepository
         {
             ResourceId = br.ResourceId,
             ResourceName = br.Resource.Name,
+            ResourceType = br.Resource.TypeResource.Name,
+            IconUrl = br.Resource.TypeResource.Icon,
             Multiplier = br.Quantite
         }).ToList();
     }
 
     private Bonus MapBonusEntityToDomain(Entities.Bonus bonusEntity)
     {
-        var dateAchat = DateTime.Now; // a revoir ? 
+        var dateAchat = DateTime.Now; //Todo: a revoir ? -> pas très SOLID mais ça marche
         var dateExpiration = dateAchat.Add(bonusEntity.DureeParDefaut);
         
         return new Bonus
@@ -108,11 +128,15 @@ public class EfBonusRepository : IBonusRepository
             Name = bonusEntity.Name,
             Description = bonusEntity.Description,
             DateAchat = dateAchat,
-            DateExpiration =dateExpiration,
+            DateExpiration = dateExpiration,
+            IconUrl = bonusEntity.IconUrl,
+            EffectType = (BonusEffectType)bonusEntity.EffectTypeId, // Conversion élégante !
             Resources = bonusEntity.BonusResources.Select(br => new BonusResource
             {
                 ResourceId = br.ResourceId,
                 ResourceName = br.Resource.Name,
+                ResourceType = br.Resource.TypeResource.Name,
+                IconUrl = br.Resource.TypeResource.Icon,
                 Multiplier = br.Quantite
             }).ToList()
         };

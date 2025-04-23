@@ -11,6 +11,9 @@ public class Bonus
     
     public TimeSpan DureeParDefaut { get; set; } = TimeSpan.FromHours(24);
     
+    public string IconUrl { get; set; } = string.Empty; 
+    public int EffectTypeId { get; set; } = 0;
+    
     // clés
     public IList<ColonBonus> ColonBonuses { get; set; } = new List<ColonBonus>();
     
