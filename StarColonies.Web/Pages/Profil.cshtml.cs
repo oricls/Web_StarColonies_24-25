@@ -25,7 +25,7 @@ public class Profil : PageModel
     [BindProperty]
     public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
     
-    private const string ColonId = "testUser"; // TODO a modifier
+    private const string ColonId = "6e4d72ae-7680-4219-aa33-b30650c98024"; // TODO a modifier
     
     public Profil(IColonRepository colonRepository, ILogger<ConsultMission> logger)
     {
@@ -49,7 +49,7 @@ public class Profil : PageModel
         catch (Exception ex)
         {
             _logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
-            return RedirectToPage("/Error");
+            return Page();
         }
         return Page();
     }
@@ -59,8 +59,9 @@ public class Profil : PageModel
         if (UpdateProfil.NouveauMotDePasse != UpdateProfil.ConfirmationMotDePasse)
         {
             ModelState.AddModelError(UpdateProfil.ConfirmationMotDePasse, "Le nouveau mot de passe et la confirmation ne correspondent pas.");
+            return Page();
         }
-        
+
         try
         {
             var colon = await _repository.GetColonByIdAsync(ColonId);
@@ -69,14 +70,23 @@ public class Profil : PageModel
             colon.DateBirth = UpdateProfil.DateDeNaissance;
 
             await _repository.UpdateColonAsync(colon);
-            //await _repository.ChangePassword(colon, UpdateProfil.ConfirmationMotDePasse);
+            await _repository.ChangePassword(ColonId, UpdateProfil.ConfirmationMotDePasse);
+
+            User = await _repository.GetColonByIdAsync(ColonId);
+            UpdateProfil = new UpdateProfilViewModel
+            {
+                Courriel = User.Email,
+                NomDeColon = User.Name,
+                DateDeNaissance = User.DateBirth,
+                AvatarActuel = User.Avatar
+            };
+            return Page();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profile");
-            return RedirectToPage("/Error");
+            _logger.LogError(ex, "Profil - Erreur lors de la mise à jour du profil");
+            return Page();
         }
-        return Page();
     }
 
     public async Task<IActionResult> OnPostDeleteAccountAsync()

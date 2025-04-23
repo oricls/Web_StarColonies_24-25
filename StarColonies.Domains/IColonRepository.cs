@@ -13,5 +13,5 @@ public interface IColonRepository
     Task AddResourceToColonAsync(string colonId, int resourceId, int quantity);
     Task AddBonusToColonAsync(string colonId, int bonusId, TimeSpan duration);
     Task<IReadOnlyList<Profession>> GetAllProfessionsAsync();
-    Task ChangePassword(Colon colon, string newPswd);
+    Task ChangePassword(string colonId, string newPswd);
 }

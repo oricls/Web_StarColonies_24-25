@@ -91,16 +91,18 @@ public class EfColonRepository : IColonRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task ChangePassword(Colon colon, string newPswd)
+    public async Task ChangePassword(string colonId, string newPswd)
     {
-        var colonFind = await _userManager.FindByIdAsync(colon.Id);
+        var colonFind = await _userManager.FindByIdAsync(colonId);
         if (colonFind == null)
         {
             throw new Exception("Colon n'existe pas");
         }
+        await _userManager.GeneratePasswordResetTokenAsync(colonFind);
+        await _userManager.RemovePasswordAsync(colonFind);
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(colonFind);
-        await _userManager.ResetPasswordAsync(colonFind, token, colon.Password);
+        await _userManager.AddPasswordAsync(colonFind, newPswd);
+        await _context.SaveChangesAsync();
     }
 
     /**
