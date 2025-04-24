@@ -12,7 +12,7 @@
         <h2 class="font-barlow text-white fw-bold mb-4">Mes ressources :</h2>
         
         <div class="d-flex flex-wrap gap-3">
-            @if (Model.ResourcesOfColon.Any())
+            @if (Model.ResourcesOfColon != null && Model.ResourcesOfColon.Any())
             {
                 foreach (var resource in Model.ResourcesOfColon)
                 {
@@ -32,7 +32,7 @@
         <h2 class="font-barlow text-white fw-bold mb-4">Objets disponibles :</h2>
 
         <div class="row g-4">
-            @if (Model.Bonuses.Any()) {
+            @if (Model.Bonuses != null && Model.Bonuses.Any()) {
                 foreach (var bonus in Model.Bonuses)
                 {
                     <div class="col-md-6 col-lg-4">
