@@ -48,6 +48,8 @@ public class Profil : PageModel
     [BindProperty]
     public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
     
+    private Infrastructures.Entities.Colon? _user;
+    
     public Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogger<Profil> logger)
     {
         _userManager = userManager;
@@ -55,11 +57,22 @@ public class Profil : PageModel
         _logger = logger;
     }
 
+    private async Task<Infrastructures.Entities.Colon> GetCurrentUserAsync()
+    {
+        _user = await _userManager.GetUserAsync(User);
+        if (_user == null)
+        {
+            throw new ApplicationException("User impossible à obtenir");
+        }
+        return _user;
+    }
+    
+    
     public async Task<IActionResult> OnGet()
     {
-        var user = await _userManager.GetUserAsync(User);
         try
         {
+            var user = await GetCurrentUserAsync();
             Colon = await _repository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilViewModel
             {
@@ -68,7 +81,6 @@ public class Profil : PageModel
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
-            
         }
         catch (Exception ex)
         {
@@ -80,9 +92,9 @@ public class Profil : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        var user = await _userManager.GetUserAsync(User);
         try
         {
+            var user =  await GetCurrentUserAsync();
             var colon = await _repository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
             colon.Email = UpdateProfil.Courriel;
@@ -114,10 +126,9 @@ public class Profil : PageModel
 
     public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
-        // TODO : plutot ajt message de confrimation avant de suppr
-        var user = await _userManager.GetUserAsync(User);
         try
         {
+            var user =  await GetCurrentUserAsync();
             await _repository.DeleteColonAsync(user.Id); 
             return RedirectToPage("/Index");
         }
