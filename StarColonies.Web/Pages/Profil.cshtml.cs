@@ -132,13 +132,14 @@ public class Profil : PageModel
         }
     }
 
-    public async Task<IActionResult>OnPostDeleteAccountAsync()
+    public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
         try
         {
             var user = await GetCurrentUserAsync();
             await _repository.DeleteColonAsync(user.Id);
-            return RedirectToPage("/Dashboard");
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme); // ou logout
+            return RedirectToPage("/Dashboard"); 
         }
         catch (Exception ex)
         {
