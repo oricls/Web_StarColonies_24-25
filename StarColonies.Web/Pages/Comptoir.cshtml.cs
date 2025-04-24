@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 using StarColonies.Domains.Repositories;
 using System.Security.Claims;
+using IColonRepository = StarColonies.Domains.IColonRepository;
 
 namespace StarColonies.Web.Pages;
 
