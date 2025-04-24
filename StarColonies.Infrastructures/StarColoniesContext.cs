@@ -32,6 +32,8 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
         modelBuilder.ApplyConfiguration(new TypeBestiaireConfiguration());
         modelBuilder.ApplyConfiguration(new TypeResourceConfiguration());
@@ -51,9 +53,7 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
         modelBuilder.ApplyConfiguration(new ColonResourceConfiguration());
         
         // Configurations pour le système d'administration
-        modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
         modelBuilder.ApplyConfiguration(new LogConfiguration());
-        modelBuilder.ApplyConfiguration(new AdminConfiguration());
         
         modelBuilder.ApplyConfiguration(new BonusTransactionConfiguration());
         modelBuilder.ApplyConfiguration(new BonusTransactionResourceConfiguration());
