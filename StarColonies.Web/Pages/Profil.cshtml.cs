@@ -38,28 +38,23 @@ public class UpdateProfilViewModel
 }
 
 
-public class Profil : PageModel
+public class Profil(
+    IColonRepository colonRepository,
+    UserManager<Infrastructures.Entities.Colon> userManager,
+    ILogRepository logRepository,
+    ILogger<Profil> logger)
+    : PageModel
 {
-    private readonly IColonRepository _repository;
-    private readonly ILogger<Profil> _logger;
-    private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
     public Colon Colon { get; private set; }
 
     [BindProperty]
     public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
     
     private Infrastructures.Entities.Colon? _user;
-    
-    public Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogger<Profil> logger)
-    {
-        _userManager = userManager;
-        _repository = colonRepository;
-        _logger = logger;
-    }
 
     private async Task<Infrastructures.Entities.Colon> GetCurrentUserAsync()
     {
-        _user = await _userManager.GetUserAsync(User);
+        _user = await userManager.GetUserAsync(User);
         if (_user == null)
         {
             throw new ApplicationException("User impossible à obtenir");
@@ -73,7 +68,7 @@ public class Profil : PageModel
         try
         {
             var user = await GetCurrentUserAsync();
-            Colon = await _repository.GetColonByIdAsync(user.Id);
+            Colon = await colonRepository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilViewModel
             {
                 Courriel = Colon.Email,
@@ -84,7 +79,7 @@ public class Profil : PageModel
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
+            logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
             return Page();
         }
         return Page();
@@ -95,19 +90,28 @@ public class Profil : PageModel
         try
         {
             var user =  await GetCurrentUserAsync();
-            var colon = await _repository.GetColonByIdAsync(user.Id);
+            var colon = await colonRepository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
             colon.Email = UpdateProfil.Courriel;
             colon.DateBirth = UpdateProfil.DateDeNaissance;
 
-            await _repository.UpdateColonAsync(colon);
+            await colonRepository.UpdateColonAsync(colon);
+            
+            await logRepository.AddLog(
+                new Log()
+                {
+                    RequeteAction = "Mise à jour du profil",
+                    ResponseAction = "Profil mis à jour avec succès",
+                    DateHeureAction = DateTime.Now
+                }
+            );
             
             if (!string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
             { 
-                await _repository.ChangePassword(user.Id, UpdateProfil.ConfirmationMotDePasse);
+                await colonRepository.ChangePassword(user.Id, UpdateProfil.ConfirmationMotDePasse);
             }
 
-            Colon = await _repository.GetColonByIdAsync(user.Id);
+            Colon = await colonRepository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilViewModel
             {
                 Courriel = Colon.Email,
@@ -119,7 +123,7 @@ public class Profil : PageModel
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profil - Erreur lors de la mise à jour du profil");
+            logger.LogError(ex, "Profil - Erreur lors de la mise à jour du profil");
             return Page();
         }
     }
@@ -129,7 +133,17 @@ public class Profil : PageModel
         try
         {
             var user =  await GetCurrentUserAsync();
-            await _repository.DeleteColonAsync(user.Id); 
+            await colonRepository.DeleteColonAsync(user.Id); 
+            
+            await logRepository.AddLog(
+                new Log()
+                {
+                    RequeteAction = "Suppression de compte",
+                    ResponseAction = "Compte supprimé avec succès",
+                    DateHeureAction = DateTime.Now
+                }
+            );
+            
             return RedirectToPage("/Index");
         }
         catch (Exception ex)

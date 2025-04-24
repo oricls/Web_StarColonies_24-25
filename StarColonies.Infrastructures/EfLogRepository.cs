@@ -11,10 +11,11 @@ public class EfLogRepository(StarColoniesContext context) : ILogRepository
         return Task.FromResult<IList<Log>>(logs.Select(l => MapLogEntityToDomain(l)).ToList());
     }
 
-    public Task<IList<Log>> GetLogsByDate(DateTime date)
+    public Task<IList<Log>> GetLogsByDateDescending(DateTime date)
     {
         var logs = context.Logs
             .Where(l => l.DateHeureAction.Date == date.Date)
+            .OrderByDescending(l => l.DateHeureAction)
             .ToList();
         return Task.FromResult<IList<Log>>(logs.Select(l => MapLogEntityToDomain(l)).ToList());
     }

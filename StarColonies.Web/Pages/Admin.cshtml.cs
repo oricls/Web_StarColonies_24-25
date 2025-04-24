@@ -16,6 +16,6 @@ public class AdminModel(ILogRepository logRepository) : PageModel
     
     public async Task OnGetAsync()
     {
-        Logs = await logRepository.GetLogsByDate(SelectedDate);
+        Logs = await logRepository.GetLogsByDateDescending(SelectedDate);
     }
 }

@@ -4,6 +4,7 @@ public interface ILogRepository
 {
     Task<IList<Log>> GetLogs();
     
-    Task<IList<Log>> GetLogsByDate(DateTime date);
+    Task<IList<Log>> GetLogsByDateDescending(DateTime date);
+    
     Task AddLog(Log log);
 }
