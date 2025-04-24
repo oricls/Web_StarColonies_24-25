@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -42,16 +41,14 @@ public class UpdateProfilViewModel
 public class Profil : PageModel
 {
     private readonly IColonRepository _repository;
-    private readonly ILogger<ConsultMission> _logger;
+    private readonly ILogger<Profil> _logger;
     private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
-    public Colon User { get; private set; }
+    public Colon Colon { get; private set; }
 
     [BindProperty]
     public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
     
-    private const string ColonId = "e98d7af7-b9be-4877-a56b-5a336f83853b"; // TODO a modifier
-    
-    public Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogger<ConsultMission> logger)
+    public Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogger<Profil> logger)
     {
         _userManager = userManager;
         _repository = colonRepository;
@@ -60,16 +57,18 @@ public class Profil : PageModel
 
     public async Task<IActionResult> OnGet()
     {
+        var user = await _userManager.GetUserAsync(User);
         try
         {
-            User = await _repository.GetColonByIdAsync(ColonId);
+            Colon = await _repository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilViewModel
             {
-                Courriel = User.Email,
-                NomDeColon = User.Name,
-                DateDeNaissance = User.DateBirth,
-                Avatar = User.Avatar
+                Courriel = Colon.Email,
+                NomDeColon = Colon.Name,
+                DateDeNaissance = Colon.DateBirth,
+                Avatar = Colon.Avatar
             };
+            
         }
         catch (Exception ex)
         {
@@ -81,9 +80,10 @@ public class Profil : PageModel
 
     public async Task<IActionResult> OnPost()
     {
+        var user = await _userManager.GetUserAsync(User);
         try
         {
-            var colon = await _repository.GetColonByIdAsync(ColonId);
+            var colon = await _repository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
             colon.Email = UpdateProfil.Courriel;
             colon.DateBirth = UpdateProfil.DateDeNaissance;
@@ -92,16 +92,16 @@ public class Profil : PageModel
             
             if (!string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
             { 
-                await _repository.ChangePassword(ColonId, UpdateProfil.ConfirmationMotDePasse);
+                await _repository.ChangePassword(user.Id, UpdateProfil.ConfirmationMotDePasse);
             }
 
-            User = await _repository.GetColonByIdAsync(ColonId);
+            Colon = await _repository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilViewModel
             {
-                Courriel = User.Email,
-                NomDeColon = User.Name,
-                DateDeNaissance = User.DateBirth,
-                Avatar = User.Avatar
+                Courriel = Colon.Email,
+                NomDeColon = Colon.Name,
+                DateDeNaissance = Colon.DateBirth,
+                Avatar = Colon.Avatar
             };
             return Page();
         }
@@ -115,9 +115,10 @@ public class Profil : PageModel
     public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
         // TODO : plutot ajt message de confrimation avant de suppr
+        var user = await _userManager.GetUserAsync(User);
         try
         {
-            await _repository.DeleteColonAsync(ColonId); 
+            await _repository.DeleteColonAsync(user.Id); 
             return RedirectToPage("/Index");
         }
         catch (Exception ex)

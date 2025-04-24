@@ -13,7 +13,7 @@
                     <div class="d-flex justify-content-center align-items-center mb-4">
                         <label for="changeProfilPicture">
                             <div class="profil-preview-logo me-3 d-flex align-items-center w-500">
-                                <img id="logoPreview" src="@Model.User.Avatar" alt="User's profil" class="img-fluid" />
+                                <img id="logoPreview" src="@Model.Colon.Avatar" alt="User's profil" class="img-fluid" />
                             </div>
                         </label>
                         <input type="file" id="changeProfilPicture" class="d-none" asp-for="UpdateProfil.UploadAvatar" accept="image/*" />
@@ -33,12 +33,12 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label" asp-for="UpdateProfil.Courriel">Courriel*</label>
-                                    <input type="email" asp-for="UpdateProfil.Courriel" value="@Model.User.Email" class="form-control login-input" placeholder="mon@email.com" required/>
+                                    <input type="email" asp-for="UpdateProfil.Courriel" value="@Model.Colon.Email" class="form-control login-input" placeholder="mon@email.com" required/>
                                     <span class="text-danger" asp-validation-for="UpdateProfil.Courriel"></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label" asp-for="UpdateProfil.NomDeColon">Nom de colon*</label>
-                                    <input type="text" asp-for="UpdateProfil.NomDeColon" value="@Model.User.Name" class="form-control login-input" placeholder="abc" required/>
+                                    <input type="text" asp-for="UpdateProfil.NomDeColon" value="@Model.Colon.Name" class="form-control login-input" placeholder="abc" required/>
                                     <span class="text-danger" asp-validation-for="UpdateProfil.NomDeColon"></span>
                                 </div>
                             </div>
