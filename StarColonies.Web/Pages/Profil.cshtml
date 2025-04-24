@@ -1,0 +1,91 @@
+﻿@page
+@model StarColonies.Web.Pages.Profil
+@{
+    ViewData["Title"] = "Profil";
+}
+
+<div class="container mt-4">
+    <section class="mb-5 d-flex flex-column gap-5">
+        <div class="row g-5  justify-content-center align-items-center">
+            <!-- img -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-center align-items-center mb-4">
+                        <label for="changeProfilPicture">
+                            <div class="profil-preview-logo me-3 d-flex align-items-center w-500">
+                                <img id="logoPreview" src="@Model.User.Avatar" alt="User's profil" class="img-fluid" />
+                            </div>
+                        </label>
+                        <input type="file" id="changeProfilPicture" class="d-none" asp-for="UpdateProfil.UploadAvatar" accept="image/*" />
+                        <span asp-validation-for="UpdateProfil.UploadAvatar" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- détails profil-->
+            <div class="col-lg-6 col-md-8 d-flex flex-column gap-3">
+                <div class="title-page hall-of-fame">
+                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">PROFIL</h3>
+                </div>
+                <form method="post" class="mt-3">
+                    <div class="card bg-dark h-100 border-0 shadow">
+                        <div class="card-body d-flex flex-column gap-3">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" asp-for="UpdateProfil.Courriel">Courriel*</label>
+                                    <input type="email" asp-for="UpdateProfil.Courriel" value="@Model.User.Email" class="form-control login-input" placeholder="mon@email.com" required/>
+                                    <span class="text-danger" asp-validation-for="UpdateProfil.Courriel"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" asp-for="UpdateProfil.NomDeColon">Nom de colon*</label>
+                                    <input type="text" asp-for="UpdateProfil.NomDeColon" value="@Model.User.Name" class="form-control login-input" placeholder="abc" required/>
+                                    <span class="text-danger" asp-validation-for="UpdateProfil.NomDeColon"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="UpdateProfil.DateDeNaissance">Date de naissance*</label>
+                                <input type="date" asp-for="UpdateProfil.DateDeNaissance" class="form-control login-input" placeholder="****" required/>
+                                <span class="text-danger" asp-validation-for="UpdateProfil.DateDeNaissance"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" asp-for="UpdateProfil.NouveauMotDePasse">Nouveau mot de passe</label>
+                                    <input type="password" asp-for="UpdateProfil.NouveauMotDePasse" class="form-control login-input" placeholder="****" />
+                                    <span class="text-danger" asp-validation-for="UpdateProfil.NouveauMotDePasse"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" asp-for="UpdateProfil.ConfirmationMotDePasse">Confirmation mot de passe</label>
+                                    <input type="password" asp-for="UpdateProfil.ConfirmationMotDePasse" class="form-control login-input" placeholder="****" />
+                                    <span class="text-danger" asp-validation-for="UpdateProfil.ConfirmationMotDePasse"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-purple w-100 mt-auto font-barlow fw-bold">Enregistrer</button>
+                </form>
+                
+                <form method="post" asp-page="./Profil" asp-page-handler="DeleteAccount" class="mt-3">
+                    <button type="submit" class="btn btn-danger w-100 font-barlow fw-bold">Supprimer le compte</button>
+                </form>
+            </div>
+            <!-- forunri graphs ou consulter stats + job ? (aucune modif acceptée)-->
+        </div>
+    </section>
+</div>
+
+
+@section Scripts {
+    <script>
+        // merci chatty
+        document.getElementById('changeProfilPicture').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+}
