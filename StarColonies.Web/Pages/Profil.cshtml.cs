@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
+using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Web.Pages;
 
@@ -40,6 +43,7 @@ public class Profil : PageModel
 {
     private readonly IColonRepository _repository;
     private readonly ILogger<ConsultMission> _logger;
+    private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
     public Colon User { get; private set; }
 
     [BindProperty]
@@ -47,8 +51,9 @@ public class Profil : PageModel
     
     private const string ColonId = "e98d7af7-b9be-4877-a56b-5a336f83853b"; // TODO a modifier
     
-    public Profil(IColonRepository colonRepository, ILogger<ConsultMission> logger)
+    public Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogger<ConsultMission> logger)
     {
+        _userManager = userManager;
         _repository = colonRepository;
         _logger = logger;
     }
