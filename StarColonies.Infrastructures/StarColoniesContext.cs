@@ -25,6 +25,7 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<Profession> Profession { get; set; }
     public DbSet<TypeResource> TypeResource { get; set; }
     public DbSet<BonusResource> BonusResource { get; set; }
+    public DbSet<Log> Logs { get; set; }
     public DbSet<BonusTransaction> BonusTransaction { get; set; }
     public DbSet<BonusTransactionResource> BonusTransactionResource { get; set; }
 

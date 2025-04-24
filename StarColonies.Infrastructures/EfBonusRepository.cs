@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarColonies.Domains;
+using StarColonies.Domains.Repositories;
 using StarColonies.Infrastructures.Entities;
 using Bonus = StarColonies.Domains.Bonus;
 using BonusResource = StarColonies.Domains.BonusResource;
