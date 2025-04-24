@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 
@@ -7,11 +9,29 @@ namespace StarColonies.Web.Pages;
 
 public class UpdateProfilViewModel
 {
+    [Required(ErrorMessage = "Le courriel est requis")]
+    [EmailAddress(ErrorMessage = "Format du courriel invalide")]
+    [Display(Name = "Courriel")]
     public string Courriel { get; set; } = string.Empty;
-    public string NomDeColon { get; set; }  = string.Empty;
-    public DateTime DateDeNaissance { get; set; }  = DateTime.Today;
+    
+    [Required(ErrorMessage = "Le nom de colon est requis")]
+    [Display(Name = "Nom de colon")]
+    public string NomDeColon { get; set; } = string.Empty;
+    
+    [Required(ErrorMessage = "La date de naissance est requise")]
+    [DataType(DataType.Date)]
+    [Display(Name = "Date de naissance")]
+    public DateTime DateDeNaissance { get; set; } = DateTime.Today;
+    
+    [Display(Name = "Nouveau mot de passe")]
+    [DataType(DataType.Password)]
     public string NouveauMotDePasse { get; set; }  = string.Empty;
-    public string ConfirmationMotDePasse { get; set; } = string.Empty;
+    
+    [Display(Name = "Confirmation mot de passe")]
+    [DataType(DataType.Password)]
+    [Compare("NouveauMotDePasse", ErrorMessage = "Les mots de passe ne correspondent pas")]
+    public string ConfirmationMotDePasse { get; set; }  = string.Empty;
+    
     public string AvatarActuel { get; set; } = string.Empty;
 }
 
@@ -56,12 +76,6 @@ public class Profil : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        if (UpdateProfil.NouveauMotDePasse != UpdateProfil.ConfirmationMotDePasse)
-        {
-            ModelState.AddModelError(UpdateProfil.ConfirmationMotDePasse, "Le nouveau mot de passe et la confirmation ne correspondent pas.");
-            return Page();
-        }
-
         try
         {
             var colon = await _repository.GetColonByIdAsync(ColonId);
@@ -70,7 +84,11 @@ public class Profil : PageModel
             colon.DateBirth = UpdateProfil.DateDeNaissance;
 
             await _repository.UpdateColonAsync(colon);
-            await _repository.ChangePassword(ColonId, UpdateProfil.ConfirmationMotDePasse);
+            
+            if (!string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
+            { 
+                await _repository.ChangePassword(ColonId, UpdateProfil.ConfirmationMotDePasse);
+            }
 
             User = await _repository.GetColonByIdAsync(ColonId);
             UpdateProfil = new UpdateProfilViewModel
