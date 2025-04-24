@@ -280,7 +280,44 @@ public class EfColonRepository : IColonRepository
 
         await _context.SaveChangesAsync();
     }
-    
+
+    public async Task ExpireBonusAsync(string colonId, int bonusId)
+    {
+        // Récupérer l'association
+        var colonBonus = await _context.ColonBonus
+            .FirstOrDefaultAsync(cb => cb.ColonId == colonId && cb.BonusId == bonusId);
+        
+        if (colonBonus != null)
+        {
+            // Supprimer l'association
+            _context.ColonBonus.Remove(colonBonus);
+            await _context.SaveChangesAsync();
+        
+            // Vérifier si d'autres colons utilisent ce bonus
+            var otherAssociations = await _context.ColonBonus
+                .AnyAsync(cb => cb.BonusId == bonusId);
+            
+            if (!otherAssociations)
+            {
+                // Récupérer et supprimer les ressources du bonus
+                var bonusResources = await _context.BonusResource
+                    .Where(br => br.BonusId == bonusId)
+                    .ToListAsync();
+                
+                _context.BonusResource.RemoveRange(bonusResources);
+            
+                // Récupérer et supprimer le bonus lui-même
+                var bonus = await _context.Bonus.FindAsync(bonusId);
+                if (bonus != null)
+                {
+                    _context.Bonus.Remove(bonus);
+                }
+            
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)
     {
         return new Colon

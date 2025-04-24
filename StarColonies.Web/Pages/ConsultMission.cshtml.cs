@@ -119,6 +119,7 @@ public class ConsultMission(
         var teammates = await teamRepository.GetMembersOfTeam(team);
         
         int bonusAppliedCount = 0;
+        List<(string UserId, int BonusId)> oneTimeBonusesToExpire = new List<(string, int)>();
         
         foreach (var teammate in teammates)
         {
@@ -141,6 +142,11 @@ public class ConsultMission(
                     logger.LogInformation($"Force: {strengthBefore} -> {teamWithBonuses.TotalStrength}");
                     logger.LogInformation($"Endurance: {enduranceBefore} -> {teamWithBonuses.TotalEndurance}");
 
+                    //TODO : to DB or not to DB ?
+                    if (bonus.Name.Contains("usage unique"))
+                    {
+                        oneTimeBonusesToExpire.Add((teammate.Id, bonus.Id));
+                    }
                 }
             }
         }
@@ -150,6 +156,13 @@ public class ConsultMission(
         
         // 6. Exécuter la mission avec l'équipe modifiée par les bonus
         var result = missionEngine.ExecuteMission(Mission, teamWithBonuses);
+        
+        // Expirer les bonus à usage unique identifiés
+        foreach (var (curUserId, bonusId) in oneTimeBonusesToExpire)
+        {
+            await colonRepository.ExpireBonusAsync(curUserId, bonusId);
+            logger.LogInformation($"Bonus à usage unique {bonusId} expiré après utilisation pour l'utilisateur {userId}");
+        }
         
         missionRepository.SaveMissionResult(result);
         

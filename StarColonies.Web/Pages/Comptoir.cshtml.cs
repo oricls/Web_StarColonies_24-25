@@ -12,6 +12,7 @@ public class Comptoir : PageModel
     private readonly ILogger<ConsultMission> _logger;
     private readonly IBonusRepository _repositoryBonus;
     private readonly IColonRepository _repositoryColon;
+    private readonly IMissionRepository _repositoryMission;
 
     public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
     public Dictionary<int, TimeSpan> BonusDuration { get; private set; }
@@ -29,15 +30,31 @@ public class Comptoir : PageModel
     
     public Dictionary<int, DateTime> ExpirationDates { get; private set; }
     
-    public Comptoir(IBonusRepository repositoryBonus, IColonRepository repositoryColon, ILogger<ConsultMission> logger)
+    // Nouvelles propriétés pour le suivi des achats
+    [BindProperty(SupportsGet = true)]
+    public string FromMission { get; set; }
+    
+    [BindProperty(SupportsGet = true)]
+    public int PurchaseCount { get; set; } = 0;
+    
+    public bool TeamBonusAvailable => PurchaseCount >= 5;
+    public bool TeamBonusCreated { get; set; } = false;
+    public Mission CurrentMission { get; set; }
+    
+    public Comptoir(
+        IBonusRepository repositoryBonus, 
+        IColonRepository repositoryColon, 
+        IMissionRepository repositoryMission,
+        ILogger<ConsultMission> logger)
     {
         _repositoryBonus = repositoryBonus;
         _repositoryColon = repositoryColon;
+        _repositoryMission = repositoryMission;
         _logger = logger;
         BonusDuration = new Dictionary<int, TimeSpan>();
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(bool bonusCreated = false)
     {
         try
         {
@@ -100,6 +117,29 @@ public class Comptoir : PageModel
                     }
                 }
             }
+            
+            // Si on vient d'une mission, récupérer la mission correspondante
+            if (!string.IsNullOrEmpty(FromMission))
+            {
+                var allMissions = await _repositoryMission.GetAllMissionsAsync();
+                CurrentMission = allMissions.FirstOrDefault(m => m.Name.ToKebab() == FromMission);
+                
+                // Si le bonus est disponible mais pas encore créé et qu'on n'a pas un indicateur qu'il a déjà été créé
+                TeamBonusCreated = bonusCreated;
+                if (TeamBonusAvailable && !TeamBonusCreated)
+                {
+                    // Créer le bonus d'équipe
+                    await CreateTeamLevelBonus(userId);
+                    
+                    // Rediriger pour marquer le bonus comme créé
+                    return RedirectToPage(new { fromMission = FromMission, purchaseCount = PurchaseCount, bonusCreated = true });
+                }
+                
+                if (bonusCreated)
+                {
+                    StatusMessage = "Félicitations ! Vous avez débloqué un bonus d'augmentation de niveau pour votre équipe!";
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -108,7 +148,7 @@ public class Comptoir : PageModel
         return Page();
     }
     
-    public async Task<IActionResult> OnPostAcheterBonusAsync(int bonusId)
+    public async Task<IActionResult> OnPostAcheterBonusAsync(int bonusId, string fromMission, int currentCount)
     {
         try
         {
@@ -122,7 +162,7 @@ public class Comptoir : PageModel
             if (bonus == null)
             {
                 StatusMessage = "Erreur : Bonus non trouvé.";
-                return RedirectToPage();
+                return RedirectToPage(new { fromMission, purchaseCount = currentCount });
             }
             
             // Récupérer les ressources du colon
@@ -146,15 +186,14 @@ public class Comptoir : PageModel
                     colonResource.TotalQuantity < requiredResource.Multiplier)
                 {
                     StatusMessage = "Erreur : Ressources insuffisantes pour effectuer cet échange.";
-                    return RedirectToPage();
+                    return RedirectToPage(new { fromMission, purchaseCount = currentCount });
                 }
             }
             
             // Déduire les ressources et effectuer l'achat
             foreach (var requiredResource in bonus.Resources)
             {
-                // Trouver les ressources du type requis
-                //TODO : Se débarasser du typeresource... 
+                // Trouver les ressources du type requis 
                 var resourcesOfType = groupedResources[requiredResource.ResourceType].Resources;
                 
                 int remainingToDeduct = requiredResource.Multiplier;
@@ -171,20 +210,70 @@ public class Comptoir : PageModel
                         break;
                 }
             }
+            
             // Enregistrer la transaction
             await _repositoryBonus.CreateTransactionAsync(userId, bonusId, bonus.Resources.ToList());
             
             // Ajouter le bonus au colon
             await _repositoryColon.AddBonusToColonAsync(userId, bonusId, TimeSpan.Zero); // Utilise la durée par défaut du bonus
             
-            StatusMessage = $"Le bonus {bonus.Name} a été acheté avec succès !";
-            return RedirectToPage();
+            // Si on est en train d'acheter des bonus pour débloquer le bonus d'équipe
+            if (!string.IsNullOrEmpty(fromMission))
+            {
+                // Incrémenter le compteur
+                currentCount++;
+                
+                // Vérifier si on atteint 5 achats
+                if (currentCount == 5)
+                {
+                    StatusMessage = $"Le bonus {bonus.Name} a été acheté avec succès ! Vous avez débloqué un bonus d'augmentation de niveau pour votre équipe!";
+                }
+                else
+                {
+                    StatusMessage = $"Le bonus {bonus.Name} a été acheté avec succès ! Encore {5 - currentCount} achat(s) pour débloquer le bonus d'équipe.";
+                }
+            }
+            else
+            {
+                StatusMessage = $"Le bonus {bonus.Name} a été acheté avec succès !";
+            }
+            
+            return RedirectToPage(new { fromMission, purchaseCount = currentCount });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erreur lors de l'achat d'un bonus");
             StatusMessage = "Une erreur est survenue lors de l'achat du bonus.";
-            return RedirectToPage();
+            return RedirectToPage(new { fromMission, purchaseCount = currentCount });
+        }
+    }
+    
+    private async Task CreateTeamLevelBonus(string userId)
+    {
+        try
+        {
+            // Créer un bonus d'augmentation de niveau avec un nom spécial pour l'identifier
+            var levelBonus = new Bonus
+            {
+                Name = "Boost de niveau d'équipe (usage unique)",
+                Description = "Augmente le niveau de chaque membre de l'équipe de 1 pour la prochaine mission uniquement",
+                EffectType = BonusEffectType.IncreaseLevel,
+                IconUrl = "icons/temp.png",
+                DateAchat = DateTime.Now,
+                DateExpiration = DateTime.Now.AddHours(12) // Durée suffisante pour retourner à la mission
+            };
+            
+            // Sauvegarder le bonus
+            var bonusId = await _repositoryBonus.CreateBonusAsync(levelBonus);
+            
+            // Associer le bonus au colon
+            await _repositoryColon.AddBonusToColonAsync(userId, bonusId, TimeSpan.FromHours(12));
+            
+            _logger.LogInformation($"Bonus d'équipe à usage unique créé pour l'utilisateur {userId} (ID: {bonusId})");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la création du bonus d'équipe");
         }
     }
 }

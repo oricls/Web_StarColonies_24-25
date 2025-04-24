@@ -15,7 +15,7 @@ public class EfBonusRepository : IBonusRepository
         _context = context;
     }
     
-    public async Task CreateBonusAsync(Bonus bonus)
+    public async Task<int> CreateBonusAsync(Bonus bonus)
     {
         var bonusEntity = new Entities.Bonus
         {
@@ -24,7 +24,7 @@ public class EfBonusRepository : IBonusRepository
             DureeParDefaut = (bonus.DateExpiration - bonus.DateAchat).Duration(),
             IconUrl = bonus.IconUrl,
             EffectTypeId = (int)bonus.EffectType, 
-            
+        
             BonusResources = bonus.Resources.Select(r => new Entities.BonusResource {
                 ResourceId = r.ResourceId,
                 Quantite = (int)r.Multiplier
@@ -32,6 +32,9 @@ public class EfBonusRepository : IBonusRepository
         };
         _context.Bonus.Add(bonusEntity);
         await _context.SaveChangesAsync();
+    
+        // Retourner l'ID du bonus créé
+        return bonusEntity.Id;
     }
 
     public async Task DeleteBonusAsync(Bonus bonus)
