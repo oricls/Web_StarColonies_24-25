@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250423113627_UpdateAdmin3")]
+    partial class UpdateAdmin3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,8 +69,8 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d832f2ee-7acc-462d-8d0d-30949168b103",
-                            ConcurrencyStamp = "35e6136f-3fd0-4f08-bfb0-ed69db678678",
+                            Id = "a8d17110-e8d5-4863-ac6a-5c4eae9c2ac7",
+                            ConcurrencyStamp = "337b9586-39d9-43e9-8bed-327066318218",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -177,6 +180,26 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ColonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColonId")
+                        .IsUnique();
+
+                    b.ToTable("Admin");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
@@ -1259,6 +1282,17 @@ namespace StarColonies.Infrastructures.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
+                        .WithOne()
+                        .HasForeignKey("StarColonies.Infrastructures.Entities.Admin", "ColonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colon");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>

@@ -10,9 +10,6 @@ public class LogConfiguration : IEntityTypeConfiguration<Log>
     {
         builder.HasKey(x => x.Id);
         
-        builder.Property(x => x.ActivityLogId)
-            .IsRequired();
-        
         builder.Property(x => x.RequeteAction)
             .IsRequired()
             .HasMaxLength(256);
@@ -23,10 +20,5 @@ public class LogConfiguration : IEntityTypeConfiguration<Log>
 
         builder.Property(x => x.DateHeureAction)
             .IsRequired();
-        
-        builder.HasOne(x => x.ActivityLog)
-            .WithMany(x => x.Logs)
-            .HasForeignKey(x => x.ActivityLogId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }
