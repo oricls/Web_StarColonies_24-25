@@ -8,7 +8,7 @@
 
     namespace StarColonies.Web.Pages;
 
-    public class RegisterModel(UserManager<Colon> userManager, SignInManager<Colon> signInManagern, IColonRepository colonRepository) : PageModel
+    public class RegisterModel(UserManager<Colon> userManager, SignInManager<Colon> signInManagern, IColonRepository colonRepository, ILogRepository logRepository) : PageModel
     {
 
         public IEnumerable<Profession> Profession { get; set; } = [];
@@ -66,10 +66,29 @@
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                
+                await logRepository.AddLog(
+                    new Log()
+                    {
+                        RequeteAction = "Inscription",
+                        ResponseAction = "Erreur d'inscription : " + string.Join(", ", result.Errors.Select(e => e.Description)),
+                        DateHeureAction = DateTime.Now
+                    }
+                );
+                
                 return Page();
             }
             
             await signInManagern.SignInAsync(colon, isPersistent: false);
+            
+            await logRepository.AddLog(
+                new Log()
+                {
+                    RequeteAction = "Inscription",
+                    ResponseAction = "Inscription réussie",
+                    DateHeureAction = DateTime.Now
+                }
+            );
             
 
             return RedirectToPage("/DashBoard");
