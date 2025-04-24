@@ -7,6 +7,7 @@ namespace StarColonies.Domains
         DoubleEndurance = 2, 
         IncreaseLevel = 3,
         DoubleResources = 4,
+        ExperienceBoost = 5
         // ...
     }
 }

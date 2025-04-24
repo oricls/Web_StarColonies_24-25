@@ -43,12 +43,20 @@ namespace StarColonies.Domains
                 case BonusEffectType.DoubleResources:
                     // Rien à faire ici, car ce bonus est appliqué après la mission 
                     break;
+                case BonusEffectType.ExperienceBoost:
+                    // Rien à faire ici, car ce bonus est appliqué après la mission
+                    break;
                 case BonusEffectType.None:
                     break;
                 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        
+        public bool ApplyExperienceBonus()
+        {
+            return IsActive() && EffectType == BonusEffectType.ExperienceBoost;
         }
         
         // Méthode pour appliquer ce bonus aux ressources obtenues

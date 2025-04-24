@@ -11,4 +11,7 @@ public interface IBonusRepository
     Task<TimeSpan> getDurationOfBonus(Bonus bonus);
     
     Task<IReadOnlyList<BonusResource>> GetBonusResources(Bonus bonus);
+    
+    Task<IReadOnlyList<TransactionInfo>> GetColonTransactionsAsync(string colonId, int? limit = null);
+    Task CreateTransactionAsync(string colonId, int bonusId, List<BonusResource> resources);
 }

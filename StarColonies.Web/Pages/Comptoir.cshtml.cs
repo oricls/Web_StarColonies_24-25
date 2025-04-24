@@ -19,6 +19,9 @@ public class Comptoir : PageModel
     // Propriété pour stocker les ressources groupées par type
     public IReadOnlyCollection<ResourceGroupViewModel> GroupedResources { get; private set; }
     
+    // Propriété pour stocker l'historique des transactions
+    public IReadOnlyCollection<TransactionInfo> TransactionHistory { get; private set; }
+    
     public string StatusMessage { get; set; }
     
     public Dictionary<int, bool> ActiveBonusStatus { get; private set; }
@@ -46,6 +49,9 @@ public class Comptoir : PageModel
             
             // Récupérer les bonus actifs du colon
             var activeBonuses = await _repositoryColon.GetColonActiveBonusesAsync(userId);
+            
+            // Récupérer l'historique des transactions du colon (limité aux 10 dernières)
+            TransactionHistory = await _repositoryBonus.GetColonTransactionsAsync(userId, 10);
             
             // Grouper les ressources par type et calculer les totaux
             GroupedResources = resourcesOfColon
@@ -165,6 +171,8 @@ public class Comptoir : PageModel
                         break;
                 }
             }
+            // Enregistrer la transaction
+            await _repositoryBonus.CreateTransactionAsync(userId, bonusId, bonus.Resources.ToList());
             
             // Ajouter le bonus au colon
             await _repositoryColon.AddBonusToColonAsync(userId, bonusId, TimeSpan.Zero); // Utilise la durée par défaut du bonus

@@ -12,6 +12,8 @@ public class MissionSucessful(
 {
     public MissionRewardViewModel RewardModel { get; set; } = new();
 
+    public int Levels = 0;
+
     public async Task OnGetAsync(int idMission, int teamId)
 {
     // 1. Récupérer l'équipe qui a réussi la mission
@@ -26,6 +28,7 @@ public class MissionSucessful(
     
     // 3. Augmenter le niveau des membres de l'équipe
     teamRepository.LevelUpTeam(team);
+    Levels++;
 
     // 4. Récupérer les membres et leurs récompenses
     var members = await teamRepository.GetMembersOfTeam(team);
@@ -34,10 +37,23 @@ public class MissionSucessful(
     
     // 5. Récupérer tous les bonus actifs des membres
     List<Bonus> activeTeamBonuses = new List<Bonus>();
+    bool hasExperienceBoost = false;
+    
     foreach (var member in members)
     {
         var memberBonuses = await colonRepository.GetColonActiveBonusesAsync(member.Id);
         activeTeamBonuses.AddRange(memberBonuses);
+        
+        if (memberBonuses.Any(b => b.ApplyExperienceBonus()))
+        {
+            hasExperienceBoost = true;
+        }
+    }
+
+    if (hasExperienceBoost)
+    {
+        teamRepository.LevelUpTeam(team);
+        Levels++;
     }
 
     // 6. Distribuer les récompenses à chaque membre
@@ -51,6 +67,7 @@ public class MissionSucessful(
 
         // Générer 1-3 ressources aléatoires pour ce membre
         List<Resource> memberResources = new List<Resource>();
+
         for (var i = 0; i < random.Next(1, 4); i++)
         {
             var resource = allResources.OrderBy(x => random.Next()).First();
@@ -67,11 +84,12 @@ public class MissionSucessful(
             memberResources.Add(memberResource);
         }
         
+        
         foreach (var bonus in activeTeamBonuses)
         {
             bonus.ApplyToResources(memberResources);
         }
-        
+
         // Ajouter les ressources à la récompense et à la base de données
         foreach (var resource in memberResources)
         {

@@ -84,10 +84,10 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
             new Bonus
             {
                 Id = 5,
-                Name = "Seconde chance",
-                Description = "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)",
-                DureeParDefaut = TimeSpan.FromMinutes(20), // 1 mission comme durée
-                EffectTypeId = 2, // DoubleEndurance
+                Name = "Parchemin de monsieur Swinnen",
+                Description = "Augmente l'expérience gagnée et permet de gagner un niveau supplémentaire à chaque mission",
+                DureeParDefaut = TimeSpan.FromMinutes(20),
+                EffectTypeId = 5, // ExperienceBoost
                 IconUrl = "assets/icons/potion.png"
             },
             new Bonus

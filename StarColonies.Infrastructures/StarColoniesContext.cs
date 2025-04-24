@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StarColonies.Infrastructures.Configuration;
 using StarColonies.Infrastructures.Entities;
+using Transaction = System.Transactions.Transaction;
 
 namespace StarColonies.Infrastructures;
 
@@ -24,6 +25,9 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<Profession> Profession { get; set; }
     public DbSet<TypeResource> TypeResource { get; set; }
     public DbSet<BonusResource> BonusResource { get; set; }
+    public DbSet<BonusTransaction> BonusTransaction { get; set; }
+    public DbSet<BonusTransactionResource> BonusTransactionResource { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +53,9 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
         modelBuilder.ApplyConfiguration(new ActivityLogConfiguration());
         modelBuilder.ApplyConfiguration(new LogConfiguration());
         modelBuilder.ApplyConfiguration(new AdminConfiguration());
+        
+        modelBuilder.ApplyConfiguration(new BonusTransactionConfiguration());
+        modelBuilder.ApplyConfiguration(new BonusTransactionResourceConfiguration());
         
         base.OnModelCreating(modelBuilder);
     }

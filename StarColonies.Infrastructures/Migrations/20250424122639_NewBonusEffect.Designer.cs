@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250424122639_NewBonusEffect")]
+    partial class NewBonusEffect
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,81 +448,23 @@ namespace StarColonies.Infrastructures.Migrations
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusResource", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("BonusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantite")
                         .HasColumnType("int");
 
                     b.Property<int>("ResourceId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResourceId");
-
-                    b.HasIndex("BonusId", "ResourceId");
-
-                    b.ToTable("BonusResource");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
-                {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BonusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ColonId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BonusId");
-
-                    b.HasIndex("ColonId");
-
-                    b.ToTable("BonusTransaction");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransactionResource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BonusResourceId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantite")
                         .HasColumnType("int");
 
-                    b.Property<int>("TransactionId")
-                        .HasColumnType("int");
+                    b.HasKey("BonusId", "ResourceId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("ResourceId");
 
-                    b.HasIndex("BonusResourceId");
-
-                    b.HasIndex("TransactionId");
-
-                    b.ToTable("BonusTransactionResource");
+                    b.ToTable("BonusResource");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
@@ -1424,44 +1369,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Resource");
                 });
 
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.Bonus", "Bonus")
-                        .WithMany()
-                        .HasForeignKey("BonusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
-                        .WithMany()
-                        .HasForeignKey("ColonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bonus");
-
-                    b.Navigation("Colon");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransactionResource", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.BonusResource", "BonusResource")
-                        .WithMany()
-                        .HasForeignKey("BonusResourceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("StarColonies.Infrastructures.Entities.BonusTransaction", "Transaction")
-                        .WithMany("TransactionResources")
-                        .HasForeignKey("TransactionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BonusResource");
-
-                    b.Navigation("Transaction");
-                });
-
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.Profession", "Profession")
@@ -1599,11 +1506,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("BonusResources");
 
                     b.Navigation("ColonBonuses");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
-                {
-                    b.Navigation("TransactionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
