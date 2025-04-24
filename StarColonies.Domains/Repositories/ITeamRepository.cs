@@ -1,4 +1,4 @@
-﻿namespace StarColonies.Domains;
+﻿namespace StarColonies.Domains.Repositories;
 
 public interface ITeamRepository
 {

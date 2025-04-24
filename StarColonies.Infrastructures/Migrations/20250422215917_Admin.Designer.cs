@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250422215917_Admin")]
+    partial class Admin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,15 +65,6 @@ namespace StarColonies.Infrastructures.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "d832f2ee-7acc-462d-8d0d-30949168b103",
-                            ConcurrencyStamp = "35e6136f-3fd0-4f08-bfb0-ed69db678678",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -177,6 +171,52 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityLog");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityLogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityLogId");
+
+                    b.ToTable("Admin");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
@@ -545,6 +585,9 @@ namespace StarColonies.Infrastructures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ActivityLogId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DateHeureAction")
                         .HasColumnType("datetime2");
 
@@ -560,7 +603,9 @@ namespace StarColonies.Infrastructures.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.HasIndex("ActivityLogId");
+
+                    b.ToTable("Log");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Mission", b =>
@@ -1261,6 +1306,17 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
+                        .WithMany("Admins")
+                        .HasForeignKey("ActivityLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActivityLog");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.TypeBestiaire", "TypeBestiaire")
@@ -1340,6 +1396,17 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Resource");
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Log", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
+                        .WithMany("Logs")
+                        .HasForeignKey("ActivityLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActivityLog");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionBestiaire", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.Bestiaire", "Bestiaire")
@@ -1398,6 +1465,13 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
 
                     b.Navigation("ColonCreator");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
+                {
+                    b.Navigation("Admins");
+
+                    b.Navigation("Logs");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>

@@ -44,6 +44,14 @@
                                 <i class="fas fa-shopping-cart nav-link-icon"></i>Comptoir
                             </a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-page="/Admin">
+                                    <i class="fas fa-user-shield nav-link-icon"></i>Admin
+                                </a>
+                            </li>
+                        }
                     }
                 </ul>
 

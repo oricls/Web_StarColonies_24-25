@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StarColonies.Domains;
+using StarColonies.Domains.Repositories;
 using StarColonies.Infrastructures;
 using StarColonies.Infrastructures.Entities;
 using StarColonies.Web.Constraints;
@@ -24,6 +25,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
+    options.AccessDeniedPath = "/AccesDenied";
 });
 
 builder.Services.AddDbContext<StarColoniesContext>(options =>
@@ -35,13 +37,15 @@ builder.Services.AddIdentity<Colon, IdentityRole>(options =>
         options.Password.RequireDigit = false;
     })
     .AddEntityFrameworkStores<StarColoniesContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>();
 
 builder.Services.AddScoped<IColonRepository, EfColonRepository>();
 builder.Services.AddScoped<IMissionRepository, EfMissionRepository>();
 builder.Services.AddScoped<ITeamRepository, EfTeamRepository>();
 builder.Services.AddScoped<IColonRepository, EfColonRepository>();
 builder.Services.AddScoped<IBonusRepository, EfBonusRepository>();
+builder.Services.AddScoped<IAdminRepository, EfAdminRepository>();
 builder.Services.AddScoped<MissionEngine>();
 
 var app = builder.Build();

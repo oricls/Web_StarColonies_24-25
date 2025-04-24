@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StarColonies.Domains;
+using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Infrastructures;
 
