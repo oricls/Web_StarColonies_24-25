@@ -20,6 +20,13 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
         
         builder.Property(b => b.DureeParDefaut)
             .IsRequired();
+            
+        builder.Property(b => b.IconUrl)
+            .HasMaxLength(255);
+            
+        builder.Property(b => b.EffectTypeId)
+            .IsRequired()
+            .HasDefaultValue(0);
         
         builder.HasMany(b => b.ColonBonuses)
             .WithOne(cb => cb.Bonus)
@@ -43,42 +50,54 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Id = 1,
                 Name = "Potion de force",
                 Description = "Augmente temporairement la force de tous les membres d'une équipe",
-                DureeParDefaut = TimeSpan.FromMinutes(20)
+                DureeParDefaut = TimeSpan.FromMinutes(5),
+                EffectTypeId = 1, // DoubleStrength
+                IconUrl = "assets/icons/potion.png"
             },
             new Bonus
             {
                 Id = 2,
-                Name = "Equipe de pouce",
-                Description = "Investit un soldat supplémentaire pour les 3 prochaines missions",
-                DureeParDefaut = TimeSpan.FromMinutes(3) // 3 missions comme durée
+                Name = "Coup de pouce",
+                Description = "Investit un soldat supplémentaire pour les prochaines missions",
+                DureeParDefaut = TimeSpan.FromMinutes(3), // 3 missions comme durée
+                EffectTypeId = 3, // IncreaseLevel
+                IconUrl = "assets/icons/potion.png"
             },
             new Bonus
             {
                 Id = 3,
                 Name = "Potion d'endurance",
                 Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
-                DureeParDefaut = TimeSpan.FromMinutes(20)
+                DureeParDefaut = TimeSpan.FromMinutes(5),
+                EffectTypeId = 2, // DoubleEndurance
+                IconUrl = "assets/icons/potion.png"
             },
             new Bonus
             {
                 Id = 4,
                 Name = "Grâce de Midas",
-                Description = "Double le nombre de ressources obtenues pour 1 mission",
-                DureeParDefaut = TimeSpan.FromMinutes(10) // 1 mission comme durée
+                Description = "Double le nombre de ressources obtenues",
+                DureeParDefaut = TimeSpan.FromMinutes(1), 
+                EffectTypeId = 4, // DoubleResources
+                IconUrl = "assets/icons/potion.png"
             },
             new Bonus
             {
                 Id = 5,
-                Name = "Seconde chance",
-                Description = "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)",
-                DureeParDefaut = TimeSpan.FromMinutes(10) // 1 mission comme durée
+                Name = "Parchemin de monsieur Swinnen",
+                Description = "Augmente l'expérience gagnée et permet de gagner un niveau supplémentaire à chaque mission",
+                DureeParDefaut = TimeSpan.FromMinutes(20),
+                EffectTypeId = 5, // ExperienceBoost
+                IconUrl = "assets/icons/potion.png"
             },
             new Bonus
             {
                 Id = 6,
-                Name = "Litem trop cheats",
+                Name = "L'item trop cheatés",
                 Description = "Elimine instantanément tous les ministres",
-                DureeParDefaut = TimeSpan.FromMinutes(100)
+                DureeParDefaut = TimeSpan.FromMinutes(100),
+                EffectTypeId = 0, //TODO: HAHA C'EST COMPLIQUE CELUI CI
+                IconUrl = "assets/icons/potion.png"
             }
         };
 
