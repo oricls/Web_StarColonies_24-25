@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 
@@ -32,7 +30,9 @@ public class UpdateProfilViewModel
     [Compare("NouveauMotDePasse", ErrorMessage = "Les mots de passe ne correspondent pas")]
     public string ConfirmationMotDePasse { get; set; }  = string.Empty;
     
-    public string AvatarActuel { get; set; } = string.Empty;
+    public IFormFile? UploadAvatar { get; set; }
+    
+    public string Avatar { get; set; } = string.Empty;
 }
 
 
@@ -63,7 +63,7 @@ public class Profil : PageModel
                 Courriel = User.Email,
                 NomDeColon = User.Name,
                 DateDeNaissance = User.DateBirth,
-                AvatarActuel = User.Avatar
+                Avatar = User.Avatar
             };
         }
         catch (Exception ex)
@@ -96,7 +96,7 @@ public class Profil : PageModel
                 Courriel = User.Email,
                 NomDeColon = User.Name,
                 DateDeNaissance = User.DateBirth,
-                AvatarActuel = User.Avatar
+                Avatar = User.Avatar
             };
             return Page();
         }
@@ -120,6 +120,4 @@ public class Profil : PageModel
             throw new Exception(ex.Message);
         }
     }
-    
-    private bool InputIsEmpty(string intput) => string.IsNullOrWhiteSpace(intput);
 }
