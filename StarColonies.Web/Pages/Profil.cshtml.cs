@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +8,7 @@ using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Web.Pages;
 
-public class UpdateProfilViewModel
+public class UpdateProfilInput
 {
     [Required(ErrorMessage = "Le courriel est requis")]
     [EmailAddress(ErrorMessage = "Format du courriel invalide")]
@@ -44,9 +45,11 @@ public class Profil : PageModel
     private readonly ILogger<Profil> _logger;
     private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
     public Colon Colon { get; private set; }
+    
+    public string Message { get; set; } = string.Empty;
 
     [BindProperty]
-    public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
+    public UpdateProfilInput UpdateProfil { get; set; } = new UpdateProfilInput();
     
     private Infrastructures.Entities.Colon? _user;
     
@@ -74,20 +77,23 @@ public class Profil : PageModel
         {
             var user = await GetCurrentUserAsync();
             Colon = await _repository.GetColonByIdAsync(user.Id);
-            UpdateProfil = new UpdateProfilViewModel
+            
+            UpdateProfil = new UpdateProfilInput
             {
                 Courriel = Colon.Email,
                 NomDeColon = Colon.Name,
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            return Page();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
-            return Page();
+            _logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
+            ModelState.AddModelError(string.Empty, "Erreur lors du chargement du profil.");
+            Message = "Erreur lors du chargement du profil.";
+            return RedirectToPage("/Dashboard");
         }
-        return Page();
     }
 
     public async Task<IActionResult> OnPost()
@@ -108,33 +114,36 @@ public class Profil : PageModel
             }
 
             Colon = await _repository.GetColonByIdAsync(user.Id);
-            UpdateProfil = new UpdateProfilViewModel
+            UpdateProfil = new UpdateProfilInput
             {
                 Courriel = Colon.Email,
                 NomDeColon = Colon.Name,
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            Message = "Modification enregistrée !";
             return Page();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Profil - Erreur lors de la mise à jour du profil");
-            return Page();
+            ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
+            Message = "Erreur lors de la mise à jour du profil";
+            return RedirectToPage("/Dashboard");
         }
     }
 
-    public async Task<IActionResult> OnPostDeleteAccountAsync()
+    public async Task<IActionResult>OnPostDeleteAccountAsync()
     {
         try
         {
-            var user =  await GetCurrentUserAsync();
-            await _repository.DeleteColonAsync(user.Id); 
-            return RedirectToPage("/Index");
+            var user = await GetCurrentUserAsync();
+            await _repository.DeleteColonAsync(user.Id);
+            return RedirectToPage("/Dashboard");
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la suppression");
+            return RedirectToPage("/Dashboard");
         }
     }
 }

@@ -61,17 +61,43 @@
                             </div>
                         </div>
                     </div>
+                    @if (!string.IsNullOrEmpty(Model.Message))
+                    {
+                        <div class="alert alert-success">@Model.Message</div>
+                    }
                     <button type="submit" class="btn btn-purple w-100 mt-auto font-barlow fw-bold">Enregistrer</button>
                 </form>
                 
-                <form method="post" asp-page="./Profil" asp-page-handler="DeleteAccount" class="mt-3">
-                    <button type="submit" class="btn btn-danger w-100 font-barlow fw-bold">Supprimer le compte</button>
-                </form>
+                <button type="button" class="btn btn-danger w-100 font-barlow fw-bold" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Supprimer le compte</button>
+             
             </div>
             <!-- forunri graphs ou consulter stats + job ? (aucune modif acceptée)-->
         </div>
     </section>
 </div>
+
+<!-- Modal de confirmation de suppression -->
+ <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+         <div class="modal-content bg-dark text-light">
+             <div class="modal-header border-secondary">
+                 <h5 class="modal-title" id="deleteUserModalLabel">Confirmer la suppression</h5>
+                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             
+             <div class="modal-body">
+                 La suppression du compte est <strong>irréversible</strong>, <br>voulez vous continuer ?
+             </div>
+             
+             <div class="modal-footer border-secondary">
+                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                 <form method="post" asp-page-handler="DeleteAccount">
+                     <button type="submit" class="btn btn-danger">Supprimer le compte</button>
+                 </form>
+             </div>
+         </div>
+     </div>
+ </div>
 
 
 @section Scripts {
@@ -88,4 +114,5 @@
             }
         });
     </script>
+}
 }
