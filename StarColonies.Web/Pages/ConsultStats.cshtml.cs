@@ -7,6 +7,13 @@ using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Web.Pages;
 
+public class StatPoint
+{
+    public string Date { get; set; }
+    public double Endurance { get; set; }
+    public double Strength { get; set; }
+}
+
 public class ConsultStatsModel : PageModel
 {
     private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
@@ -29,7 +36,8 @@ public class ConsultStatsModel : PageModel
     public int SelectedTeamId { get; set; }
     public int TotalSuccess { get; set; } = 0;
     public int TotalFailure { get; set; } = 0;
-
+    
+    public List<StatPoint> StatsEvolution { get; set; } = new();
     
     private async Task<Infrastructures.Entities.Colon> GetCurrentUserAsync()
     {
@@ -48,13 +56,21 @@ public class ConsultStatsModel : PageModel
 
         foreach (var team in UserTeams)
         {
-            var missionTeam = _missionRepository.GetMissionsByTeamId(team.Id);
+            var missionTeam = await _missionRepository.GetMissionsByTeamIdAsync(team.Id);
 
             foreach (var mission in missionTeam)
             {
-                var resultMission = _missionRepository.GetResultatsByMissionId(mission.Id);
+                var resultMission = await _missionRepository.GetResultatsByMissionIdAsync(mission.Id);
                 foreach (var result in resultMission) // pourquoi une liste ????
                 {
+                   
+                    StatsEvolution.Add(new StatPoint
+                    {
+                        Date = result.Date.ToString("dd-MM-yyyy"),
+                        Strength = result.IssueStrength,
+                        Endurance = result.IssueEndurance
+                    });
+                    
                     if (result.IsSuccess)
                     {
                         TotalSuccess++;

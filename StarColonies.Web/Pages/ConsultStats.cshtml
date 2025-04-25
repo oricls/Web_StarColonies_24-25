@@ -49,8 +49,11 @@
                 <h4>Total des résultats missions</h4>
                 <div id="total-result-mission-chart" style="width: 100%; height: 300px;"></div>
 
-                <h4>Évolution de l'endurance de l'équipe</h4>
-                <div id="endurance_chart" style="width: 100%; height: 300px;"></div>
+                <h4>Évolution de la force de l'équipe</h4>
+                <div id="strength-team-chart" style="width: 100%; height: 300px;"></div>
+                
+                <h4>Évolution de l'endurence de l'équipe</h4>
+                <div id="endurence-team-chart" style="width: 100%; height: 300px;"></div>
 
             </div>
         </div>
@@ -62,11 +65,19 @@
 <script type="text/javascript">
 var totalSuccess = @Html.Raw(Model.TotalSuccess);
 var totalFailure = @Html.Raw(Model.TotalFailure);
+var dataTeamStat = @Html.Raw(Json.Serialize(Model.StatsEvolution));
 
-google.charts.load('current', {'packages':['bar']});
+google.charts.load('current', {'packages':['bar', 'corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
+    TotalResultMissions();
+    StrengthChart();
+    EndurencehChart();
+}
+
+
+function TotalResultMissions(){
     var data = google.visualization.arrayToDataTable([
         ['Etat', 'Total'],
         ['Réussites', totalSuccess],
@@ -79,6 +90,43 @@ function drawChart() {
     var chart = new google.charts.Bar(document.getElementById('total-result-mission-chart'));
     chart.draw(data, google.charts.Bar.convertOptions(options));
 }
+
+function StrengthChart(){
+    var dataArray = [['Jour', 'Force']];
+
+    dataTeamStat.forEach(function(entry) {
+        dataArray.push([entry.date, entry.strength]);
+    });
+
+    var data = google.visualization.arrayToDataTable(dataArray);
+
+    var options = {
+        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0}
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById('strength-team-chart'));
+    chart.draw(data, options);
+}
+
+function EndurencehChart(){
+    var dataArray = [['Jour', 'Endurance']];
+
+    dataTeamStat.forEach(function(entry) {
+        dataArray.push([entry.date, entry.endurance]);
+    });
+
+    var data = google.visualization.arrayToDataTable(dataArray);
+
+    var options = {
+        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0}
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById('endurence-team-chart'));
+    chart.draw(data, options);
+}
+
 </script>
 
 @section Styles {
