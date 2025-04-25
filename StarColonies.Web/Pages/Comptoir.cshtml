@@ -261,47 +261,77 @@
 
 @section Scripts {
     <script>
-        // Fonction pour mettre à jour tous les timers
+        // Modification de la fonction de mise à jour des compteurs
         function updateCountdownTimers() {
             const now = new Date();
+            let needsReload = false;
 
             document.querySelectorAll('.countdown-timer').forEach(element => {
-                // Récupérer la date d'expiration depuis l'attribut data
-                const expirationDate = new Date(element.getAttribute('data-expiration'));
+                try {
+                    // Récupérer la date d'expiration depuis l'attribut data
+                    const expirationDateStr = element.getAttribute('data-expiration');
+                    // Vérification supplémentaire pour s'assurer que la date est valide
+                    if (!expirationDateStr) {
+                        console.error("Date d'expiration manquante");
+                        return;
+                    }
 
-                // Calculer la différence en millisecondes
-                const diff = expirationDate - now;
+                    const expirationDate = new Date(expirationDateStr);
 
-                // Si le bonus est expiré, recharger la page pour le retirer
-                if (diff <= 0) {
-                    window.location.reload();
-                    return;
+                    // Vérifier si la date est valide
+                    if (isNaN(expirationDate.getTime())) {
+                        console.error("Date d'expiration invalide:", expirationDateStr);
+                        return;
+                    }
+
+                    // Calculer la différence en millisecondes
+                    const diff = expirationDate - now;
+
+                    // Si le bonus est expiré, marquer pour recharger la page une seule fois
+                    if (diff <= 0) {
+                        needsReload = true;
+                        return;
+                    }
+
+                    // Calculer les jours, heures, minutes et secondes
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    // Formater le texte du timer
+                    let timeText = '';
+                    if (days > 0) {
+                        timeText = `${days}j ${hours}h`;
+                    } else if (hours > 0) {
+                        timeText = `${hours}h ${minutes}m`;
+                    } else {
+                        timeText = `${minutes}m ${seconds}s`;
+                    }
+
+                    // Mettre à jour le texte de l'élément
+                    element.textContent = `Expire dans ${timeText}`;
+                } catch (error) {
+                    console.error("Erreur lors de la mise à jour du compteur:", error);
                 }
-
-                // Calculer les jours, heures, minutes et secondes
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                // Formater le texte du timer
-                let timeText = '';
-                if (days > 0) {
-                    timeText = `${days}j ${hours}h`;
-                } else if (hours > 0) {
-                    timeText = `${hours}h ${minutes}m`;
-                } else {
-                    timeText = `${minutes}m ${seconds}s`;
-                }
-
-                // Mettre à jour le texte de l'élément
-                element.textContent = `Expire dans ${timeText}`;
             });
-        }
 
-        // Mettre à jour les timers immédiatement, puis toutes les secondes
-        updateCountdownTimers();
-        setInterval(updateCountdownTimers, 1000);
+            // Recharger la page une seule fois si nécessaire, avec une variable pour empêcher les rechargements en boucle
+            if (needsReload && !window.hasReloaded) {
+                window.hasReloaded = true;
+                window.location.reload();
+            }
+}
+
+        // Vérifier si des timers existent avant d'initialiser
+        if (document.querySelectorAll('.countdown-timer').length > 0) {
+            // Initialiser la variable pour éviter les rechargements en boucle
+            window.hasReloaded = false;
+
+            // Mettre à jour les timers immédiatement, puis toutes les secondes
+            updateCountdownTimers();
+            setInterval(updateCountdownTimers, 1000);
+        }
     </script>
 }
 
