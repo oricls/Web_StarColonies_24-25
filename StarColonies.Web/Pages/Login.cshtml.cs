@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using StarColonies.Domains.Repositories;
 using StarColonies.Infrastructures.Entities;
+using Log = StarColonies.Domains.Log;
 
 namespace StarColonies.Web.Pages;
 
@@ -20,7 +22,7 @@ public class LogInInput() // data
     public bool RememberMe { get; set; }
 }
 
-public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userManager, ILogger<Login> logger) : PageModel
+public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userManager, ILogRepository logRepository, ILogger<Login> logger) : PageModel
 {
     
     [BindProperty]
@@ -52,6 +54,14 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
             if (result.Succeeded)
             {
                 logger.LogInformation("Utilisateur connecté: {UserName}", user.UserName);
+                await logRepository.AddLog(
+                    new Log()
+                    {
+                        DateHeureAction = DateTime.Now,
+                        RequeteAction = "Login Request",
+                        ResponseAction = $"Success : {user.UserName} s'est connecté avec succès",
+                    }
+                );
                 return RedirectToPage("/Dashboard");
             }
         }

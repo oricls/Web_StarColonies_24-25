@@ -15,7 +15,7 @@
             <a asp-page="/Dashboard" class="btn rounded-circle btn-lg me-3" style="font-size: 1.8rem; padding: 1rem 1.2rem; color: white; background-color: #5a49ab;">
                 <i class="fas fa-home"></i>
             </a>
-            <a asp-page="/Comptoir" class="btn rounded-circle btn-lg" style="font-size: 1.8rem; padding: 1rem 1.2rem; color: white; background-color: #5a49ab;">
+            <a asp-page="/Comptoir" asp-route-fromMission="@Model.Mission.Name.ToKebab()" class="btn rounded-circle btn-lg" style="font-size: 1.8rem; padding: 1rem 1.2rem; color: white; background-color: #5a49ab;">
                 <i class="fas fa-shopping-cart"></i>
             </a>
         </div>
@@ -148,7 +148,7 @@
                             <input type="radio" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
                             <label for="team-@team.Id" class="team-card">
                                 <div class="team-avatar">
-                                    <img src="@team.Baniere" alt="@team.Name" class="img-fluid">
+                                    <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
                                 </div>
                                 <div class="team-name">
                                     @team.Name

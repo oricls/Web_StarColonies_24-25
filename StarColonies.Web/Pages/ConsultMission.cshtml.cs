@@ -67,49 +67,116 @@ public class ConsultMission(
     }
     
     public async Task<IActionResult> OnPostAsync(string slug)
+{
+    try
     {
-        try
+        // 1. Valider la sélection d'équipe
+        if (!ModelState.IsValid)
         {
-            // 1. Valider la sélection d'équipe
-            if (!ModelState.IsValid)
-            {
-                ModelState.AddModelError("", "Sélectionnez une équipe valide.");
-                return RedirectToPage("/ConsultMission", new { slug });
-            }
-            
-            // 2. Démarrer la mission pour l'équipe sélectionnée
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
-            if (string.IsNullOrEmpty(userId))
-            {
-                return RedirectToPage("/ConsultMission",new { slug });
-            }
-            
-            var colon = await colonRepository.GetColonByIdAsync(userId);
-            
-            UserTeams = await teamRepository.GetTeamByColon(colon);
-            var team = UserTeams.First(t => t.Id == SelectedTeamId);
-
-            var allMissions = await missionRepository.GetAllMissionsAsync();
-            Mission = allMissions.FirstOrDefault(m => m.Name.ToKebab() == slug);
-            
-            if (Mission == null)
-            {
-                return NotFound(slug);
-            }
-
-            var result = missionEngine.ExecuteMission(Mission, team);
-            
-            missionRepository.SaveMissionResult(result);
-
-            // 3. En cas d'échec de la mission, on redirige vers la page de mission échouée
-            return !result.IsSuccess ? RedirectToPage("/ResultMissionFailed", new { slug }) : RedirectToPage("/MissionSucessful", new { idMission = Mission.Id, teamId = team.Id });
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "ConsultMission.OnPost {Slug}", slug);
-            ModelState.AddModelError("", "Une erreur est survenue");
+            ModelState.AddModelError("", "Sélectionnez une équipe valide.");
             return RedirectToPage("/ConsultMission", new { slug });
         }
+        
+        // 2. Récupérer l'utilisateur et l'équipe
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToPage("/ConsultMission", new { slug });
+        }
+        
+        var colon = await colonRepository.GetColonByIdAsync(userId);
+        
+        UserTeams = await teamRepository.GetTeamByColon(colon);
+        var team = UserTeams.First(t => t.Id == SelectedTeamId);
+        
+        // 3. Récupérer la mission
+        var allMissions = await missionRepository.GetAllMissionsAsync();
+        Mission = allMissions.FirstOrDefault(m => m.Name.ToKebab() == slug);
+        
+        if (Mission == null)
+        {
+            return NotFound(slug);
+        }
+        
+        // 4. Créer une copie de l'équipe pour y appliquer les bonus
+        logger.LogInformation($"Équipe sélectionnée: {team.Name} (ID: {team.Id})");
+        logger.LogInformation($"Force initiale: {team.TotalStrength}, Endurance initiale: {team.TotalEndurance}");
+        
+        var teamWithBonuses = new Team
+        {
+            Id = team.Id,
+            Name = team.Name,
+            Logo = team.Logo,
+            Baniere = team.Baniere,
+            MemberCount = team.MemberCount,
+            AverageLevel = team.AverageLevel,
+            TotalStrength = team.TotalStrength,
+            TotalEndurance = team.TotalEndurance,
+            CreatorId = team.CreatorId
+        };
+        
+        // 5. Récupérer et appliquer les bonus actifs de tous les membres de l'équipe
+        var teammates = await teamRepository.GetMembersOfTeam(team);
+        
+        int bonusAppliedCount = 0;
+        List<(string UserId, int BonusId)> oneTimeBonusesToExpire = new List<(string, int)>();
+        
+        foreach (var teammate in teammates)
+        {
+            var activeBonuses = await colonRepository.GetColonActiveBonusesAsync(teammate.Id);
+            
+            foreach (var bonus in activeBonuses)
+            {
+                if (bonus.IsActive()) // TODO : pas sur que ce soit utile mais fonction du domain donc j'aime
+                {
+                    logger.LogInformation($"Application du bonus: {bonus.Name} (ID: {bonus.Id})");
+
+                    int strengthBefore = teamWithBonuses.TotalStrength;
+                    int enduranceBefore = teamWithBonuses.TotalEndurance;
+
+                    
+                    // Utiliser la logique de la classe Bonus pour appliquer les effets
+                    bonus.ApplyToMission(Mission, teamWithBonuses);
+                    bonusAppliedCount++;
+                    
+                    logger.LogInformation($"Force: {strengthBefore} -> {teamWithBonuses.TotalStrength}");
+                    logger.LogInformation($"Endurance: {enduranceBefore} -> {teamWithBonuses.TotalEndurance}");
+
+                    //TODO : to DB or not to DB ?
+                    if (bonus.Name.Contains("usage unique"))
+                    {
+                        oneTimeBonusesToExpire.Add((teammate.Id, bonus.Id));
+                    }
+                }
+            }
+        }
+        
+        logger.LogInformation($"Total de {bonusAppliedCount} bonus appliqués");
+        logger.LogInformation($"Force finale: {teamWithBonuses.TotalStrength}, Endurance finale: {teamWithBonuses.TotalEndurance}");
+        
+        // 6. Exécuter la mission avec l'équipe modifiée par les bonus
+        var result = missionEngine.ExecuteMission(Mission, teamWithBonuses);
+        
+        // Expirer les bonus à usage unique identifiés
+        foreach (var (curUserId, bonusId) in oneTimeBonusesToExpire)
+        {
+            await colonRepository.ExpireBonusAsync(curUserId, bonusId);
+            logger.LogInformation($"Bonus à usage unique {bonusId} expiré après utilisation pour l'utilisateur {userId}");
+        }
+        
+        missionRepository.SaveMissionResult(result);
+        
+        // 7. Rediriger en fonction du résultat
+        return !result.IsSuccess 
+            ? RedirectToPage("/ResultMissionFailed", new { slug }) 
+            : RedirectToPage("/MissionSucessful", new { idMission = Mission.Id, teamId = team.Id });
     }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "ConsultMission.OnPost {Slug}", slug);
+        ModelState.AddModelError("", "Une erreur est survenue");
+        return RedirectToPage("/ConsultMission", new { slug });
+    }
+}
 }

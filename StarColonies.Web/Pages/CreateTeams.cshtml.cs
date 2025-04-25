@@ -11,17 +11,9 @@ using StarColonies.Web.Validators;
 namespace StarColonies.Web.Pages
 {
     [Authorize]
-    public class CreateTeamModel : PageModel
+    public class CreateTeamModel(ITeamRepository teamRepository, IColonRepository colonRepository, ILogRepository logRepository)
+        : PageModel
     {
-        private readonly ITeamRepository _teamRepository;
-        private readonly IColonRepository _colonRepository;
-
-        public CreateTeamModel(ITeamRepository teamRepository, IColonRepository colonRepository)
-        {
-            _teamRepository = teamRepository;
-            _colonRepository = colonRepository;
-        }
-
         // Propriétés liées au formulaire
         [BindProperty]
         [Required(ErrorMessage = "Le nom de l'équipe est obligatoire.")]
@@ -30,10 +22,10 @@ namespace StarColonies.Web.Pages
         public string TeamName { get; set; }
 
         [Display(Name = "Logo de l'équipe")]
-        public string Logo { get; set; } = "/img/rocket.png";
+        public string Logo { get; set; } = "img/rocket.png";
 
         [Display(Name = "Bannière de l'équipe")]
-        public string Baniere { get; set; } = "/img/rocket.png";
+        public string Baniere { get; set; } = "img/rocket.png";
 
         // ID du créateur (utilisateur connecté)
         [BindProperty]
@@ -70,10 +62,10 @@ namespace StarColonies.Web.Pages
             CreatorId = userId;
 
             // Récupérer les informations de l'utilisateur connecté
-            CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
+            CurrentUser = await colonRepository.GetColonByIdAsync(userId);
 
             // Récupérer tous les colons disponibles pour former une équipe
-            var allColons = await _colonRepository.GetAllColonsAsync();
+            var allColons = await colonRepository.GetAllColonsAsync();
             AvailableColons = allColons.Where(c => c.Id != userId); // Exclure l'utilisateur connecté
 
             // Initialiser SelectedColonIds comme une liste vide
@@ -98,10 +90,10 @@ namespace StarColonies.Web.Pages
             // Récupérer les informations de l'utilisateur connecté
             if (userId != null)
             {
-                CurrentUser = await _colonRepository.GetColonByIdAsync(userId);
+                CurrentUser = await colonRepository.GetColonByIdAsync(userId);
 
                 // Récupérer tous les colons disponibles
-                var allColons = await _colonRepository.GetAllColonsAsync();
+                var allColons = await colonRepository.GetAllColonsAsync();
                 AvailableColons = allColons.Where(c => c.Id != userId);
             }
 
@@ -138,21 +130,39 @@ namespace StarColonies.Web.Pages
                 };
 
                 // Enregistrer l'équipe dans la base de données
-                await _teamRepository.CreateTeamAsync(team);
+                await teamRepository.CreateTeamAsync(team);
 
                 // Ajouter les membres à l'équipe (y compris le créateur)
-                await _teamRepository.AddMemberToTeamAsync(team.Id, CreatorId);
+                await teamRepository.AddMemberToTeamAsync(team.Id, CreatorId);
                 
                 foreach (var colonId in SelectedColonIds)
                 {
-                    await _teamRepository.AddMemberToTeamAsync(team.Id, colonId);
+                    await teamRepository.AddMemberToTeamAsync(team.Id, colonId);
                 }
+                
+                await logRepository.AddLog(
+                    new Log
+                    {
+                        RequeteAction = "Création d'équipe",
+                        ResponseAction = $"Équipe '{TeamName}' créée avec succès.",
+                        DateHeureAction = DateTime.Now
+                    }
+                );
 
                 return RedirectToPage("/Dashboard");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Erreur lors de la création de l'équipe: {ex.Message}");
+                
+                await logRepository.AddLog(
+                    new Log
+                    {
+                        RequeteAction = "Création d'équipe",
+                        ResponseAction = $"Erreur lors de la création de l'équipe: {ex.Message}",
+                        DateHeureAction = DateTime.Now
+                    }
+                );
                 return Page();
             }
         }

@@ -152,7 +152,8 @@ public class EfColonRepository : IColonRepository
                 Name = cr.Resource.Name,
                 Description = cr.Resource.Description,
                 TypeName = cr.Resource.TypeResource.Name,
-                Quantity = cr.Quantity
+                Quantity = cr.Quantity,
+                IconUrl = cr.Resource.TypeResource.Icon
             })
             .ToListAsync();
 
@@ -161,7 +162,7 @@ public class EfColonRepository : IColonRepository
 
     public async Task<IReadOnlyList<Bonus>> GetColonActiveBonusesAsync(string colonId)
     {
-        var now = DateTime.UtcNow;
+        var now = DateTime.Now;
         
         var bonuses = await _context.ColonBonus
             .Where(cb => cb.ColonId == colonId && cb.DateExpiration > now)
@@ -175,6 +176,8 @@ public class EfColonRepository : IColonRepository
                 Description = cb.Bonus.Description,
                 DateAchat = cb.DateAchat,
                 DateExpiration = cb.DateExpiration,
+                IconUrl = cb.Bonus.IconUrl,
+                EffectType = (BonusEffectType)cb.Bonus.EffectTypeId, 
                 Resources = cb.Bonus.BonusResources.Select(br => new BonusResource
                 {
                     ResourceId = br.ResourceId,
@@ -222,19 +225,34 @@ public class EfColonRepository : IColonRepository
 
         // Si duration est TimeSpan.Zero, utiliser la durée par défaut du bonus
         var actualDuration = duration == TimeSpan.Zero ? bonus.DureeParDefaut : duration;
-        
-        var now = DateTime.UtcNow;
+    
+        var now = DateTime.Now;
         var expiration = now.Add(actualDuration);
 
-        var colonBonus = new Entities.ColonBonus
-        {
-            ColonId = colonId,
-            BonusId = bonusId,
-            DateAchat = now,
-            DateExpiration = expiration
-        };
+        // Vérifier si le bonus existe déjà pour ce colon
+        var existingColonBonus = await _context.ColonBonus
+            .SingleOrDefaultAsync(cb => cb.ColonId == colonId && cb.BonusId == bonusId);
 
-        await _context.ColonBonus.AddAsync(colonBonus);
+        if (existingColonBonus != null)
+        {
+            // Mettre à jour la date d'expiration
+            existingColonBonus.DateAchat = now;
+            existingColonBonus.DateExpiration = expiration;
+        }
+        else
+        {
+            // Ajouter un nouveau bonus
+            var colonBonus = new Entities.ColonBonus
+            {
+                ColonId = colonId,
+                BonusId = bonusId,
+                DateAchat = now,
+                DateExpiration = expiration
+            };
+
+            await _context.ColonBonus.AddAsync(colonBonus);
+        }
+
         await _context.SaveChangesAsync();
     }
 
@@ -252,6 +270,67 @@ public class EfColonRepository : IColonRepository
             .ToListAsync();
 
         return professions;
+    }
+
+    public async Task UpdateResourceQuantityAsync(string colonId, int resourceId, int newQuantity)
+    {
+        var colonResource = await _context.ColonResource
+            .SingleOrDefaultAsync(cr => cr.ColonId == colonId && cr.ResourceId == resourceId);
+
+        if (colonResource == null)
+        {
+            throw new KeyNotFoundException($"Resource {resourceId} not found for colon {colonId}");
+        }
+
+        if (newQuantity <= 0)
+        {
+            // Supprimer la ressource si la quantité est nulle ou négative (fallait y pense à ça hein)
+            _context.ColonResource.Remove(colonResource);
+        }
+        else
+        {
+            // Mettre à jour la quantité
+            colonResource.Quantity = newQuantity;
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task ExpireBonusAsync(string colonId, int bonusId)
+    {
+        // Récupérer l'association
+        var colonBonus = await _context.ColonBonus
+            .FirstOrDefaultAsync(cb => cb.ColonId == colonId && cb.BonusId == bonusId);
+        
+        if (colonBonus != null)
+        {
+            // Supprimer l'association
+            _context.ColonBonus.Remove(colonBonus);
+            await _context.SaveChangesAsync();
+        
+            // Vérifier si d'autres colons utilisent ce bonus
+            var otherAssociations = await _context.ColonBonus
+                .AnyAsync(cb => cb.BonusId == bonusId);
+            
+            if (!otherAssociations)
+            {
+                // Récupérer et supprimer les ressources du bonus
+                var bonusResources = await _context.BonusResource
+                    .Where(br => br.BonusId == bonusId)
+                    .ToListAsync();
+                
+                _context.BonusResource.RemoveRange(bonusResources);
+            
+                // Récupérer et supprimer le bonus lui-même
+                var bonus = await _context.Bonus.FindAsync(bonusId);
+                if (bonus != null)
+                {
+                    _context.Bonus.Remove(bonus);
+                }
+            
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 
     private Colon MapColonEntityToDomain(Entities.Colon colonEntity)

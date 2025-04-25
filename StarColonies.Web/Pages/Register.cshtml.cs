@@ -8,7 +8,7 @@
 
     namespace StarColonies.Web.Pages;
 
-    public class RegisterModel(UserManager<Colon> userManager, SignInManager<Colon> signInManagern, IColonRepository colonRepository) : PageModel
+    public class RegisterModel(UserManager<Colon> userManager, SignInManager<Colon> signInManagern, IColonRepository colonRepository, ILogRepository logRepository) : PageModel
     {
 
         public IEnumerable<Profession> Profession { get; set; } = [];
@@ -54,7 +54,9 @@
                 Strength = RegisterProfessionInput.Force,
                 Endurance = RegisterProfessionInput.Endurance,
                 Level = 1,
-                Avatar = RegisterAvatarInput.SelectedAvatarId ?? "default_avatar.png",
+                Avatar = RegisterAvatarInput.SelectedAvatarId != null && RegisterAvatarInput.SelectedAvatarId != "import" 
+                    ? $"avatars/avatar_{RegisterAvatarInput.SelectedAvatarId}.png" 
+                    : "avatars/avatar_5.png",
                 IdProfession = RegisterProfessionInput.SelectedProfession,
             };
             
@@ -66,10 +68,29 @@
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                
+                await logRepository.AddLog(
+                    new Log()
+                    {
+                        RequeteAction = "Inscription",
+                        ResponseAction = "Erreur d'inscription : " + string.Join(", ", result.Errors.Select(e => e.Description)),
+                        DateHeureAction = DateTime.Now
+                    }
+                );
+                
                 return Page();
             }
             
             await signInManagern.SignInAsync(colon, isPersistent: false);
+            
+            await logRepository.AddLog(
+                new Log()
+                {
+                    RequeteAction = "Inscription",
+                    ResponseAction = "Inscription réussie",
+                    DateHeureAction = DateTime.Now
+                }
+            );
             
 
             return RedirectToPage("/DashBoard");

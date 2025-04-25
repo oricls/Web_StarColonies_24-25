@@ -5,7 +5,7 @@
 namespace StarColonies.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class Admin : Migration
+    public partial class ResolvegitLeaks5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

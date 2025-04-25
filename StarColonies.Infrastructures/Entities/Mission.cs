@@ -8,7 +8,7 @@ public class Mission
     public string Description { get; set; } = String.Empty;
     
     // clés
-    public IList<ResultatMission> ResultatMissions { get; set; } = null!;
+    public IList<ResultatMission>? ResultatMissions { get; set; }
     
     public IList<MissionBestiaire> MissionBestiaires { get; set; } = new List<MissionBestiaire>();
 }
