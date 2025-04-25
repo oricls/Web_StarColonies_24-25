@@ -39,12 +39,7 @@ public class UpdateProfilInput
 }
 
 
-public class Profil(
-    IColonRepository colonRepository,
-    UserManager<Infrastructures.Entities.Colon> userManager,
-    ILogRepository logRepository,
-    ILogger<Profil> logger)
-    : PageModel
+public class Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogRepository logRepository, ILogger<Profil> logger) : PageModel
 {
     public Colon Colon { get; private set; }
     
@@ -71,7 +66,7 @@ public class Profil(
         try
         {
             var user = await GetCurrentUserAsync();
-            Colon = await _repository.GetColonByIdAsync(user.Id);
+            Colon = await colonRepository.GetColonByIdAsync(user.Id);
             
             UpdateProfil = new UpdateProfilInput
             {
@@ -84,7 +79,7 @@ public class Profil(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
+            logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
             ModelState.AddModelError(string.Empty, "Erreur lors du chargement du profil.");
             Message = "Erreur lors du chargement du profil.";
             return RedirectToPage("/Index");
@@ -117,7 +112,7 @@ public class Profil(
                 await colonRepository.ChangePassword(user.Id, UpdateProfil.ConfirmationMotDePasse);
             }
 
-            Colon = await _repository.GetColonByIdAsync(user.Id);
+            Colon = await colonRepository.GetColonByIdAsync(user.Id);
             UpdateProfil = new UpdateProfilInput
             {
                 Courriel = Colon.Email,
@@ -152,6 +147,7 @@ public class Profil(
                 }
             );
             
+            HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme); // déco
             return RedirectToPage("/Index");
         }
         catch (Exception ex)
