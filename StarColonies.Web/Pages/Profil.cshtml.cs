@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +8,7 @@ using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Web.Pages;
 
-public class UpdateProfilViewModel
+public class UpdateProfilInput
 {
     [Required(ErrorMessage = "Le courriel est requis")]
     [EmailAddress(ErrorMessage = "Format du courriel invalide")]
@@ -38,17 +39,15 @@ public class UpdateProfilViewModel
 }
 
 
-public class Profil(
-    IColonRepository colonRepository,
-    UserManager<Infrastructures.Entities.Colon> userManager,
-    ILogRepository logRepository,
-    ILogger<Profil> logger)
-    : PageModel
+public class Profil(IColonRepository colonRepository, UserManager<Infrastructures.Entities.Colon> userManager, ILogRepository logRepository, ILogger<Profil> logger) : PageModel
 {
     public Colon Colon { get; private set; }
+    
+    public string Message { get; set; } = string.Empty;
+    public bool IsSuccess { get; set; } = false;
 
     [BindProperty]
-    public UpdateProfilViewModel UpdateProfil { get; set; } = new UpdateProfilViewModel();
+    public UpdateProfilInput UpdateProfil { get; set; } = new UpdateProfilInput();
     
     private Infrastructures.Entities.Colon? _user;
 
@@ -69,27 +68,52 @@ public class Profil(
         {
             var user = await GetCurrentUserAsync();
             Colon = await colonRepository.GetColonByIdAsync(user.Id);
-            UpdateProfil = new UpdateProfilViewModel
+            
+            UpdateProfil = new UpdateProfilInput
             {
                 Courriel = Colon.Email,
                 NomDeColon = Colon.Name,
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            return Page();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Profile - Erreur lors de la récupération de l'utilisateur");
-            return Page();
+            logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
+            ModelState.AddModelError(string.Empty, "Erreur lors du chargement du profil.");
+            Message = "Erreur lors du chargement du profil.";
+            return RedirectToPage("/Index");
         }
-        return Page();
     }
 
     public async Task<IActionResult> OnPost()
     {
+        if (string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
+        {
+            ModelState.Remove("UpdateProfil.NouveauMotDePasse");
+            ModelState.Remove("UpdateProfil.ConfirmationMotDePasse");
+        }
+        
+        if (!ModelState.IsValid)
+        {
+            try
+            {
+                var user = await GetCurrentUserAsync();
+                Colon = await colonRepository.GetColonByIdAsync(user.Id);
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
+                Message = "Erreur lors du chargement du profil.";
+                return Page();
+            }
+        }
+        
         try
         {
-            var user =  await GetCurrentUserAsync();
+            var user = await GetCurrentUserAsync();
             var colon = await colonRepository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
             colon.Email = UpdateProfil.Courriel;
@@ -112,18 +136,24 @@ public class Profil(
             }
 
             Colon = await colonRepository.GetColonByIdAsync(user.Id);
-            UpdateProfil = new UpdateProfilViewModel
+            UpdateProfil = new UpdateProfilInput
             {
                 Courriel = Colon.Email,
                 NomDeColon = Colon.Name,
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            
+            IsSuccess = true;
+            Message = "Modification enregistrée !";
             return Page();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Profil - Erreur lors de la mise à jour du profil");
+            IsSuccess = false;
+            logger.LogError(ex, "Erreur lors de la mise à jour du profil");
+            ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
+            Message = "Erreur lors de la mise à jour du profil";
             return Page();
         }
     }
@@ -144,11 +174,13 @@ public class Profil(
                 }
             );
             
+            HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme); // déco
             return RedirectToPage("/Index");
         }
         catch (Exception ex)
         {
-            throw new Exception(ex.Message);
+            ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la suppression");
+            return RedirectToPage("/Index");
         }
     }
 }
