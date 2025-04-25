@@ -167,6 +167,25 @@ public class EfTeamRepository : ITeamRepository
         
         _context.SaveChanges();
     }
+    
+    public async Task<IReadOnlyList<Team>> GetTeamsWithoutMissionParticipationAsync(string userId, int missionId)
+    {
+        var userTeams = await _context.Team
+            .Where(t => t.Members.Any(m => m.Id == userId)).Include(team => team.Members)
+            .ToListAsync();
+
+        var teamsWithParticipation = await _context.ResultatMission
+            .Where(rm => rm.IdMission == missionId)
+            .Select(rm => rm.IdTeam)
+            .Distinct()
+            .ToListAsync();
+
+        var teamsWithoutParticipation = userTeams
+            .Where(t => !teamsWithParticipation.Contains(t.Id))
+            .ToList();
+
+        return teamsWithoutParticipation.Select(MapTeamEntityToDomain).ToList();
+    }
 
     public async Task<IReadOnlyList<TeamRankingModel>> GetTopTeamsAsync(int count = 10)
     {
