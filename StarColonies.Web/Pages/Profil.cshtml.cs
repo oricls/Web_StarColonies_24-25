@@ -92,7 +92,7 @@ public class Profil : PageModel
             _logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
             ModelState.AddModelError(string.Empty, "Erreur lors du chargement du profil.");
             Message = "Erreur lors du chargement du profil.";
-            return RedirectToPage("/Dashboard");
+            return RedirectToPage("/Index");
         }
     }
 
@@ -128,7 +128,7 @@ public class Profil : PageModel
         {
             ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
             Message = "Erreur lors de la mise à jour du profil";
-            return RedirectToPage("/Dashboard");
+            return RedirectToPage("/Index");
         }
     }
 
@@ -139,12 +139,12 @@ public class Profil : PageModel
             var user = await GetCurrentUserAsync();
             await _repository.DeleteColonAsync(user.Id);
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme); // ou logout
-            return RedirectToPage("/Dashboard"); 
+            return RedirectToPage("/Index"); 
         }
         catch (Exception ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la suppression");
-            return RedirectToPage("/Dashboard");
+            return RedirectToPage("/Index");
         }
     }
 }
