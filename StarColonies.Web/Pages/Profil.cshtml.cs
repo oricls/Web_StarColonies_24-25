@@ -66,7 +66,6 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
     {
         try
         {
-            
             var user = await GetCurrentUserAsync();
             Colon = await colonRepository.GetColonByIdAsync(user.Id);
             
@@ -155,18 +154,6 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
             logger.LogError(ex, "Erreur lors de la mise à jour du profil");
             ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
             Message = "Erreur lors de la mise à jour du profil";
-            
-          
-            try
-            {
-                var user = await GetCurrentUserAsync();
-                Colon = await colonRepository.GetColonByIdAsync(user.Id);
-            }
-            catch
-            {
-                return RedirectToPage("/Index");
-            }
-            
             return Page();
         }
     }
