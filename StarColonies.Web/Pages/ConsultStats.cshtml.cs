@@ -21,24 +21,24 @@ public class ConsultStatsModel : PageModel
     private readonly IMissionRepository _missionRepository;
     private readonly ILogger<ConsultStatsModel> _logger;
 
-    public ConsultStatsModel(UserManager<Infrastructures.Entities.Colon> userManager, IColonRepository colonRepository, IMissionRepository missionRepository, ITeamRepository teamRepository, ILogger<ConsultStatsModel> logger)
+    public ConsultStatsModel(UserManager<Infrastructures.Entities.Colon> userManager, ITeamRepository teamRepository, IMissionRepository missionRepository, ILogger<ConsultStatsModel> logger)
     {
         _userManager = userManager;
         _teamRepository = teamRepository;
         _missionRepository = missionRepository;
         _logger = logger;
     }
-    
+
     public IReadOnlyList<Team> UserTeams { get; private set; } = new List<Team>();
 
     [BindProperty(SupportsGet = true)]
     [Display(Name = "Équipe")]
     public int SelectedTeamId { get; set; }
-    public int TotalSuccess { get; set; } = 0;
-    public int TotalFailure { get; set; } = 0;
-    
-    public List<StatPoint> StatsEvolution { get; set; } = new();
-    
+    public int TotalSuccess { get; private set; } = 0;
+    public int TotalFailure { get; private set; } = 0;
+
+    public List<StatPoint> StatsEvolution { get; private set; } = new();
+
     private async Task<Infrastructures.Entities.Colon> GetCurrentUserAsync()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -54,31 +54,24 @@ public class ConsultStatsModel : PageModel
         var user = await GetCurrentUserAsync();
         UserTeams = await _teamRepository.GetTeamByColon(user.Id);
 
-        foreach (var team in UserTeams)
+        if (SelectedTeamId > 0)
         {
-            var missionTeam = await _missionRepository.GetMissionsByTeamIdAsync(team.Id);
+            var missionTeam = await _missionRepository.GetMissionsByTeamIdAsync(SelectedTeamId);
 
             foreach (var mission in missionTeam)
             {
                 var resultMission = await _missionRepository.GetResultatsByMissionIdAsync(mission.Id);
-                foreach (var result in resultMission) // pourquoi une liste ????
+                foreach (var result in resultMission)
                 {
-                   
                     StatsEvolution.Add(new StatPoint
                     {
                         Date = result.Date.ToString("dd-MM-yyyy"),
                         Strength = result.IssueStrength,
                         Endurance = result.IssueEndurance
                     });
-                    
-                    if (result.IsSuccess)
-                    {
-                        TotalSuccess++;
-                    }
-                    else
-                    {
-                        TotalFailure++;
-                    }
+
+                    if (result.IsSuccess) TotalSuccess++;
+                    else TotalFailure++;
                 }
             }
         }
@@ -88,14 +81,13 @@ public class ConsultStatsModel : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            return RedirectToPage(new { SelectedTeamId = SelectedTeamId });
+            var user = await GetCurrentUserAsync();
+            UserTeams = await _teamRepository.GetTeamByColon(user.Id);
+            return Page();
         }
 
-        var user = await GetCurrentUserAsync();
-        var teamsResult = await _teamRepository.GetTeamByColon(user.Id);
-        UserTeams = teamsResult.ToList();
-        return Page();
+        return RedirectToPage(new { SelectedTeamId });
     }
 }

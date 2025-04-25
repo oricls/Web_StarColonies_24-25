@@ -23,7 +23,7 @@
                         @foreach (var team in Model.UserTeams)
                         {
                             <div class="team-selector">
-                                <input type="radio" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
+                                <input type="submit" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
                                 <label for="team-@team.Id" class="team-card">
                                     <div class="team-avatar">
                                         <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
@@ -39,95 +39,96 @@
             </form>
         </div>
 
-        <div class="row g-5 justify-content-center align-items-center">
+        @if (Model.SelectedTeamId > 0)
+        {
+            <div class="row g-5 justify-content-center align-items-center">
 
-            <div class="col-lg-8 col-md-10 d-flex flex-column gap-3">
-                <div class="title-page hall-of-fame">
-                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">PERFORMANCES</h3>
+                <div class="col-lg-8 col-md-10 d-flex flex-column gap-3">
+                    <div class="title-page hall-of-fame">
+                        <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">PERFORMANCES</h3>
+                    </div>
+
+                    <h4>Total des résultats missions</h4>
+                    <div id="total-result-mission-chart" style="width: 100%; height: 300px;"></div>
+
+                    <h4>Évolution de la force de l'équipe</h4>
+                    <div id="strength-team-chart" style="width: 100%; height: 300px;"></div>
+
+                    <h4>Évolution de l'endurence de l'équipe</h4>
+                    <div id="endurence-team-chart" style="width: 100%; height: 300px;"></div>
+
                 </div>
-
-                <h4>Total des résultats missions</h4>
-                <div id="total-result-mission-chart" style="width: 100%; height: 300px;"></div>
-
-                <h4>Évolution de la force de l'équipe</h4>
-                <div id="strength-team-chart" style="width: 100%; height: 300px;"></div>
-                
-                <h4>Évolution de l'endurence de l'équipe</h4>
-                <div id="endurence-team-chart" style="width: 100%; height: 300px;"></div>
-
             </div>
-        </div>
+
+            <script type="text/javascript">
+                var totalSuccess = @Html.Raw(Model.TotalSuccess);
+                var totalFailure = @Html.Raw(Model.TotalFailure);
+                var dataTeamStat = @Html.Raw(Json.Serialize(Model.StatsEvolution));
+
+                google.charts.load('current', {'packages':['bar', 'corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    TotalResultMissions();
+                    StrengthChart();
+                    EndurencehChart();
+                }
 
 
+                function TotalResultMissions(){
+                    var data = google.visualization.arrayToDataTable([
+                        ['Etat', 'Total'],
+                        ['Réussites', totalSuccess],
+                        ['Défaites', totalFailure]
+                    ]);
+                    var options = {
+                        // TODO desing à changer
+                    }
+
+                    var chart = new google.charts.Bar(document.getElementById('total-result-mission-chart'));
+                    chart.draw(data, google.charts.Bar.convertOptions(options));
+                }
+
+                function StrengthChart(){
+                    var dataArray = [['Jour', 'Force']];
+
+                    dataTeamStat.forEach(function(entry) {
+                        dataArray.push([entry.date, entry.strength]);
+                    });
+
+                    var data = google.visualization.arrayToDataTable(dataArray);
+
+                    var options = {
+                        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+                        vAxis: {minValue: 0}
+                    };
+
+                    var chart = new google.visualization.AreaChart(document.getElementById('strength-team-chart'));
+                    chart.draw(data, options);
+                }
+
+                function EndurencehChart(){
+                    var dataArray = [['Jour', 'Endurance']];
+
+                    dataTeamStat.forEach(function(entry) {
+                        dataArray.push([entry.date, entry.endurance]);
+                    });
+
+                    var data = google.visualization.arrayToDataTable(dataArray);
+
+                    var options = {
+                        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
+                        vAxis: {minValue: 0}
+                    };
+
+                    var chart = new google.visualization.AreaChart(document.getElementById('endurence-team-chart'));
+                    chart.draw(data, options);
+                }
+
+            </script>
+        }
     </section>
 </div>
-
-<script type="text/javascript">
-var totalSuccess = @Html.Raw(Model.TotalSuccess);
-var totalFailure = @Html.Raw(Model.TotalFailure);
-var dataTeamStat = @Html.Raw(Json.Serialize(Model.StatsEvolution));
-
-google.charts.load('current', {'packages':['bar', 'corechart']});
-google.charts.setOnLoadCallback(drawChart);
-
-function drawChart() {
-    TotalResultMissions();
-    StrengthChart();
-    EndurencehChart();
-}
-
-
-function TotalResultMissions(){
-    var data = google.visualization.arrayToDataTable([
-        ['Etat', 'Total'],
-        ['Réussites', totalSuccess],
-        ['Défaites', totalFailure]
-    ]);
-    var options = {
-        // TODO desing à changer
-    }
-
-    var chart = new google.charts.Bar(document.getElementById('total-result-mission-chart'));
-    chart.draw(data, google.charts.Bar.convertOptions(options));
-}
-
-function StrengthChart(){
-    var dataArray = [['Jour', 'Force']];
-
-    dataTeamStat.forEach(function(entry) {
-        dataArray.push([entry.date, entry.strength]);
-    });
-
-    var data = google.visualization.arrayToDataTable(dataArray);
-
-    var options = {
-        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
-        vAxis: {minValue: 0}
-    };
-
-    var chart = new google.visualization.AreaChart(document.getElementById('strength-team-chart'));
-    chart.draw(data, options);
-}
-
-function EndurencehChart(){
-    var dataArray = [['Jour', 'Endurance']];
-
-    dataTeamStat.forEach(function(entry) {
-        dataArray.push([entry.date, entry.endurance]);
-    });
-
-    var data = google.visualization.arrayToDataTable(dataArray);
-
-    var options = {
-        hAxis: {title: 'Day',  titleTextStyle: {color: '#333'}},
-        vAxis: {minValue: 0}
-    };
-
-    var chart = new google.visualization.AreaChart(document.getElementById('endurence-team-chart'));
-    chart.draw(data, options);
-}
-
-</script>
 
 @section Styles {
     <style>
@@ -153,7 +154,7 @@ function EndurencehChart(){
     .team-selector input[type="radio"]:checked + label {
         border: 3px solid #5a49ab;
         box-shadow: 0 0 15px rgba(90, 73, 171, 0.8);
-        transform: translateY(-5px) scale(1.05); 
+        transform: translateY(-5px) scale(1.05);
     }
 
     .team-card {
@@ -180,7 +181,7 @@ function EndurencehChart(){
     }
 
     .team-selector input[type="radio"]:checked + label .team-card img {
-        border-color: #5a49ab; 
+        border-color: #5a49ab;
     }
 
     .team-name {
