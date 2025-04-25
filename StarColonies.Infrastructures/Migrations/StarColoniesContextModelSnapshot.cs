@@ -66,8 +66,8 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d832f2ee-7acc-462d-8d0d-30949168b103",
-                            ConcurrencyStamp = "35e6136f-3fd0-4f08-bfb0-ed69db678678",
+                            Id = "ALTAD01-04-24 10:30:00Admin",
+                            ConcurrencyStamp = "ALTAD01-04-24 10:30:00Admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

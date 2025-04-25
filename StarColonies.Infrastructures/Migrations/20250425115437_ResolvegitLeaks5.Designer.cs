@@ -12,8 +12,8 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    [Migration("20250422222826_AdminSeedE")]
-    partial class AdminSeedE
+    [Migration("20250425115437_ResolvegitLeaks5")]
+    partial class ResolvegitLeaks5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,8 +69,8 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f5f1ad4e-cd8b-4bcd-96d1-a2404fc76796",
-                            ConcurrencyStamp = "d2ca4bd7-28fc-4b6d-936f-457241694015",
+                            Id = "ALTAD01-04-24 10:30:00Admin",
+                            ConcurrencyStamp = "ALTAD01-04-24 10:30:00Admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -180,50 +180,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ActivityLog");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActivityLogId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ColonId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityLogId");
-
-                    b.HasIndex("ColonId")
-                        .IsUnique();
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Admin");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
@@ -377,6 +333,16 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Property<TimeSpan>("DureeParDefaut")
                         .HasColumnType("time");
 
+                    b.Property<int>("EffectTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -391,65 +357,135 @@ namespace StarColonies.Infrastructures.Migrations
                         {
                             Id = 1,
                             Description = "Augmente temporairement la force de tous les membres d'une équipe",
-                            DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
+                            DureeParDefaut = new TimeSpan(0, 0, 5, 0, 0),
+                            EffectTypeId = 1,
+                            IconUrl = "assets/icons/potion.png",
                             Name = "Potion de force"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Investit un soldat supplémentaire pour les 3 prochaines missions",
+                            Description = "Investit un soldat supplémentaire pour les prochaines missions",
                             DureeParDefaut = new TimeSpan(0, 0, 3, 0, 0),
-                            Name = "Equipe de pouce"
+                            EffectTypeId = 3,
+                            IconUrl = "assets/icons/potion.png",
+                            Name = "Coup de pouce"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
-                            DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
+                            DureeParDefaut = new TimeSpan(0, 0, 5, 0, 0),
+                            EffectTypeId = 2,
+                            IconUrl = "assets/icons/potion.png",
                             Name = "Potion d'endurance"
                         },
                         new
                         {
                             Id = 4,
-                            Description = "Double le nombre de ressources obtenues pour 1 mission",
-                            DureeParDefaut = new TimeSpan(0, 0, 10, 0, 0),
+                            Description = "Double le nombre de ressources obtenues",
+                            DureeParDefaut = new TimeSpan(0, 0, 1, 0, 0),
+                            EffectTypeId = 4,
+                            IconUrl = "assets/icons/potion.png",
                             Name = "Grâce de Midas"
                         },
                         new
                         {
                             Id = 5,
-                            Description = "Chaque colon se voit octroyer une vie supplémentaire (endurance ×2)",
-                            DureeParDefaut = new TimeSpan(0, 0, 10, 0, 0),
-                            Name = "Seconde chance"
+                            Description = "Augmente l'expérience gagnée et permet de gagner un niveau supplémentaire à chaque mission",
+                            DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
+                            EffectTypeId = 5,
+                            IconUrl = "assets/icons/potion.png",
+                            Name = "Parchemin de monsieur Swinnen"
                         },
                         new
                         {
                             Id = 6,
                             Description = "Elimine instantanément tous les ministres",
                             DureeParDefaut = new TimeSpan(0, 1, 40, 0, 0),
-                            Name = "Litem trop cheats"
+                            EffectTypeId = 0,
+                            IconUrl = "assets/icons/potion.png",
+                            Name = "L'item trop cheatés"
                         });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusResource", b =>
                 {
-                    b.Property<int>("BonusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResourceId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BonusId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantite")
                         .HasColumnType("int");
 
-                    b.HasKey("BonusId", "ResourceId");
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ResourceId");
 
+                    b.HasIndex("BonusId", "ResourceId");
+
                     b.ToTable("BonusResource");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BonusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ColonId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BonusId");
+
+                    b.HasIndex("ColonId");
+
+                    b.ToTable("BonusTransaction");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransactionResource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BonusResourceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BonusResourceId");
+
+                    b.HasIndex("TransactionId");
+
+                    b.ToTable("BonusTransactionResource");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
@@ -592,9 +628,6 @@ namespace StarColonies.Infrastructures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ActivityLogId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateHeureAction")
                         .HasColumnType("datetime2");
 
@@ -610,9 +643,7 @@ namespace StarColonies.Infrastructures.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityLogId");
-
-                    b.ToTable("Log");
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Mission", b =>
@@ -1313,33 +1344,6 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Admin", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
-                        .WithMany("Admins")
-                        .HasForeignKey("ActivityLogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
-                        .WithOne()
-                        .HasForeignKey("StarColonies.Infrastructures.Entities.Admin", "ColonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ActivityLog");
-
-                    b.Navigation("Colon");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.TypeBestiaire", "TypeBestiaire")
@@ -1368,6 +1372,44 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Bonus");
 
                     b.Navigation("Resource");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Bonus", "Bonus")
+                        .WithMany()
+                        .HasForeignKey("BonusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Colon", "Colon")
+                        .WithMany()
+                        .HasForeignKey("ColonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bonus");
+
+                    b.Navigation("Colon");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransactionResource", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.BonusResource", "BonusResource")
+                        .WithMany()
+                        .HasForeignKey("BonusResourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.BonusTransaction", "Transaction")
+                        .WithMany("TransactionResources")
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BonusResource");
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>
@@ -1417,17 +1459,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Colon");
 
                     b.Navigation("Resource");
-                });
-
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.Log", b =>
-                {
-                    b.HasOne("StarColonies.Infrastructures.Entities.ActivityLog", "ActivityLog")
-                        .WithMany("Logs")
-                        .HasForeignKey("ActivityLogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ActivityLog");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionBestiaire", b =>
@@ -1490,13 +1521,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("ColonCreator");
                 });
 
-            modelBuilder.Entity("StarColonies.Infrastructures.Entities.ActivityLog", b =>
-                {
-                    b.Navigation("Admins");
-
-                    b.Navigation("Logs");
-                });
-
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Bestiaire", b =>
                 {
                     b.Navigation("MissionBestiaires");
@@ -1507,6 +1531,11 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("BonusResources");
 
                     b.Navigation("ColonBonuses");
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
+                {
+                    b.Navigation("TransactionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Colon", b =>

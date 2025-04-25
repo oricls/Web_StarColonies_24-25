@@ -5,7 +5,7 @@
 namespace StarColonies.Infrastructures.Migrations
 {
     /// <inheritdoc />
-    public partial class AdminSeedE : Migration
+    public partial class ResolvegitLeaks4 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -13,12 +13,12 @@ namespace StarColonies.Infrastructures.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "d02809cb-b609-427d-a5a8-d5354cc5f283");
+                keyValue: "62f71262-20cb-4c1c-b3fa-fbb1753ea672");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "f5f1ad4e-cd8b-4bcd-96d1-a2404fc76796", "d2ca4bd7-28fc-4b6d-936f-457241694015", "Admin", "ADMIN" });
+                values: new object[] { "ALTAD01-04-24 10:30:00Admin", "ALTAD01-04-24 10:30:00Admin", "Admin", "ADMIN" });
         }
 
         /// <inheritdoc />
@@ -27,12 +27,12 @@ namespace StarColonies.Infrastructures.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "f5f1ad4e-cd8b-4bcd-96d1-a2404fc76796");
+                keyValue: "ALTAD01-04-24 10:30:00Admin");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "d02809cb-b609-427d-a5a8-d5354cc5f283", null, "Admin", "ADMIN" });
+                values: new object[] { "62f71262-20cb-4c1c-b3fa-fbb1753ea672", "9ebaa6a0-1c10-4e49-924b-b6c670c0d572", "Admin", "ADMIN" });
         }
     }
 }
