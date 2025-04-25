@@ -22,10 +22,10 @@ namespace StarColonies.Web.Pages
         public string TeamName { get; set; }
 
         [Display(Name = "Logo de l'équipe")]
-        public string Logo { get; set; } = "/img/rocket.png";
+        public string Logo { get; set; } = "img/rocket.png";
 
         [Display(Name = "Bannière de l'équipe")]
-        public string Baniere { get; set; } = "/img/rocket.png";
+        public string Baniere { get; set; } = "img/rocket.png";
 
         // ID du créateur (utilisateur connecté)
         [BindProperty]

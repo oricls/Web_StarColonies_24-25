@@ -148,7 +148,7 @@
                             <input type="radio" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
                             <label for="team-@team.Id" class="team-card">
                                 <div class="team-avatar">
-                                    <img src="@team.Baniere" alt="@team.Name" class="img-fluid">
+                                    <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
                                 </div>
                                 <div class="team-name">
                                     @team.Name

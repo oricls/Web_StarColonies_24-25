@@ -22,7 +22,7 @@
                                     <div class="me-3">
                                         @if (!string.IsNullOrEmpty(team.Logo))
                                         {
-                                            <img src="@team.Logo" alt="Avatar @team.Name"  style="width: 50px; height: 50px; object-fit: cover;">
+                                            <img src="~/@team.Logo" alt="Avatar @team.Name"  style="width: 50px; height: 50px; object-fit: cover;">
                                         }
                                         else
                                         {
@@ -69,11 +69,11 @@
                                             <div class="me-2" style="width: 40px; height: 40px;">
                                                 @if (!string.IsNullOrEmpty(member.Avatar))
                                                 {
-                                                    <img src="@member.Avatar" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <img src="~/@member.Avatar" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                                 }
                                                 else
                                                 {
-                                                    <img src="/avatars/avatar_5.png" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <img src="~/avatars/avatar_5.png" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                                 }
                                             </div>
                                         }
@@ -85,7 +85,7 @@
                                     }
                                 </div>
 
-                                <a href="/consultteam/@team.Name.ToKebab()" class="btn btn-purple w-100">CONSULTER</a>                            </div>
+                                <a asp-page="/ConsultTeam" asp-route-slug="@team.Name.ToKebab()" class="btn btn-purple w-100">CONSULTER</a>                            </div>
                         </div>
                     </div>
                 }
@@ -109,7 +109,7 @@
     <section class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="font-barlow text-white fw-bold mb-0">Missions suggérées</h2>
-            <a href="/Missions" class="btn btn-purple">Voir tous</a>
+            <a asp-page="/Missions" class="btn btn-purple">Voir tous</a>
         </div>
 
         <div class="row g-4">
@@ -135,7 +135,7 @@
                                         <div class="me-2">
                                             <img class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
                                                  style="width: 40px; height: 40px; object-fit: cover;"
-                                                 src="@bestiaire.Avatar"
+                                                 src="~/@bestiaire.Avatar"
                                                  alt="@bestiaire.Name"
                                                  title="@bestiaire.Name (@bestiaire.TypeName)" />
                                         </div>

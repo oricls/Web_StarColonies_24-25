@@ -54,7 +54,9 @@
                 Strength = RegisterProfessionInput.Force,
                 Endurance = RegisterProfessionInput.Endurance,
                 Level = 1,
-                Avatar = RegisterAvatarInput.SelectedAvatarId ?? "default_avatar.png",
+                Avatar = RegisterAvatarInput.SelectedAvatarId != null && RegisterAvatarInput.SelectedAvatarId != "import" 
+                    ? $"avatars/avatar_{RegisterAvatarInput.SelectedAvatarId}.png" 
+                    : "avatars/avatar_5.png",
                 IdProfession = RegisterProfessionInput.SelectedProfession,
             };
             

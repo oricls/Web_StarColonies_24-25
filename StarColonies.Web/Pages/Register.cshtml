@@ -60,7 +60,7 @@
                         <div id="avatarPreview" class="rounded overflow-hidden" style="width: 200px; height: 200px;">
                             @if (!string.IsNullOrEmpty(Model.AvatarPreview))
                             {
-                                <img src="@Model.AvatarPreview" class="w-100 h-100 object-fit-cover" alt="Avatar preview" />
+                                <img src="~/@Model.AvatarPreview" class="w-100 h-100 object-fit-cover" alt="Avatar preview" />
                             }
                             else
                             {
@@ -149,12 +149,12 @@
             </div>
 
             <div class="d-flex justify-content-between mt-4">
-                <a href="/" class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3">ANNULER</a>
+                <a asp-page="/"  class="btn btn-outline-secondary font-barlow fw-bold w-50 mx-3">ANNULER</a>
                 <button type="submit" class="btn btn-purple font-barlow fw-bold w-50 mx-3 text-center">S'INSCRIRE</button>
             </div>
 
             <div class="text-center mt-4">
-                <p class="small mb-0">Déjà un compte ? <a href="/Login" class="text-accent-link">Se connecter</a></p>
+                <p class="small mb-0">Déjà un compte ? <a asp-page="/Login" class="text-accent-link">Se connecter</a></p>
             </div>
         </form>
     </div>
@@ -177,7 +177,7 @@
                     const avatarId = this.getAttribute('data-avatar');
                     selectedAvatarInput.value = avatarId;
                     customAvatarInput.value = '';
-                    const avatarImgSrc = `/avatars/avatar_${avatarId}.png`;
+                    const avatarImgSrc = `avatars/avatar_${avatarId}.png`;
                     avatarPreview.innerHTML = `<img src="${avatarImgSrc}" class="w-100 h-100 object-fit-cover" alt="Avatar ${avatarId}" />`;
                 });
             });
