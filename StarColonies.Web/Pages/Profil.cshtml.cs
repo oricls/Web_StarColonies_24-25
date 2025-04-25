@@ -66,6 +66,7 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
     {
         try
         {
+            
             var user = await GetCurrentUserAsync();
             Colon = await colonRepository.GetColonByIdAsync(user.Id);
             
@@ -89,15 +90,31 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
 
     public async Task<IActionResult> OnPost()
     {
+        if (string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
+        {
+            ModelState.Remove("UpdateProfil.NouveauMotDePasse");
+            ModelState.Remove("UpdateProfil.ConfirmationMotDePasse");
+        }
+        
+        if (!ModelState.IsValid)
+        {
+            try
+            {
+                var user = await GetCurrentUserAsync();
+                Colon = await colonRepository.GetColonByIdAsync(user.Id);
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Erreur lors de la récupération des informations du profil");
+                Message = "Erreur lors du chargement du profil.";
+                return Page();
+            }
+        }
+        
         try
         {
-            if (string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
-            {
-                ModelState["UpdateProfil.NouveauMotDePasse"]?.Errors.Clear();
-                ModelState["UpdateProfil.ConfirmationMotDePasse"]?.Errors.Clear();
-            }
-            
-            var user =  await GetCurrentUserAsync();
+            var user = await GetCurrentUserAsync();
             var colon = await colonRepository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
             colon.Email = UpdateProfil.Courriel;
@@ -127,6 +144,7 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            
             IsSuccess = true;
             Message = "Modification enregistrée !";
             return Page();
@@ -134,9 +152,22 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
         catch (Exception ex)
         {
             IsSuccess = false;
+            logger.LogError(ex, "Erreur lors de la mise à jour du profil");
             ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
             Message = "Erreur lors de la mise à jour du profil";
-            return RedirectToPage("/Index");
+            
+          
+            try
+            {
+                var user = await GetCurrentUserAsync();
+                Colon = await colonRepository.GetColonByIdAsync(user.Id);
+            }
+            catch
+            {
+                return RedirectToPage("/Index");
+            }
+            
+            return Page();
         }
     }
 
