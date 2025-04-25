@@ -25,7 +25,7 @@ namespace StarColonies.Web.Pages
         public string Logo { get; set; } = "img/rocket.png";
 
         [Display(Name = "Bannière de l'équipe")]
-        public string Baniere { get; set; } = "img/rocket.png";
+        public string Baniere { get; set; } = "img/space.png";
 
         // ID du créateur (utilisateur connecté)
         [BindProperty]

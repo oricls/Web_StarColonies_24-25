@@ -91,8 +91,7 @@ namespace StarColonies.Web.Pages
                 CalculateTeamStats();
 
                 // Récupérer le nombre de missions réussies (à 0 par défaut)
-                // TODO: A changer
-                SuccessfulMissions = 0;
+                SuccessfulMissions = await _teamRepository.GetSuccessfulMissionsCountAsync(Team.Id);
             }
             catch (Exception ex)
             {
