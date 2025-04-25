@@ -12,7 +12,7 @@ public interface ITeamRepository
     void RemoveMemberToTeam(Team team, Colon newMember);
     Task<Team> GetTeamById(int id);
     Task<IReadOnlyList<Colon>> GetMembersOfTeam(Team team);
-    Task<IReadOnlyList<Team>> GetTeamByColon(Colon colon);
+    Task<IReadOnlyList<Team>> GetTeamByColon(string colonId);
     Task AddMemberToTeamAsync(int teamId, string userId);
     void LevelUpTeam(Team team);
 }

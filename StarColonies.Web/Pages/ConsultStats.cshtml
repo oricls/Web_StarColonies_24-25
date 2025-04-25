@@ -1,0 +1,148 @@
+﻿@page
+@model StarColonies.Web.Pages.ConsultStatsModel
+@{
+    ViewData["Title"] = "Statistiques";
+}
+<div class="container mt-4">
+    <section class="mb-5 d-flex flex-column gap-4">
+        <div class="mb-5">
+            <h3 class="text-white fw-bold mb-4">Sélectionner une équipe :</h3>
+            <p class="text-white">Sélectionnez une équipe pour voir ses statistiques</p>
+            <form method="post">
+                <div class="text-danger mb-3">
+                    <validation-summary model-only="true" />
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    @if (!Model.UserTeams.Any())
+                    {
+                        <p class="text-white">Aucune équipe disponible.</p>
+                    }
+                    else
+                    {
+                        @foreach (var team in Model.UserTeams)
+                        {
+                            <div class="team-selector">
+                                <input type="radio" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
+                                <label for="team-@team.Id" class="team-card">
+                                    <div class="team-avatar">
+                                        <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
+                                    </div>
+                                    <div class="team-name">
+                                        @team.Name
+                                    </div>
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-5 justify-content-center align-items-center">
+
+            <div class="col-lg-8 col-md-10 d-flex flex-column gap-3">
+                <div class="title-page hall-of-fame">
+                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">PERFORMANCES</h3>
+                </div>
+
+                <h4>Total des résultats missions</h4>
+                <div id="total-result-mission-chart" style="width: 100%; height: 300px;"></div>
+
+                <h4>Évolution de l'endurance de l'équipe</h4>
+                <div id="endurance_chart" style="width: 100%; height: 300px;"></div>
+
+            </div>
+        </div>
+
+
+    </section>
+</div>
+
+<script type="text/javascript">
+var totalSuccess = @Html.Raw(Model.TotalSuccess);
+var totalFailure = @Html.Raw(Model.TotalFailure);
+
+google.charts.load('current', {'packages':['bar']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+        ['Etat', 'Total'],
+        ['Réussites', totalSuccess],
+        ['Défaites', totalFailure]
+    ]);
+    var options = {
+        // TODO desing à changer
+    }
+
+    var chart = new google.charts.Bar(document.getElementById('total-result-mission-chart'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+}
+</script>
+
+@section Styles {
+    <style>
+    .font-barlow {
+        font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .team-selector {
+        position: relative;
+    }
+
+    .team-selector label {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .team-selector label:hover {
+        transform: scale(1.05);
+    }
+
+    .team-selector input[type="radio"]:checked + label {
+        border: 3px solid #5a49ab;
+        box-shadow: 0 0 15px rgba(90, 73, 171, 0.8);
+        transform: translateY(-5px) scale(1.05); /* Combine les transformations */
+    }
+
+    .team-card {
+        width: 120px;
+        min-height: 140px;
+        background-color: #1d1935;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 10px;
+        overflow: visible;
+        padding: 10px;
+    }
+
+    .team-card img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 8px;
+        border: 2px solid transparent; /* Ajout pour une transition fluide */
+        transition: all 0.3s ease;
+    }
+
+    .team-selector input[type="radio"]:checked + label .team-card img {
+        border-color: #5a49ab; /* Style lorsque sélectionné */
+    }
+
+    .team-name {
+        white-space: normal;
+        word-wrap: break-word;
+        max-width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        line-height: 1.2;
+        color: #fff;
+    }
+</style>
+}

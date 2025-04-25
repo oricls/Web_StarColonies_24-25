@@ -156,7 +156,7 @@ public class EfTeamRepositoryTests
         };
         
         // Act
-        var teams = await _repository.GetTeamByColon(colon);
+        var teams = await _repository.GetTeamByColon(colon.Id);
         
         // Assert
         Assert.IsNotNull(teams);

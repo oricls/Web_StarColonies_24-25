@@ -52,7 +52,7 @@ public class ConsultMission(
             
             // Récupérer les teams auxquelles l'utilisateur est associé
             var colon = new Domains.Colon() { Id = userManager.GetUserId(User) };
-            UserTeams = await teamRepository.GetTeamByColon(colon);
+            UserTeams = await teamRepository.GetTeamByColon(colon.Id);
             
             // Récupérer les ressources disponibles
             Resources = await missionRepository.GetAllResources();
@@ -85,9 +85,7 @@ public class ConsultMission(
             return RedirectToPage("/ConsultMission", new { slug });
         }
         
-        var colon = await colonRepository.GetColonByIdAsync(userId);
-        
-        UserTeams = await teamRepository.GetTeamByColon(colon);
+        UserTeams = await teamRepository.GetTeamByColon(userId);
         var team = UserTeams.First(t => t.Id == SelectedTeamId);
         
         // 3. Récupérer la mission
