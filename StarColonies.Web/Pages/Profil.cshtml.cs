@@ -44,6 +44,7 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
     public Colon Colon { get; private set; }
     
     public string Message { get; set; } = string.Empty;
+    public bool IsSuccess { get; set; } = false;
 
     [BindProperty]
     public UpdateProfilInput UpdateProfil { get; set; } = new UpdateProfilInput();
@@ -90,6 +91,12 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
     {
         try
         {
+            if (string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
+            {
+                ModelState["UpdateProfil.NouveauMotDePasse"]?.Errors.Clear();
+                ModelState["UpdateProfil.ConfirmationMotDePasse"]?.Errors.Clear();
+            }
+            
             var user =  await GetCurrentUserAsync();
             var colon = await colonRepository.GetColonByIdAsync(user.Id);
             colon.Name = UpdateProfil.NomDeColon;
@@ -120,11 +127,13 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
                 DateDeNaissance = Colon.DateBirth,
                 Avatar = Colon.Avatar
             };
+            IsSuccess = true;
             Message = "Modification enregistrée !";
             return Page();
         }
         catch (Exception ex)
         {
+            IsSuccess = false;
             ModelState.AddModelError(string.Empty, ex.Message + " - erreur lors de la validation des changements");
             Message = "Erreur lors de la mise à jour du profil";
             return RedirectToPage("/Index");

@@ -63,15 +63,13 @@
                     </div>
                     @if (!string.IsNullOrEmpty(Model.Message))
                     {
-                        <div class="alert alert-success">@Model.Message</div>
+                        var alertClass = Model.IsSuccess ? "alert-success" : "alert-danger";
+                        <div class="alert @alertClass">@Model.Message</div>
                     }
                     <button type="submit" class="btn btn-purple w-100 mt-auto font-barlow fw-bold">Enregistrer</button>
                 </form>
-                
                 <button type="button" class="btn btn-danger w-100 font-barlow fw-bold" data-bs-toggle="modal" data-bs-target="#deleteUserModal">Supprimer le compte</button>
-             
             </div>
-            <!-- forunri graphs ou consulter stats + job ? (aucune modif acceptée)-->
         </div>
     </section>
 </div>
