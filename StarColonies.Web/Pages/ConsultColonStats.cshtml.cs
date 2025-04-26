@@ -12,12 +12,14 @@ public class ColonStatPoint
     public double Endurance { get; set; } = 0.0;
     public double Strength { get; set; } = 0.0;
     public int Level { get; set; }= 0;
+    public int ChallengeWon { get; set; } = 0; 
 }
 
 public class ConsultColonStats(
     UserManager<Infrastructures.Entities.Colon> userManager,
     IColonRepository colonRepository,
     ITeamRepository teamRepository,
+    IMissionRepository missionRepository,
     ILogger<ConsultStatsModel> logger)
     : PageModel
 {
@@ -68,21 +70,15 @@ public class ConsultColonStats(
                         };
                     }
                 }
-                else if (TeamMembers.Any())
-                {
-                    var firstMember = TeamMembers.First();
-                    var colon = await colonRepository.GetColonByIdAsync(firstMember.Id);
-                    if (colon != null)
-                    {
-                        StatsEvolution = new ColonStatPoint()
-                        {
-                            Endurance = colon.Endurance,
-                            Strength = colon.Strength,
-                            Level = colon.Level,
-                        };
-                    }
-                }
             }
+            
+            int totalReussites = 0;
+            foreach (var mission in await missionRepository.GetMissionsByTeamIdAsync(SelectedTeamId))
+            {
+                var resultats = await missionRepository.GetResultatsByMissionIdAsync(mission.Id);
+                totalReussites += resultats.Count(r => r.IsSuccess);
+            }
+            StatsEvolution.ChallengeWon = totalReussites;
         }
         else
         {

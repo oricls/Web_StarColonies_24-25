@@ -120,10 +120,10 @@
         new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['Endurance', 'Strength', 'Level'],
+                labels: ['Endurance', 'Strength', 'Level', 'Challenge won'],
                 datasets: [{
                     label: 'Statistiques du colon',
-                    data: [colonStats.Endurance, colonStats.Strength, colonStats.Level],
+                    data: [colonStats.Endurance, colonStats.Strength, colonStats.Level, colonStats.ChallengeWon],
                     borderColor: '#3B82F6',
                     borderWidth: 2,
                 }]
