@@ -287,6 +287,18 @@ public class EfMissionRepository : IMissionRepository
         return _context.SaveChangesAsync();
     }
 
+    public Task DeleteMissionAsync(Mission mission)
+    {
+        var missionEntity = _context.Mission
+            .Include(m => m.MissionBestiaires)
+            .FirstOrDefault(m => m.Id == mission.Id);
+
+        if (missionEntity == null) return Task.CompletedTask;
+        _context.Mission.Remove(missionEntity);
+        return _context.SaveChangesAsync();
+
+    }
+
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
     private Mission MapMissionEntityToDomain(Entities.Mission missionEntity)
     {

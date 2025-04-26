@@ -47,7 +47,7 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
         {
             Name = AddMissionInputModel.MissionName,
             Description = AddMissionInputModel.MissionDescription,
-            Image = "/img/missions/" + uniqueFileName,
+            Image = uniqueFileName,
             Bestiaires = selectedBestiaires,
         };
 

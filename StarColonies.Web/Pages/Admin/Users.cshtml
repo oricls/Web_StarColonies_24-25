@@ -1,9 +1,65 @@
 @page
 @model StarColonies.Web.Pages.Admin.Users
-
 @{
     ViewData["Title"] = "Utilisateurs";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 @await Html.PartialAsync("_AdminNavbar")
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="font-barlow">
+            <i class="fas fa-users me-2"></i>Utilisateurs
+        </h1>
+    </div>
+
+    @if (ModelState.ErrorCount > 0)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    @if (Model.UsersList.Any())
+    {
+        <div class="table-responsive shadow-sm rounded bg-dark p-4">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nom d'utilisateur</th>
+                        <th>Email</th>
+                        <th>Profession</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.UsersList)
+                    {
+                        <tr>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>@user.ProfessionName</td>
+                            <td style="width: 150px;">
+                                <form method="post" asp-page-handler="DeleteUser" asp-route-colonId="@user.Id" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-user-slash me-1"></i> Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Aucun utilisateur trouvé.
+        </div>
+    }
+</div>
