@@ -17,6 +17,7 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
     public async Task OnGetAsync()
     {
         AvailableBestiaires = await missionRepository.GetAllBestiaires();
+        AvailableResources = await missionRepository.GetAllResources();
     }
     
     public async Task<IActionResult> OnPostAsync()
@@ -42,6 +43,10 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
         var selectedBestiaires = AddMissionInputModel.SelectedMonsters
             .Select(id => new Bestiaire { Id = id })
             .ToList();
+        
+        var selectedResources = AddMissionInputModel.SelectedResources
+            .Select(id => new Resource { Id = id })
+            .ToList();
 
         var mission = new Mission
         {
@@ -49,6 +54,7 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
             Description = AddMissionInputModel.MissionDescription,
             Image = uniqueFileName,
             Bestiaires = selectedBestiaires,
+            Resources = selectedResources
         };
 
         await missionRepository.AddMission(mission);
@@ -57,6 +63,8 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
 
 
     public IReadOnlyList<Bestiaire> AvailableBestiaires { get; set; } = new List<Bestiaire>();
+    
+    public IReadOnlyList<Resource> AvailableResources { get; set; } = new List<Resource>();
 }
 
 public class AddMissionInputModel
@@ -75,4 +83,8 @@ public class AddMissionInputModel
     [Required(ErrorMessage = "Sélectionnez au moins un monstre")]
     [MinLength(1, ErrorMessage = "Sélectionnez au moins un monstre")]
     public List<int> SelectedMonsters { get; set; } = new();
+    
+    [Required(ErrorMessage = "Sélectionnez au moins une ressource")]
+    [MinLength(1, ErrorMessage = "Sélectionnez au moins une ressource")]
+    public List<int> SelectedResources { get; set; } = new();
 }

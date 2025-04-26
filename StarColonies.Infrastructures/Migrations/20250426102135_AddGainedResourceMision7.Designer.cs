@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250426102135_AddGainedResourceMision7")]
+    partial class AddGainedResourceMision7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -850,75 +853,18 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Property<int>("IdResource")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ResourceId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdMission");
+                    b.HasAlternateKey("IdMission", "IdResource");
 
                     b.HasIndex("IdResource");
 
-                    b.ToTable("MissionResource");
+                    b.HasIndex("ResourceId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IdMission = 1,
-                            IdResource = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IdMission = 1,
-                            IdResource = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IdMission = 2,
-                            IdResource = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            IdMission = 2,
-                            IdResource = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            IdMission = 3,
-                            IdResource = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            IdMission = 3,
-                            IdResource = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            IdMission = 4,
-                            IdResource = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            IdMission = 4,
-                            IdResource = 8
-                        },
-                        new
-                        {
-                            Id = 9,
-                            IdMission = 5,
-                            IdResource = 9
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IdMission = 5,
-                            IdResource = 10
-                        });
+                    b.ToTable("MissionResources", (string)null);
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
@@ -1571,10 +1517,14 @@ namespace StarColonies.Infrastructures.Migrations
                         .IsRequired();
 
                     b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
-                        .WithMany("MissionResources")
+                        .WithMany()
                         .HasForeignKey("IdResource")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", null)
+                        .WithMany("MissionResources")
+                        .HasForeignKey("ResourceId");
 
                     b.Navigation("Mission");
 

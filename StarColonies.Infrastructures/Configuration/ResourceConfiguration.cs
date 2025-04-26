@@ -27,6 +27,10 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
             .WithOne(cr => cr.Resource)
             .HasForeignKey(cr => cr.ResourceId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(r => r.MissionResources)
+            .WithOne(mr => mr.Resource)
+            .HasForeignKey(mr => mr.IdResource);
 
         SeedResources(builder);
     }

@@ -11,4 +11,6 @@ public class Mission
     public IList<ResultatMission>? ResultatMissions { get; set; }
     
     public IList<MissionBestiaire> MissionBestiaires { get; set; } = new List<MissionBestiaire>();
+    
+    public IList<MissionResource> GainedResources { get; set; } = new List<MissionResource>();    
 }

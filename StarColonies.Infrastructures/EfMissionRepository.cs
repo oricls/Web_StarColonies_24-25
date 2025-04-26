@@ -269,7 +269,7 @@ public class EfMissionRepository : IMissionRepository
         }).ToList();
     }
 
-    public Task AddMission(Mission mission)
+    public async Task AddMission(Mission mission)
     {
         var missionEntity = new Entities.Mission
         {
@@ -278,13 +278,17 @@ public class EfMissionRepository : IMissionRepository
             Description = mission.Description,
             MissionBestiaires = mission.Bestiaires.Select(b => new Entities.MissionBestiaire
             {
-                IdMission = mission.Id,
                 IdBestiaire = b.Id
+            }).ToList(),
+        
+            GainedResources = mission.Resources.Select(r => new Entities.MissionResource
+            {
+                IdResource = r.Id
             }).ToList()
         };
 
         _context.Mission.Add(missionEntity);
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public Task DeleteMissionAsync(Mission mission)
@@ -297,6 +301,25 @@ public class EfMissionRepository : IMissionRepository
         _context.Mission.Remove(missionEntity);
         return _context.SaveChangesAsync();
 
+    }
+
+    public async Task<IReadOnlyList<Resource>> GetResourcesByMissionIdAsync(int missionId)
+    {
+        var resources = await _context.MissionResource
+            .Where(mr => mr.IdMission == missionId)
+            .Include(mr => mr.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .Select(mr => new Resource
+            {
+                Id = mr.Resource.Id,
+                Name = mr.Resource.Name,
+                Description = mr.Resource.Description,
+                IconUrl = mr.Resource.TypeResource.Icon,
+                TypeName = mr.Resource.TypeResource.Name
+            })
+            .ToListAsync();
+
+        return resources;
     }
 
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission

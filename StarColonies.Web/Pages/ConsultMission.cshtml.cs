@@ -25,7 +25,7 @@ public class ConsultMission(
     public IReadOnlyList<Team> UserTeams { get; private set; } = new List<Team>();
     public IReadOnlyList<Bestiaire> Bestiaires { get; private set; } = new List<Bestiaire>();
     
-    public IReadOnlyList<Resource> Resources { get; private set; } = new List<Resource>();
+    public IReadOnlyList<Resource> ResourcesMission { get; private set; } = new List<Resource>();
     
     [BindProperty]
     [Required(ErrorMessage = "Sélectionnez une équipe")]
@@ -55,7 +55,7 @@ public class ConsultMission(
             UserTeams = await teamRepository.GetTeamByColon(colon);
             
             // Récupérer les ressources disponibles
-            Resources = await missionRepository.GetAllResources();
+            ResourcesMission = await missionRepository.GetResourcesByMissionIdAsync(Mission.Id);
             
             return Page();
         }
