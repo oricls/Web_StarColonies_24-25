@@ -143,7 +143,7 @@
                 new Log()
                 {
                     RequeteAction = "Inscription",
-                    ResponseAction = "Inscription réussie",
+                    ResponseAction = "Inscription réussie pour " + RegisterInput.NameOfColon,
                     DateHeureAction = DateTime.Now
                 }
             );
