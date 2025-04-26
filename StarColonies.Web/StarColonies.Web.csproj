@@ -23,6 +23,8 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Teams\create.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\missions\a0a4c365-2488-4010-9609-43485b81a423.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\missions\a3812707-25ae-4e66-9ad0-7628f37943cb.jpg" />
     </ItemGroup>
 
     <ItemGroup>

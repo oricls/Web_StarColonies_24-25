@@ -16,4 +16,7 @@ public interface IMissionRepository
     Task SaveOrUpdateMissionAsync(Mission mission);
     void SaveMissionResult(ResultatMission missionResult);
     Task<IReadOnlyList<Resource>> GetAllResources();
+    Task<IReadOnlyList<Bestiaire>> GetAllBestiaires();
+    Task AddMission(Mission mission);
+    Task DeleteMissionAsync(Mission mission);
 }

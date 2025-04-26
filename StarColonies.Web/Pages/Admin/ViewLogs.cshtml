@@ -1,0 +1,89 @@
+@page
+@model StarColonies.Web.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin - Logs";
+}
+
+<!-- Barre de navigation admin -->
+@await Html.PartialAsync("_AdminNavbar")
+
+<div class="container mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="font-barlow">
+            <i class="fas fa-scroll me-2"></i>Logs de l'application
+        </h1>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <form method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="date" class="form-control bg-dark text-white border-secondary" asp-for="SelectedDate" />
+                    <button type="submit" class="btn btn-accent">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-bordered align-middle table-dark">
+            <thead>
+            <tr class="bg-primary">
+                <th scope="col" class="text-center"><i class="fas fa-calendar-alt me-2"></i>Date/Heure</th>
+                <th scope="col" class="text-center"><i class="fas fa-bolt me-2"></i>Action (Request)</th>
+                <th scope="col" class="text-center"><i class="fas fa-reply me-2"></i>Réponse</th>
+            </tr>
+            </thead>
+            <tbody id="logsContainer">
+            @foreach (var log in Model.Logs)
+            {
+                <tr class="bg-secondary bg-opacity-10">
+                    <td class="text-center text-nowrap">@log.DateHeureAction.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td class="text-break">@log.RequeteAction</td>
+                    <td class="text-break">@log.ResponseAction</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+    /* Styles spécifiques pour le tableau */
+    .table-dark {
+        --bs-table-bg: var(--tercary-bg-color);
+        --bs-table-striped-bg: var(--secondary-bg-color);
+        --bs-table-hover-bg: var(--quaternary-bg-color);
+        color: #f8f9fa;
+        border-color: var(--secondary-bg-color);
+    }
+    
+    .bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+    
+    .bg-secondary {
+        background-color: var(--secondary-bg-color) !important;
+    }
+    
+    tr {
+        transition: background-color 0.2s ease;
+    }
+    
+    tr:hover {
+        background-color: var(--quaternary-bg-color) !important;
+    }
+    
+    .table-bordered {
+        border-color: var(--secondary-bg-color) !important;
+    }
+    
+    .table-bordered th,
+    .table-bordered td {
+        border-color: var(--secondary-bg-color) !important;
+    }
+</style>
+}

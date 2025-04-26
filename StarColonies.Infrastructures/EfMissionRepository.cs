@@ -251,6 +251,54 @@ public class EfMissionRepository : IMissionRepository
         }).ToList();
     }
 
+    public async Task<IReadOnlyList<Bestiaire>> GetAllBestiaires()
+    {
+        var bestiaireEntities = await _context.Bestiaire
+            .Include(b => b.TypeBestiaire)
+            .ToListAsync();
+
+        return bestiaireEntities.Select(bestiaireEntity => new Bestiaire
+        {
+            Id = bestiaireEntity.Id,
+            Name = bestiaireEntity.Name,
+            Strength = bestiaireEntity.Strength,
+            Endurance = bestiaireEntity.Endurance,
+            TypeBestiaireName = bestiaireEntity.TypeBestiaire.Name,
+            TypeBestiaireAvatar = bestiaireEntity.TypeBestiaire.Avatar,
+            TypeBestiaireDescription = bestiaireEntity.TypeBestiaire.Description
+        }).ToList();
+    }
+
+    public Task AddMission(Mission mission)
+    {
+        var missionEntity = new Entities.Mission
+        {
+            Name = mission.Name,
+            Image = mission.Image,
+            Description = mission.Description,
+            MissionBestiaires = mission.Bestiaires.Select(b => new Entities.MissionBestiaire
+            {
+                IdMission = mission.Id,
+                IdBestiaire = b.Id
+            }).ToList()
+        };
+
+        _context.Mission.Add(missionEntity);
+        return _context.SaveChangesAsync();
+    }
+
+    public Task DeleteMissionAsync(Mission mission)
+    {
+        var missionEntity = _context.Mission
+            .Include(m => m.MissionBestiaires)
+            .FirstOrDefault(m => m.Id == mission.Id);
+
+        if (missionEntity == null) return Task.CompletedTask;
+        _context.Mission.Remove(missionEntity);
+        return _context.SaveChangesAsync();
+
+    }
+
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
     private Mission MapMissionEntityToDomain(Entities.Mission missionEntity)
     {
