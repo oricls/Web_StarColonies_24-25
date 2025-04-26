@@ -40,8 +40,8 @@ public class Dashboard : PageModel
             var colon = await _colonRepository.GetColonByIdAsync(userId);
 
             // Récupérer toutes les équipes dont l'utilisateur est membre
-            UserTeams = await _teamRepository.GetTeamByColon(colon);
-                
+            UserTeams = (await _teamRepository.GetTeamByColon(colon)).Take(5).ToList();
+            
             // Pour chaque équipe, récupérer ses membres
             foreach (var team in UserTeams)
             {

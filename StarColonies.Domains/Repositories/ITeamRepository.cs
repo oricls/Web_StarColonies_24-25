@@ -1,4 +1,4 @@
-﻿namespace StarColonies.Domains.Repositories;
+namespace StarColonies.Domains.Repositories;
 
 public interface ITeamRepository
 {
@@ -15,4 +15,8 @@ public interface ITeamRepository
     Task<IReadOnlyList<Team>> GetTeamByColon(Colon colon);
     Task AddMemberToTeamAsync(int teamId, string userId);
     void LevelUpTeam(Team team);
+    Task<IReadOnlyList<TeamRankingModel>> GetTopTeamsAsync(int count = 10);
+    Task<int> GetSuccessfulMissionsCountAsync(int teamId);
+    Task<IReadOnlyList<Team>> GetTeamsWithoutMissionParticipationAsync(string userId, int missionId);
+
 }

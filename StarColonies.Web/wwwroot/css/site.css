@@ -172,10 +172,15 @@ body {
 }
 
 /* Login Page Specific Styles */
-.login-container, .title-page, .profil-container {
+.title-page, .profil-container {
   /*max-width: 450px;*/
   width: 100%;
   margin: 0 auto;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
 }
 
 .login-header {
