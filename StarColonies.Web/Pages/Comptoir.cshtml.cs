@@ -14,6 +14,7 @@ public class Comptoir : PageModel
     private readonly IBonusRepository _repositoryBonus;
     private readonly IColonRepository _repositoryColon;
     private readonly IMissionRepository _repositoryMission;
+    private readonly ILogRepository _repositoryLog;
 
     public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
     public Dictionary<int, TimeSpan> BonusDuration { get; private set; }
@@ -46,11 +47,13 @@ public class Comptoir : PageModel
         IBonusRepository repositoryBonus, 
         IColonRepository repositoryColon, 
         IMissionRepository repositoryMission,
+        ILogRepository repositoryLog,
         ILogger<ConsultMission> logger)
     {
         _repositoryBonus = repositoryBonus;
         _repositoryColon = repositoryColon;
         _repositoryMission = repositoryMission;
+        _repositoryLog = repositoryLog;
         _logger = logger;
         BonusDuration = new Dictionary<int, TimeSpan>();
     }
@@ -217,6 +220,16 @@ public class Comptoir : PageModel
             
             // Ajouter le bonus au colon
             await _repositoryColon.AddBonusToColonAsync(userId, bonusId, TimeSpan.Zero); // Utilise la durée par défaut du bonus
+            
+            // Logger l'achat
+            await _repositoryLog.AddLog(
+                new Log
+                {
+                    DateHeureAction = DateTime.Now,
+                    RequeteAction = "Achat de bonus",
+                    ResponseAction = $"Achat réussi du bonus {bonus.Name} par l'utilisateur {userId}"
+                }
+            );
             
             // Si on est en train d'acheter des bonus pour débloquer le bonus d'équipe
             if (!string.IsNullOrEmpty(fromMission))

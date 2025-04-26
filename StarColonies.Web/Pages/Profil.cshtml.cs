@@ -101,7 +101,7 @@ public class Profil(
                 new Log()
                 {
                     RequeteAction = "Mise à jour du profil",
-                    ResponseAction = "Profil mis à jour avec succès",
+                    ResponseAction = "Profil mis à jour avec succès pour " + user.UserName,
                     DateHeureAction = DateTime.Now
                 }
             );
@@ -139,7 +139,7 @@ public class Profil(
                 new Log()
                 {
                     RequeteAction = "Suppression de compte",
-                    ResponseAction = "Compte supprimé avec succès",
+                    ResponseAction = "Compte supprimé avec succès + " + user.UserName,
                     DateHeureAction = DateTime.Now
                 }
             );
