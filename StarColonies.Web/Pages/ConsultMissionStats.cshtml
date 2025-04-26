@@ -1,0 +1,177 @@
+﻿@page
+@model StarColonies.Web.Pages.ConsultMissionStats
+@{
+    ViewData["Title"] = "Statistiques";
+}
+@await Html.PartialAsync("_StatsNavbar")
+<div class="container mt-4">
+    <section class="mb-5 d-flex flex-column gap-4">
+        <div class="mb-5">
+            <h3 class="text-white fw-bold mb-4">Sélectionner une équipe :</h3>
+            <p class="text-white">Sélectionnez une équipe pour voir ses statistiques</p>
+            <form method="post">
+                <div class="text-danger mb-3">
+                    <validation-summary model-only="true" />
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mb-5">
+                    @if (!Model.UserTeams.Any())
+                    {
+                        <p class="text-white">Aucune équipe disponible.</p>
+                    }
+                    else
+                    {
+                        @foreach (var team in Model.UserTeams)
+                        {
+                            <div class="team-selector">
+                                <input type="submit" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
+                                <label for="team-@team.Id" class="team-card">
+                                    <div class="team-avatar">
+                                        <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
+                                    </div>
+                                    <div class="team-name">@team.Name</div>
+                                </label>
+                            </div>
+                        }
+                    }
+                </div>
+            </form>
+        </div>
+        
+        <div class="row g-5 justify-content-center align-items-center">
+
+            <div class="col-lg-8 col-md-10 d-flex flex-column gap-3">
+                <div class="title-page hall-of-fame">
+                    <h3 class="py-3 mb-0 text-center fw-bold font-barlow login-header">Missions</h3>
+                </div>
+
+                <h4>Total des résultats missions</h4>
+                <canvas id="total-result-mission-chart" style="width: 100%; height: 300px;"></canvas>
+
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    var dataTeamStat = @Html.Raw(Json.Serialize(Model.SelectedTeamId));
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        drawChart();
+    });
+
+    function drawChart() {
+        TotalResultMissions();
+    }
+
+    function TotalResultMissions() {
+        var ctx = document.getElementById('total-result-mission-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels:
+                    ['Difficulty level', 'Success rate' , 'Challenges encountered'],
+                datasets: [{
+                    label: 'Analyse de la mission',
+                    data: [90, 85, 80],
+                    borderColor: '#3B82F6',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                },
+                backgroundColor: 'transparent',
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'white' 
+                        },
+                        grid: {
+                            color: 'rgba(255,255,255,0.2)'
+                        },
+                        pointLabels: {
+                            color: 'white',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+
+@section Styles {
+    <style>
+    .font-barlow {
+        font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .team-selector {
+        position: relative;
+    }
+
+    .team-selector label {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .team-selector label:hover {
+        transform: scale(1.05);
+    }
+
+    .team-selector input[type="radio"]:checked + label {
+        border: 3px solid #5a49ab;
+        box-shadow: 0 0 15px rgba(90, 73, 171, 0.8);
+        transform: translateY(-5px) scale(1.05);
+    }
+
+    .team-card {
+        width: 120px;
+        min-height: 140px;
+        background-color: #1d1935;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 10px;
+        overflow: visible;
+        padding: 10px;
+    }
+
+    .team-card img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 8px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .team-selector input[type="radio"]:checked + label .team-card img {
+        border-color: #5a49ab;
+    }
+
+    .team-name {
+        white-space: normal;
+        word-wrap: break-word;
+        max-width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        line-height: 1.2;
+        color: #fff;
+    }
+</style>
+}

@@ -14,21 +14,13 @@ public class StatPoint
     public double Strength { get; set; }
 }
 
-public class ConsultStatsModel : PageModel
+public class ConsultStatsModel(
+    UserManager<Infrastructures.Entities.Colon> userManager,
+    ITeamRepository teamRepository,
+    IMissionRepository missionRepository,
+    ILogger<ConsultStatsModel> logger)
+    : PageModel
 {
-    private readonly UserManager<Infrastructures.Entities.Colon> _userManager;
-    private readonly ITeamRepository _teamRepository;
-    private readonly IMissionRepository _missionRepository;
-    private readonly ILogger<ConsultStatsModel> _logger;
-
-    public ConsultStatsModel(UserManager<Infrastructures.Entities.Colon> userManager, ITeamRepository teamRepository, IMissionRepository missionRepository, ILogger<ConsultStatsModel> logger)
-    {
-        _userManager = userManager;
-        _teamRepository = teamRepository;
-        _missionRepository = missionRepository;
-        _logger = logger;
-    }
-
     public IReadOnlyList<Team> UserTeams { get; private set; } = new List<Team>();
 
     [BindProperty(SupportsGet = true)]
@@ -41,7 +33,7 @@ public class ConsultStatsModel : PageModel
 
     private async Task<Infrastructures.Entities.Colon> GetCurrentUserAsync()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user = await userManager.GetUserAsync(User);
         if (user == null)
         {
             throw new ApplicationException("User impossible à obtenir");
@@ -52,15 +44,15 @@ public class ConsultStatsModel : PageModel
     public async Task<IActionResult> OnGet()
     {
         var user = await GetCurrentUserAsync();
-        UserTeams = await _teamRepository.GetTeamByColon(user.Id);
+        UserTeams = await teamRepository.GetTeamByColon(user.Id);
 
         if (SelectedTeamId > 0)
         {
-            var missionTeam = await _missionRepository.GetMissionsByTeamIdAsync(SelectedTeamId);
+            var missionTeam = await missionRepository.GetMissionsByTeamIdAsync(SelectedTeamId);
 
             foreach (var mission in missionTeam)
             {
-                var resultMission = await _missionRepository.GetResultatsByMissionIdAsync(mission.Id);
+                var resultMission = await missionRepository.GetResultatsByMissionIdAsync(mission.Id);
                 foreach (var result in resultMission)
                 {
                     StatsEvolution.Add(new StatPoint
@@ -84,7 +76,7 @@ public class ConsultStatsModel : PageModel
         if (!ModelState.IsValid)
         {
             var user = await GetCurrentUserAsync();
-            UserTeams = await _teamRepository.GetTeamByColon(user.Id);
+            UserTeams = await teamRepository.GetTeamByColon(user.Id);
             return Page();
         }
 
