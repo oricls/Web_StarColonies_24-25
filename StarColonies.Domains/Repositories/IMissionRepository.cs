@@ -19,4 +19,5 @@ public interface IMissionRepository
     Task<IReadOnlyList<Bestiaire>> GetAllBestiaires();
     Task AddMission(Mission mission);
     Task DeleteMissionAsync(Mission mission);
+    Task<IReadOnlyList<Resource>> GetResourcesByMissionIdAsync(int missionId);
 }

@@ -13,4 +13,5 @@ public class Mission
     public int TotalEndurance { get; set; }
     public int TotalStrength { get; set; }
     public IList<Bestiaire> Bestiaires { get; set; } = new List<Bestiaire>();
+    public List<Resource> Resources { get; set; } = [];
 }

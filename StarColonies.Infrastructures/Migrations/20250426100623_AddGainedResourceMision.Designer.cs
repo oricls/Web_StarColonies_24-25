@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250426100623_AddGainedResourceMision")]
+    partial class AddGainedResourceMision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -847,78 +850,24 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Property<int>("IdMission")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdResource")
+                    b.Property<int>("IdRessource")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RessourceId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdMission");
 
-                    b.HasIndex("IdResource");
+                    b.HasIndex("MissionId");
+
+                    b.HasIndex("RessourceId");
 
                     b.ToTable("MissionResource");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IdMission = 1,
-                            IdResource = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IdMission = 1,
-                            IdResource = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IdMission = 2,
-                            IdResource = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            IdMission = 2,
-                            IdResource = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            IdMission = 3,
-                            IdResource = 5
-                        },
-                        new
-                        {
-                            Id = 6,
-                            IdMission = 3,
-                            IdResource = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            IdMission = 4,
-                            IdResource = 7
-                        },
-                        new
-                        {
-                            Id = 8,
-                            IdMission = 4,
-                            IdResource = 8
-                        },
-                        new
-                        {
-                            Id = 9,
-                            IdMission = 5,
-                            IdResource = 9
-                        },
-                        new
-                        {
-                            Id = 10,
-                            IdMission = 5,
-                            IdResource = 10
-                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
@@ -1564,21 +1513,23 @@ namespace StarColonies.Infrastructures.Migrations
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionResource", b =>
                 {
-                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", "Mission")
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", null)
                         .WithMany("GainedResources")
                         .HasForeignKey("IdMission")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
-                        .WithMany("MissionResources")
-                        .HasForeignKey("IdResource")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", "Mission")
+                        .WithMany()
+                        .HasForeignKey("MissionId");
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Ressource")
+                        .WithMany()
+                        .HasForeignKey("RessourceId");
 
                     b.Navigation("Mission");
 
-                    b.Navigation("Resource");
+                    b.Navigation("Ressource");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
@@ -1658,8 +1609,6 @@ namespace StarColonies.Infrastructures.Migrations
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.Navigation("ColonResources");
-
-                    b.Navigation("MissionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Team", b =>

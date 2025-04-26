@@ -33,7 +33,7 @@ public class MissionSucessful(
 
     // 4. Récupérer les membres et leurs récompenses
     var members = await teamRepository.GetMembersOfTeam(team);
-    var allResources = await missionRepository.GetAllResources();
+    var resourcesByMission = await missionRepository.GetResourcesByMissionIdAsync(mission.Id);
     var random = new Random();
     
     // 5. Récupérer tous les bonus actifs des membres
@@ -66,42 +66,33 @@ public class MissionSucessful(
             LevelGained = true // Puisqu'on a fait levelUpTeam
         };
 
-        // Générer 1-3 ressources aléatoires pour ce membre
-        List<Resource> memberResources = new List<Resource>();
-
-        for (var i = 0; i < random.Next(1, 4); i++)
+        foreach (var resource in resourcesByMission)
         {
-            var resource = allResources.OrderBy(x => random.Next()).First();
-            var quantity = random.Next(1, 4);
-            
-            var memberResource = new Resource
+            var quantity = random.Next(1, 4); // entre 1 et 3
+
+            var resourceCopy = new Resource
             {
                 Id = resource.Id,
                 Name = resource.Name,
                 IconUrl = resource.IconUrl,
                 Quantity = quantity
             };
-            
-            memberResources.Add(memberResource);
-        }
-        
-        
-        foreach (var bonus in activeTeamBonuses)
-        {
-            bonus.ApplyToResources(memberResources);
-        }
 
-        // Ajouter les ressources à la récompense et à la base de données
-        foreach (var resource in memberResources)
-        {
+            // Appliquer les bonus sur la ressource
+            foreach (var bonus in activeTeamBonuses)
+            {
+                bonus.ApplyToResources(new List<Resource> { resourceCopy });
+            }
+
             colonReward.Resources.Add(new ResourceReward
             {
-                ResourceName = resource.Name,
-                Icon = resource.IconUrl,
-                Quantity = resource.Quantity
+                ResourceName = resourceCopy.Name,
+                Icon = resourceCopy.IconUrl,
+                Quantity = resourceCopy.Quantity
             });
-            
-            await colonRepository.AddResourceToColonAsync(member.Id, resource.Id, resource.Quantity);
+
+            // Enregistrer dans la BDD
+            await colonRepository.AddResourceToColonAsync(member.Id, resourceCopy.Id, resourceCopy.Quantity);
         }
         
         RewardModel.ColonRewards.Add(colonReward);
