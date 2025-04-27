@@ -29,7 +29,7 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
         }
 
         // Gérer l'enregistrement de l'image
-        var uploadsFolder = Path.Combine("wwwroot", "img", "missions");
+        var uploadsFolder = Path.Combine("wwwroot", "uploads", "missions");
         Directory.CreateDirectory(uploadsFolder);
 
         var uniqueFileName = Guid.NewGuid() + Path.GetExtension(AddMissionInputModel.MissionImage.FileName);

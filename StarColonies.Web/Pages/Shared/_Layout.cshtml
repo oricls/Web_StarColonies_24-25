@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -57,11 +59,13 @@
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    var userAvatar = User.FindFirstValue("Avatar") ?? "default-avatar.png";
+
                     <!-- Menu utilisateur connecté -->
                     <div class="d-flex align-items-center">
                         <div class="dropdown">
                             <button class="btn btn-accent dropdown-toggle d-flex align-items-center" type="button" id="userMenu" data-bs-toggle="dropdown">
-                                <img src="~/img/default-avatar.jpg" class="user-avatar" alt="Avatar">
+                                <img src="~/uploads/avatars/@userAvatar" class="user-avatar" alt="Avatar">
                                 <span>@User.Identity.Name</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
