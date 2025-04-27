@@ -267,7 +267,6 @@
         function updateCountdownTimers() {
             const now = new Date();
             let needsReload = false;
-
             document.querySelectorAll('.countdown-timer').forEach(element => {
                 try {
                     // Récupérer la date d'expiration depuis l'attribut data
@@ -277,30 +276,24 @@
                         console.error("Date d'expiration manquante");
                         return;
                     }
-
                     const expirationDate = new Date(expirationDateStr);
-
                     // Vérifier si la date est valide
                     if (isNaN(expirationDate.getTime())) {
                         console.error("Date d'expiration invalide:", expirationDateStr);
                         return;
                     }
-
                     // Calculer la différence en millisecondes
                     const diff = expirationDate - now;
-
                     // Si le bonus est expiré, marquer pour recharger la page une seule fois
                     if (diff <= 0) {
                         needsReload = true;
                         return;
                     }
-
                     // Calculer les jours, heures, minutes et secondes
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
                     // Formater le texte du timer
                     let timeText = '';
                     if (days > 0) {
@@ -310,7 +303,6 @@
                     } else {
                         timeText = `${minutes}m ${seconds}s`;
                     }
-
                     // Mettre à jour le texte de l'élément
                     element.textContent = `Expire dans ${timeText}`;
                 } catch (error) {
@@ -318,22 +310,31 @@
                 }
             });
 
-            // Recharger la page une seule fois si nécessaire, avec une variable pour empêcher les rechargements en boucle
-            if (needsReload && !window.hasReloaded) {
-                window.hasReloaded = true;
+            // Recharger la page une seule fois si nécessaire
+            // Utiliser localStorage pour maintenir l'état entre les rechargements
+            if (needsReload && localStorage.getItem('hasReloaded') !== 'true') {
+                localStorage.setItem('hasReloaded', 'true');
                 window.location.reload();
             }
 }
 
-        // Vérifier si des timers existent avant d'initialiser
-        if (document.querySelectorAll('.countdown-timer').length > 0) {
-            // Initialiser la variable pour éviter les rechargements en boucle
-            window.hasReloaded = false;
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si cette page vient juste d'être rechargée
+            if (localStorage.getItem('hasReloaded') === 'true') {
+                // Réinitialiser le drapeau après un court délai pour permettre à la page de se stabiliser
+                setTimeout(function() {
+                    localStorage.removeItem('hasReloaded');
+                }, 2000);
+            }
 
-            // Mettre à jour les timers immédiatement, puis toutes les secondes
-            updateCountdownTimers();
-            setInterval(updateCountdownTimers, 1000);
-        }
+            // Vérifier si des timers existent et initialiser le rafraîchissement
+            if (document.querySelectorAll('.countdown-timer').length > 0) {
+                // Mettre à jour les timers immédiatement, puis toutes les secondes
+                updateCountdownTimers();
+                setInterval(updateCountdownTimers, 1000);
+            }
+});
     </script>
 }
 

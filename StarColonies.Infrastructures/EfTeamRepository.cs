@@ -187,6 +187,15 @@ public class EfTeamRepository : ITeamRepository
         return teamsWithoutParticipation.Select(MapTeamEntityToDomain).ToList();
     }
 
+    public async Task<bool> IsUserMemberOfTeam(string userId, int teamId)
+    {
+        var team = await GetTeamById(teamId);
+
+        var members = await GetMembersOfTeam(team);
+        return members.Any(m => m.Id == userId);
+    }
+
+
     public async Task<IReadOnlyList<TeamRankingModel>> GetTopTeamsAsync(int count = 10)
     {
         var teams = await _context.Team
