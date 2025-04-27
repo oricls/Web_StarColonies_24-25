@@ -75,7 +75,7 @@
                             <div class="monster-icon-container mb-3">
                                 @if (!string.IsNullOrEmpty(monster.TypeBestiaireAvatar))
                                 {
-                                    <img src="~/@monster.TypeBestiaireAvatar" alt="@monster.TypeBestiaireName" class="monster-avatar">
+                                    <img src="~/icons/@monster.TypeBestiaireAvatar" alt="@monster.TypeBestiaireName" class="monster-avatar">
                                 }
                                 else
                                 {
@@ -118,7 +118,7 @@
                 <div class="col-auto mb-3">
                     <div class="card bg-dark text-center border-0" style="width: 120px;">
                         <div class="card-body">
-                            <img src="~/@resource.IconUrl" alt="@resource.Name" class="img-fluid rounded-circle" style="width: 60px; height: 60px;" />
+                            <img src="~/icons/@resource.IconUrl" alt="@resource.Name" class="img-fluid rounded-circle" style="width: 60px; height: 60px;" />
                             <h6 class="text-white">@resource.Name</h6>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                             <input type="radio" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
                             <label for="team-@team.Id" class="team-card">
                                 <div class="team-avatar">
-                                    <img src="~/@team.Baniere" alt="@team.Name" class="img-fluid">
+                                    <img src="~/uploads/banieres/@team.Baniere" alt="@team.Name" class="img-fluid">
                                 </div>
                                 <div class="team-name">
                                     @team.Name

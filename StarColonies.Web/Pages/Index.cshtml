@@ -46,12 +46,12 @@
                             <div class="team-banner-container">
                                 @if (!string.IsNullOrEmpty(team.Logo))
                                 {
-                                    <div class="team-banner" style="background-image: url('@team.Baniere');"></div>
+                                    <div class="team-banner" style="background-image: url('~/uploads/banieres/@team.Baniere');"></div>
                                 }
                                 <div class="team-info">
                                     @if (!string.IsNullOrEmpty(team.Logo))
                                     {
-                                        <img src="@team.Logo" alt="@team.Name Logo" class="me-2 rounded" style="width: 2.5rem; height: 2.5rem;" />
+                                        <img src="~/uploads/logos/@team.Logo" alt="@team.Name Logo" class="me-2 rounded" style="width: 2.5rem; height: 2.5rem;" />
                                     }
                                     <span class="team-name">@team.Name</span>
                                 </div>

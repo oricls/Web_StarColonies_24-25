@@ -115,38 +115,37 @@
     </script>
 }
 
-@section Styles {
-    <style>
-        .mission-image-preview {
-            border: 2px dashed var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+<style>
+    .mission-image-preview {
+        border: 2px dashed var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .mission-image-preview::before {
-            content: "Aperçu de l'image";
-            color: var(--text-color);
-            opacity: 0.5;
-        }
+    .mission-image-preview::before {
+        content: "Aperçu de l'image";
+        color: var(--text-color);
+        opacity: 0.5;
+    }
 
-        .mission-image-preview.has-image::before {
-            display: none;
-        }
+    .mission-image-preview.has-image::before {
+        display: none;
+    }
 
-        .bestiary-selection {
-            max-height: 300px;
-            overflow-y: auto;
-        }
+    .bestiary-selection,
+    .resource-selection { /* <-- j'ai ajouté .resource-selection ici */
+        max-height: 300px;
+        overflow-y: auto;
+    }
 
-        .form-check-label {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+    .form-check-label {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
 
-        .form-check-label:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-    </style>
-}
+    .form-check-label:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+</style>

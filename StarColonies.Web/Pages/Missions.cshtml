@@ -57,7 +57,7 @@
                 <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
                     <!-- Ajout de l'image de la mission -->
                     <div class="mission-banner-container position-relative overflow-hidden rounded-top" style="height: 180px;">
-                        <img src="~/@(!string.IsNullOrEmpty(mission.Image) ? mission.Image : "images/default-mission.jpg")" alt="Image de la mission" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                        <img src="~/uploads/missions/@(!string.IsNullOrEmpty(mission.Image) ? mission.Image : "images/default-mission.jpg")" alt="Image de la mission" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
                         <div class="mission-banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(29,19,50,0.9)); z-index: 2;"></div>
 
                         <!-- Niveau de mission superposé sur l'image -->
