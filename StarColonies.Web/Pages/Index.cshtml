@@ -46,8 +46,7 @@
                             <div class="team-banner-container">
                                 @if (!string.IsNullOrEmpty(team.Logo))
                                 {
-                                    <div class="team-banner" style="background-image: url('~/uploads/banieres/@team.Baniere');"></div>
-                                }
+                                <div class="team-banner" style="background-image: url('@Url.Content("~/uploads/banieres/" + team.Baniere)');"></div>                                }
                                 <div class="team-info">
                                     @if (!string.IsNullOrEmpty(team.Logo))
                                     {
