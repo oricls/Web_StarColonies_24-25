@@ -14,10 +14,11 @@ public interface IMissionRepository
     Task<IReadOnlyList<ResultatMission>> GetResultatsByMissionIdAsync(int missionId);
     void SaveOrUpdateMission(Mission mission);
     Task SaveOrUpdateMissionAsync(Mission mission);
-    void SaveMissionResult(ResultatMission missionResult);
+    int SaveMissionResult(ResultatMission missionResult);
     Task<IReadOnlyList<Resource>> GetAllResources();
     Task<IReadOnlyList<Bestiaire>> GetAllBestiaires();
     Task AddMission(Mission mission);
     Task DeleteMissionAsync(Mission mission);
     Task<IReadOnlyList<Resource>> GetResourcesByMissionIdAsync(int missionId);
+    Task<ResultatMission> GetMissionResultById(int resultId);
 }

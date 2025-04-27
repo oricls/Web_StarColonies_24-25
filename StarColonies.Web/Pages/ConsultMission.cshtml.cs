@@ -31,6 +31,11 @@ public class ConsultMission(
     [Required(ErrorMessage = "Sélectionnez une équipe")]
     [Display(Name = "Équipe")]
     public int SelectedTeamId { get; set; }
+    
+    [BindProperty]
+    [Display(Name = "Passer la simulation")]
+    public bool SkipSimulation { get; set; } = false;
+
 
     public async Task<IActionResult> OnGetAsync(string slug)
     {
@@ -96,6 +101,7 @@ public class ConsultMission(
             {
                 return RedirectToPage("/ConsultMission", new { slug });
             }
+            
 
             // Les équipes qui n'ont pas encore fait la mission
             UserTeams = await teamRepository.GetTeamsWithoutMissionParticipationAsync(userId, Mission.Id);
@@ -169,12 +175,21 @@ public class ConsultMission(
                     $"Bonus à usage unique {bonusId} expiré après utilisation pour l'utilisateur {userId}");
             }
 
-            missionRepository.SaveMissionResult(result);
+            var savedResultId = missionRepository.SaveMissionResult(result);
 
-            // 7. Rediriger en fonction du résultat
-            return !result.IsSuccess
-                ? RedirectToPage("/ResultMissionFailed", new { slug })
-                : RedirectToPage("/MissionSucessful", new { idMission = Mission.Id, teamId = team.Id });
+            
+            if (SkipSimulation)
+            {
+                // Redirection directe vers la page de résultat
+                return result.IsSuccess
+                    ? RedirectToPage("/MissionSucessful", new { idMission = Mission.Id, teamId = team.Id })
+                    : RedirectToPage("/ResultMissionFailed", new { slug });
+            }
+            else
+            {
+                // Redirection vers la page de simulation
+                return RedirectToPage("/SimulationMission", new { slug = slug, teamId = team.Id, resultId = savedResultId });
+            }
         }
         catch (Exception ex)
         {
