@@ -1,0 +1,591 @@
+@page "{slug:isSlug}"
+@model StarColonies.Web.Pages.MissionSimulation
+
+@{
+ViewData["Title"] = "Simulation de Mission";
+ViewData["HideNavButtons"] = true;
+}
+
+<div class="container-fluid mission-simulation-page d-flex flex-column justify-content-center py-4">
+    <!-- Battle arena -->
+    <div class="row mb-4 justify-content-center">
+        <!-- Team deck -->
+        <div class="col-md-3 mb-4 mb-md-0 text-center">
+            <h5 class="text-white mb-3">@Model.Team.Name</h5>
+            <div id="teamDeck" class="card-deck team-deck mx-auto">
+                <div class="team-banner-container">
+                    @if (!string.IsNullOrEmpty(Model.Team.Baniere))
+                    {
+                    <img src="/@Model.Team.Baniere" alt="Bannière d'équipe" class="team-banner" />
+                    }
+                    else
+                    {
+                    <div class="team-banner-placeholder">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Playing field -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-5">
+                    <div id="teamCardSlot" class="card-slot team-slot mx-auto"></div>
+                </div>
+                <div class="col-2 text-center">
+                    <div class="badge bg-primary rounded-circle p-3 fs-5">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div id="monsterCardSlot" class="card-slot monster-slot mx-auto"></div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <span class="badge bg-secondary p-2" id="turnCounter">Tour: 0</span>
+            </div>
+        </div>
+
+        <!-- Monster deck -->
+        <div class="col-md-3 text-center">
+            <h5 class="text-white mb-3">&nbsp;</h5>
+            <div id="monsterDeck" class="card-deck monster-deck mx-auto">
+                <div class="deck-count">
+                    <span id="monsterDeckCount">@Model.Bestiaires.Count</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card templates (hidden) -->
+    <div id="cardTemplates" style="display: none;">
+        <!-- Team member card template -->
+        <div id="teamCardTemplate" class="game-card team-card">
+            <div class="card bg-dark border-primary h-100">
+                <div class="card-img-overlay p-0">
+                    <div class="card-header bg-primary bg-opacity-75 text-center p-2 border-bottom border-primary">
+                        <h5 class="card-title text-truncate mb-0 text-white"></h5>
+                        <span class="badge bg-primary profession-badge"></span>
+                    </div>
+                    <div class="card-footer bg-dark bg-opacity-75 p-2 text-center border-top border-primary position-absolute bottom-0 w-100">
+                        <div class="row stat-row g-1">
+                            <div class="col-4">
+                                <div class="stat">
+                                    <i class="fas fa-fist-raised"></i>
+                                    <span class="strength-value"></span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="endurance-value"></span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stat">
+                                    <i class="fas fa-star"></i>
+                                    <span class="level-value"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img class="card-img member-avatar" src="" alt="">
+            </div>
+        </div>
+
+        <!-- Monster card template -->
+        <div id="monsterCardTemplate" class="game-card monster-card">
+            <div class="card bg-dark border-danger h-100">
+                <div class="card-img-overlay p-0">
+                    <div class="card-header bg-danger bg-opacity-75 text-center p-2 border-bottom border-danger">
+                        <h5 class="card-title text-truncate mb-0 text-white"></h5>
+                        <span class="badge bg-danger type-badge"></span>
+                    </div>
+                    <div class="card-footer bg-dark bg-opacity-75 p-2 text-center border-top border-danger position-absolute bottom-0 w-100">
+                        <div class="row stat-row g-1">
+                            <div class="col-6">
+                                <div class="stat">
+                                    <i class="fas fa-fist-raised"></i>
+                                    <span class="strength-value"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat">
+                                    <i class="fas fa-heart"></i>
+                                    <span class="endurance-value"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img class="card-img monster-avatar" src="" alt="">
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden form values -->
+    <input type="hidden" id="missionResultValue" value="@(Model.MissionResult.IsSuccess ? "true" : "false")">
+    <input type="hidden" id="missionId" value="@Model.Mission.Id">
+    <input type="hidden" id="teamId" value="@Model.Team.Id">
+    <input type="hidden" id="missionSlug" value="@Model.Mission.Name.ToKebab()">
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Éléments DOM essentiels
+        const teamDeck = document.getElementById('teamDeck');
+        const monsterDeck = document.getElementById('monsterDeck');
+        const teamCardSlot = document.getElementById('teamCardSlot');
+        const monsterCardSlot = document.getElementById('monsterCardSlot');
+        const monsterDeckCount = document.getElementById('monsterDeckCount');
+        const turnCounter = document.getElementById('turnCounter');
+
+        // Templates
+        const teamCardTemplate = document.getElementById('teamCardTemplate');
+        const monsterCardTemplate = document.getElementById('monsterCardTemplate');
+
+        // État du jeu
+        let gameStarted = false;
+        let currentTurn = 0;
+        let simulationSpeed = 1500;
+        let simulationInterval;
+
+        // Données
+        let teamMembers = @Html.Raw(Json.Serialize(Model.TeamMembers.Select(m => new {
+        id = m.Id,
+        name = m.Name,
+        profession = m.ProfessionName,
+        avatar = m.Avatar,
+        strength = m.Strength,
+        endurance = m.Endurance,
+        level = m.Level
+        })));
+
+        let monsters = @Html.Raw(Json.Serialize(Model.Bestiaires));
+
+        // Copier les données pour la simulation
+        let teamMembersInDeck = [...teamMembers];
+        let monstersInDeck = [...monsters];
+
+        // Résultat prédéterminé - lire depuis le champ caché
+        const isSuccess = document.getElementById('missionResultValue').value;
+
+        // Initialiser les decks
+        function initializeDecks() {
+            balanceDecks();
+
+            // Effet visuel de cartes empilées pour les deux decks
+            for (let i = 0; i < 3; i++) {
+                // Team shadow cards
+                const teamShadowCard = document.createElement('div');
+                teamShadowCard.className = 'shadow-card team-shadow';
+                teamShadowCard.style.transform = `translateY(${i * -2}px) translateX(${i * -1}px) rotate(${i * -2}deg)`;
+                teamDeck.appendChild(teamShadowCard);
+
+                // Monster shadow cards
+                const monsterShadowCard = document.createElement('div');
+                monsterShadowCard.className = 'shadow-card monster-shadow';
+                monsterShadowCard.style.transform = `translateY(${i * -2}px) translateX(${i * -1}px) rotate(${i * -2}deg)`;
+                monsterDeck.appendChild(monsterShadowCard);
+            }
+
+            updateDeckCounts();
+        }
+
+        // Équilibrer les decks
+        function balanceDecks() {
+            const teamCount = teamMembersInDeck.length;
+            const monsterCount = monstersInDeck.length;
+
+            if (teamCount === monsterCount) return;
+
+            if (teamCount > monsterCount) {
+                // Si plus de membres que de monstres, répéter les monstres
+                const difference = teamCount - monsterCount;
+                const repeatedMonsters = [...monstersInDeck];
+                shuffleArray(repeatedMonsters);
+
+                for (let i = 0; i < difference; i++) {
+                    monstersInDeck.push({...repeatedMonsters[i % repeatedMonsters.length]});
+                }
+            } else {
+                // Si plus de monstres que de membres, répéter les membres
+                const difference = monsterCount - teamCount;
+                const repeatedTeamMembers = [...teamMembersInDeck];
+                shuffleArray(repeatedTeamMembers);
+
+                for (let i = 0; i < difference; i++) {
+                    teamMembersInDeck.push({...repeatedTeamMembers[i % repeatedTeamMembers.length]});
+                }
+            }
+        }
+
+        // Démarrer automatiquement la simulation
+        function startGame() {
+            if (gameStarted) return;
+
+            gameStarted = true;
+            currentTurn = 0;
+
+            // Mélanger les decks
+            shuffleArray(teamMembersInDeck);
+            shuffleArray(monstersInDeck);
+
+            turnCounter.textContent = "Tour: " + currentTurn;
+            updateDeckCounts();
+
+            // Démarrer la simulation
+            simulationInterval = setInterval(() => {
+                playNextTurn();
+
+                // Vérifier si la simulation est terminée
+                if (teamMembersInDeck.length === 0 || monstersInDeck.length === 0) {
+                    endGame();
+                }
+            }, simulationSpeed);
+        }
+
+        // Jouer le tour suivant
+        function playNextTurn() {
+            if (!gameStarted || teamMembersInDeck.length === 0 || monstersInDeck.length === 0) {
+                return;
+            }
+
+            currentTurn++;
+            turnCounter.textContent = "Tour: " + currentTurn;
+
+            // Nettoyer les emplacements
+            teamCardSlot.innerHTML = '';
+            monsterCardSlot.innerHTML = '';
+
+            // Tirer des cartes
+            const teamMember = teamMembersInDeck.shift();
+            const monster = monstersInDeck.shift();
+
+            updateDeckCounts();
+
+            // Créer et afficher les cartes
+            const teamCard = createTeamCard(teamMember);
+            const monsterCard = createMonsterCard(monster);
+
+            // Animation des cartes - synchronisée pour les deux
+            teamCardSlot.appendChild(teamCard);
+            monsterCardSlot.appendChild(monsterCard);
+
+            setTimeout(() => {
+                teamCard.classList.add('played');
+                monsterCard.classList.add('played');
+            }, 100);
+        }
+
+        // Terminer le jeu
+        function endGame() {
+            clearInterval(simulationInterval);
+
+            // Redirection après un court délai
+            setTimeout(() => {
+                redirectToResult();
+            }, 1000);
+        }
+
+        // Rediriger vers la page de résultat appropriée
+        function redirectToResult() {
+            const missionId = document.getElementById('missionId').value;
+            const teamId = document.getElementById('teamId').value;
+            const missionSlug = document.getElementById('missionSlug').value;
+
+            if (isSuccess === "true") {
+                window.location.href = `/MissionSucessful?idMission=${missionId}&teamId=${teamId}`;
+            } else {
+                window.location.href = `/ResultMissionFailed?slug=${missionSlug}`;
+            }
+        }
+
+        // Créer une carte membre d'équipe
+        function createTeamCard(member) {
+            if (!member) return document.createElement('div');
+
+            const card = teamCardTemplate.cloneNode(true);
+            card.style.display = 'block';
+            card.id = '';
+
+            // Valeurs
+            const name = member.name || "Colon";
+            const profession = member.profession || "Colon";
+            const strength = member.strength != null ? member.strength : 0;
+            const endurance = member.endurance != null ? member.endurance : 0;
+            const level = member.level != null ? member.level : 1;
+
+            // Mise à jour du DOM
+            card.querySelector('.card-title').textContent = name;
+            card.querySelector('.profession-badge').textContent = profession;
+            card.querySelector('.strength-value').textContent = strength;
+            card.querySelector('.endurance-value').textContent = endurance;
+            card.querySelector('.level-value').textContent = level;
+
+            // Avatar comme fond de carte
+            const avatarImg = card.querySelector('.member-avatar');
+            if (member.avatar && member.avatar.length > 0) {
+                avatarImg.src = `/${member.avatar}`;
+            } else {
+                // Si pas d'avatar, utiliser un placeholder
+                avatarImg.src = "/images/avatar-placeholder.png";
+                // Si cette image n'existe pas, vous pouvez appliquer une couleur de fond
+                card.querySelector('.card').style.backgroundColor = "var(--primary-color)";
+            }
+
+            return card;
+        }
+
+        // Créer une carte monstre
+        function createMonsterCard(monster) {
+            if (!monster) return document.createElement('div');
+
+            const card = monsterCardTemplate.cloneNode(true);
+            card.style.display = 'block';
+            card.id = '';
+
+            // Valeurs
+            const name = monster.name || "Monstre";
+            const typeName = monster.typeBestiaireName || "Inconnu";
+            const strength = monster.strength != null ? monster.strength : 0;
+            const endurance = monster.endurance != null ? monster.endurance : 0;
+
+            // Mise à jour du DOM
+            card.querySelector('.card-title').textContent = name;
+            card.querySelector('.type-badge').textContent = typeName;
+            card.querySelector('.strength-value').textContent = strength;
+            card.querySelector('.endurance-value').textContent = endurance;
+
+            // Avatar comme fond de carte
+            const avatarImg = card.querySelector('.monster-avatar');
+            if (monster.typeBestiaireAvatar && monster.typeBestiaireAvatar.length > 0) {
+                avatarImg.src = `/${monster.typeBestiaireAvatar}`;
+            } else {
+                // Si pas d'avatar, utiliser un placeholder
+                avatarImg.src = "/images/monster-placeholder.png";
+                // Si cette image n'existe pas, vous pouvez appliquer une couleur de fond
+                card.querySelector('.card').style.backgroundColor = "var(--alert-message-color)";
+            }
+
+            return card;
+        }
+
+        // Mettre à jour le compteur de cartes
+        function updateDeckCounts() {
+            monsterDeckCount.textContent = monstersInDeck.length;
+
+            // Afficher un deck vide s'il n'y a plus de cartes
+            if (monstersInDeck.length === 0) {
+                monsterDeck.classList.add('empty-deck');
+            }
+        }
+
+        // Mélanger un tableau
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialiser et démarrer automatiquement la simulation
+        initializeDecks();
+        setTimeout(startGame, 500); // Démarre automatiquement après un court délai
+    });
+</script>
+}
+
+@section Styles {
+<style>
+    /* Mission simulation specific styles */
+    .mission-simulation-page {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Card deck styles */
+    .card-deck {
+        position: relative;
+        width: 150px;
+        height: 210px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .team-deck {
+        background-color: rgba(67, 41, 116, 0.1);
+        border: 2px solid var(--primary-color);
+        overflow: hidden;
+    }
+
+    .monster-deck {
+        background-color: rgba(154, 58, 59, 0.1);
+        border: 2px solid var(--alert-message-color);
+    }
+
+    .shadow-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        top: 0;
+        left: 0;
+    }
+
+    .team-shadow {
+        background-color: rgba(67, 41, 116, 0.1);
+        border: 2px solid var(--primary-color);
+    }
+
+    .monster-shadow {
+        background-color: rgba(154, 58, 59, 0.1);
+        border: 2px solid var(--alert-message-color);
+    }
+
+    .deck-count {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: white;
+        z-index: 2;
+        position: relative;
+    }
+
+    .empty-deck {
+        opacity: 0.5;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .empty-deck .deck-count {
+        font-size: 1.5rem;
+        color: var(--alert-message-color);
+    }
+
+    /* Team banner styles */
+    .team-banner-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+    }
+
+    .team-banner {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .team-banner-placeholder {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: var(--primary-color);
+        opacity: 0.6;
+    }
+
+    /* Card slots */
+    .card-slot {
+        width: 160px;
+        height: 230px;
+        border: 2px dashed #6c757d;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .team-slot {
+        border-color: var(--primary-color);
+    }
+
+    .monster-slot {
+        border-color: var(--alert-message-color);
+    }
+
+    /* Game cards */
+    .game-card {
+        width: 150px;
+        height: 220px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        opacity: 0;
+        transform: scale(0.8) rotate(-5deg);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .game-card.played {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+
+    /* Card styling */
+    .game-card .card {
+        height: 100%;
+        border-width: 2px;
+        overflow: hidden;
+    }
+
+    .team-card .card {
+        border-color: var(--primary-color);
+    }
+
+    .monster-card .card {
+        border-color: var(--alert-message-color);
+    }
+
+    .game-card .card-img {
+        height: 100%;
+        object-fit: cover;
+        border-radius: calc(0.375rem - 2px);
+    }
+
+    /* Stats */
+    .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 0.8rem;
+        color: white;
+    }
+
+    .stat i {
+        margin-bottom: 0.2rem;
+        color: white;
+    }
+
+    /* Bootstrap overrides */
+    .bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+
+    .border-primary {
+        border-color: var(--primary-color) !important;
+    }
+
+    .bg-danger {
+        background-color: var(--alert-message-color) !important;
+    }
+
+    .border-danger {
+        border-color: var(--alert-message-color) !important;
+    }
+</style>
+}
