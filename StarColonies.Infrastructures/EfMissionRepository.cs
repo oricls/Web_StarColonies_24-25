@@ -156,6 +156,7 @@ public class EfMissionRepository : IMissionRepository
                 Id = rm.Id,
                 IssueStrength = rm.IssueStrength,
                 IssueEndurance = rm.IssueEndurance,
+                IsSuccess = (rm.IssueEndurance > 0 && rm.IssueStrength > 0), //TODO : Changer avec le domain
                 Date = rm.Date,
                 MissionId = rm.IdMission,
                 TeamId = rm.IdTeam,
