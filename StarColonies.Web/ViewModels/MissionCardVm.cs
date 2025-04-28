@@ -8,3 +8,5 @@ public record MissionCardVm(
     int BestiaireCount,
     string Target,
     IEnumerable<BestiaireIconVm> BestiaireIcons);
+    
+    
