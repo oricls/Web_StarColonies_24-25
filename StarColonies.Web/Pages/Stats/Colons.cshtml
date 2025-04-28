@@ -1,0 +1,415 @@
+﻿@page
+@using System.Text.Json
+@using StarColonies.Web.ViewModels
+@model ColonsModel
+@{
+    ViewData["Title"] = "Statistiques des Colons";
+    Layout = "_StatsLayout";
+}
+
+@section TeamSelector {
+    @if (Model.UserTeams.Count == 0)
+    {
+        <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Aucune équipe disponible.
+        </div>
+    }
+    else
+    {
+        <form method="post">
+            <div class="text-danger mb-3">
+                <validation-summary model-only="true"/>
+            </div>
+
+            <div class="teams-row">
+                @foreach (var team in Model.UserTeams)
+                {
+                    <div class="team-item">
+                        <input type="submit" asp-for="SelectedTeamId" value="@team.Id" id="team-@team.Id" class="visually-hidden"/>
+                        <label for="team-@team.Id" class="team-label @(team.Id == Model.SelectedTeamId ? "team-selected" : "")">
+                            <div class="team-logo-container">
+                                @if (!string.IsNullOrEmpty(team.Logo))
+                                {
+                                    <img src="~/uploads/logos/@team.Logo" alt="Logo @team.Name" class="team-logo">
+                                }
+                                else
+                                {
+                                    <div class="team-initial">
+                                        <span>@(team.Name.Substring(0, 1))</span>
+                                    </div>
+                                }
+                            </div>
+                            <div class="team-name">@team.Name</div>
+                        </label>
+                    </div>
+                }
+            </div>
+        </form>
+    }
+}
+
+@if (Model.SelectedTeamId != 0 && Model.TeamMembers.Count > 0)
+{
+    <div class="row">
+        <!-- Graphique radar de comparaison d'équipe -->
+        <div class="col-lg-8">
+            <div class="stats-card mb-4">
+                <div class="stats-card-header d-flex justify-content-between align-items-center">
+                    <h4 class="font-barlow fw-bold text-white mb-0">
+                        <i class="fas fa-chart-radar me-2"></i>Comparaison des membres
+                    </h4>
+                    <div>
+                        <button type="button" class="btn btn-info btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#statsInfoModal">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    @if (Model.TeamStats.MembersStats.Count > 0)
+                    {
+                        <div class="chart-container">
+                            <canvas id="team-comparison-chart"></canvas>
+                            <i class="fas fa-download download-icon" id="downloadChart" title="Télécharger le graphique"></i>
+                        </div>
+
+                        <!-- Modal Explicatif des Stats -->
+                        <div class="modal fade" id="statsInfoModal" tabindex="-1" aria-labelledby="statsInfoModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content bg-dark text-white">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="statsInfoModalLabel">Explication des statistiques</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <h6 class="text-primary">Force</h6>
+                                            <p>La force est calculée comme suit:</p>
+                                            <ul>
+                                                <li>Force de base du colon</li>
+                                                <li>+ Bonus égal au niveau du colon</li>
+                                            </ul>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6 class="text-primary">Endurance</h6>
+                                            <p>L'endurance est calculée comme suit:</p>
+                                            <ul>
+                                                <li>Endurance de base du colon</li>
+                                                <li>+ Bonus égal au niveau du colon</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h6 class="text-primary">Défis de l'équipe</h6>
+                                            <p>L'équipe a gagné un total de <strong>@Model.TeamStats.TotalChallengesWon</strong> défis.</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucune donnée disponible pour cette équipe.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Détails du colon sélectionné -->
+        <div class="col-lg-4">
+            <div class="stats-card mb-4">
+                <div class="stats-card-header">
+                    <h4 class="font-barlow fw-bold text-white mb-0">
+                        Détails du colon
+                    </h4>
+                </div>
+                <div class="card-body p-3">
+                    @if (Model.SelectedColonStats != null)
+                    {
+                        <div class="text-center mb-3">
+                            @if (!string.IsNullOrEmpty(Model.SelectedColonStats.Avatar))
+                            {
+                                <img src="~/uploads/avatars/@Model.SelectedColonStats.Avatar" alt="Avatar de @Model.SelectedColonStats.Name"
+                                     class="img-thumbnail rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="avatar-placeholder rounded-circle mb-2" style="width: 100px; height: 100px; margin: 0 auto;">
+                                    <span>@(Model.SelectedColonStats.Name.Substring(0, 1))</span>
+                                </div>
+                            }
+                            <h5 class="text-white">@Model.SelectedColonStats.Name</h5>
+                            <p class="text-white-50">@Model.SelectedColonStats.Profession</p>
+                        </div>
+
+                        <div class="stats-detail-list">
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-label">
+                                    <i class="fas fa-star text-primary me-2"></i>Niveau
+                                </div>
+                                <div class="stats-detail-value">
+                                    @Model.SelectedColonStats.Level
+                                </div>
+                            </div>
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-label">
+                                    <i class="fas fa-fist-raised text-primary me-2"></i>Force
+                                </div>
+                                <div class="stats-detail-value">
+                                    @Model.SelectedColonStats.Strength
+                                </div>
+                            </div>
+                            <div class="stats-detail-item">
+                                <div class="stats-detail-label">
+                                    <i class="fas fa-heart text-primary me-2"></i>Endurance
+                                </div>
+                                <div class="stats-detail-value">
+                                    @Model.SelectedColonStats.Endurance
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Sélectionnez un colon pour voir ses détails.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des membres de l'équipe -->
+    <div class="stats-card">
+        <div class="stats-card-header">
+            <h4 class="font-barlow fw-bold text-white mb-0">
+                <i class="fas fa-users me-2"></i>Membres de l'équipe
+            </h4>
+        </div>
+        <div class="card-body p-3">
+            <div class="row g-3">
+                @foreach (var colon in Model.TeamMembers)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <form method="get" asp-page="/Stats/Colons">
+                            <input type="hidden" name="SelectedColonId" value="@colon.Id"/>
+                            <input type="hidden" name="SelectedTeamId" value="@Model.SelectedTeamId"/>
+                            <button type="submit" style="all: unset; width: 100%;">
+                                @await Html.PartialAsync("_ColonCard", ColonCardVm.FromColon(colon,
+                                    isSelected: colon.Id == Model.SelectedColonId,
+                                    isCurrentUser: colon.Id == Model.SelectedColonId))
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+else if (Model.SelectedTeamId > 0 && Model.TeamMembers.Count == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <i class="fas fa-user-slash me-2"></i>
+        Aucun membre dans cette équipe.
+    </div>
+}
+else
+{
+    <div class="text-center py-4">
+        <div class="mb-3">
+            <i class="fas fa-users fa-3x text-primary opacity-50"></i>
+        </div>
+        <h4 class="font-barlow fw-bold text-white mb-2">Aucune équipe sélectionnée</h4>
+        <p class="text-white-50">Veuillez sélectionner une équipe pour voir ses membres</p>
+    </div>
+}
+
+@section Scripts {
+    // Partie à remplacer dans la section Scripts de votre fichier Razor
+    <script type="text/javascript">
+        // S'assurer que teamStats est disponible et correctement formaté
+        const teamStats = @Html.Raw(JsonSerializer.Serialize(Model.TeamStats));
+        const selectedColonId = @Html.Raw(Json.Serialize(Model.SelectedColonId));
+
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("Document loaded, checking teamStats");
+            console.log("teamStats:", teamStats);
+            console.log("selectedColonId:", selectedColonId);
+
+            // CORRECTION: Utiliser MembersStats (avec M majuscule) au lieu de membersStats
+            if (teamStats && teamStats.MembersStats && teamStats.MembersStats.length > 0) {
+                console.log("Drawing chart with", teamStats.MembersStats.length, "members");
+                drawTeamComparisonChart();
+                setupDownloadButton();
+            } else {
+                console.warn("No team stats available or members array is empty");
+                // Afficher plus de détails sur ce qui manque
+                if (!teamStats) console.warn("teamStats is null or undefined");
+                else if (!teamStats.MembersStats) console.warn("teamStats.MembersStats is null or undefined");
+                else if (teamStats.MembersStats.length === 0) console.warn("teamStats.MembersStats is empty");
+            }
+        });
+
+        function drawTeamComparisonChart() {
+            const chartElement = document.getElementById('team-comparison-chart');
+            if (!chartElement) {
+                console.error("Chart element not found");
+                return;
+            }
+
+            const ctx = chartElement.getContext('2d');
+
+            // Préparer les données du graphique
+            const datasets = [];
+
+            // CORRECTION: Utiliser MembersStats avec M majuscule
+            for (const member of teamStats.MembersStats) {
+                console.log("Processing member:", member);
+
+                // Déterminer si ce membre est sélectionné
+                const isSelected = member.Id === selectedColonId;  // CORRECTION: Id avec I majuscule
+
+                // Créer différentes apparences pour distinguer le membre sélectionné
+                datasets.push({
+                    label: member.Name,  // CORRECTION: Name avec N majuscule
+                    data: [member.Endurance, member.Strength, member.Level],  // CORRECTION: Majuscules
+                    borderColor: isSelected ? '#F59E0B' : '#3B82F6',
+                    borderWidth: isSelected ? 3 : 2,
+                    backgroundColor: isSelected ? 'rgba(245, 158, 11, 0.3)' : 'rgba(59, 130, 246, 0.2)',
+                    pointBackgroundColor: isSelected ? '#F59E0B' : '#3B82F6',
+                    pointRadius: isSelected ? 6 : 4,
+                    pointHoverRadius: isSelected ? 8 : 6,
+                    hidden: false
+                });
+            }
+
+            console.log("Creating chart with datasets:", datasets);
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Endurance', 'Force', 'Niveau'],
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: 'white',
+                                boxWidth: 15,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(13, 18, 30, 0.9)',
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.raw || 0;
+                                    const dataIndex = context.dataIndex;
+
+                                    // CORRECTION: Utiliser MembersStats avec M majuscule et Name avec N majuscule
+                                    const member = teamStats.MembersStats.find(m => m.Name === label);
+
+                                    if (!member) return `${label}: ${value}`;
+
+                                    if (dataIndex === 0) { // Endurance
+                                        return `${label} - Endurance: ${value} (base: ${member.BaseEndurance} + niveau: ${member.EnduranceBonus})`;
+                                    } else if (dataIndex === 1) { // Force
+                                        return `${label} - Force: ${value} (base: ${member.BaseStrength} + niveau: ${member.StrengthBonus})`;
+                                    } else if (dataIndex === 2) { // Niveau
+                                        return `${label} - Niveau: ${value}`;
+                                    }
+                                    return `${label}: ${value}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255,255,255,0.2)'
+                            },
+                            grid: {
+                                color: 'rgba(255,255,255,0.2)'
+                            },
+                            pointLabels: {
+                                color: 'white',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                color: 'rgba(255,255,255,0.7)',
+                                showLabelBackdrop: false
+                            },
+                            suggestedMin: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function setupDownloadButton() {
+            const downloadButton = document.getElementById('downloadChart');
+            if (downloadButton) {
+                downloadButton.addEventListener('click', download);
+            }
+        }
+
+        function download() {
+            const imgLink = document.createElement('a');
+            const canvas = document.getElementById('team-comparison-chart');
+            imgLink.download = 'comparaison-equipe.png';
+            imgLink.href = canvas.toDataURL('image/png', 1);
+            imgLink.click();
+        }
+    </script>
+}
+
+    <style>
+        .stats-detail-list {
+            margin-top: 1rem;
+        }
+
+        .stats-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-detail-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .stats-detail-value {
+            color: white;
+            font-weight: 600;
+        }
+
+        .avatar-placeholder {
+            background-color: #3B82F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>

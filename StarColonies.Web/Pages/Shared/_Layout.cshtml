@@ -48,14 +48,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-page="/ConsultStats">
+                            <a class="nav-link text-white" asp-page="/stats/index">
                                 <i class="fas fa-chart-line nav-link-icon"></i>Analyse
                             </a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-page="Admin/ViewLogs">
+                                <a class="nav-link text-white" asp-page="/Admin/ViewLogs">
                                     <i class="fas fa-user-shield nav-link-icon"></i>Admin
                                 </a>
                             </li>
