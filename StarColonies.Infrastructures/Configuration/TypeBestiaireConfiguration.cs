@@ -40,7 +40,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Robot",
                 Description =
                     "Créations mécaniques ou cybernétiques, souvent conçues pour des tâches spécifiques. Peuvent aller des assistants domestiques aux machines de guerre autonomes.",
-                Avatar = "Avatar1.png"
+                Avatar = "robot.png"
             },
             new()
             {
@@ -48,7 +48,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Naturelle",
                 Description =
                     "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.",
-                Avatar = "icons/naturelle.png"
+                Avatar = "naturelle.png"
             },
             new()
             {
@@ -56,7 +56,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Extraterrestre",
                 Description =
                     "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.",
-                Avatar = "icons/extraterrestre.png"
+                Avatar = "extraterrestre.png"
             },
             new()
             {
@@ -64,7 +64,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Paranormal",
                 Description =
                     "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.",
-                Avatar = "icons/paranormal.png"
+                Avatar = "paranormal.png"
             },
             new()
             {
@@ -72,7 +72,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Animal",
                 Description =
                     "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.",
-                Avatar = "icons/animal.png"
+                Avatar = "animal.png"
             },
             new()
             {
@@ -80,7 +80,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Expérience",
                 Description =
                     "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.",
-                Avatar = "icons/experience.png"
+                Avatar = "experience.png"
             },
             new()
             {
@@ -88,7 +88,7 @@ public class TypeBestiaireConfiguration : IEntityTypeConfiguration<TypeBestiaire
                 Name = "Humanoïde",
                 Description =
                     "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.",
-                Avatar = "icons/humanoide.png"
+                Avatar = "humanoide.png"
             },
         };
 

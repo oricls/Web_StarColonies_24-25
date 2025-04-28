@@ -52,7 +52,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Augmente temporairement la force de tous les membres d'une équipe",
                 DureeParDefaut = TimeSpan.FromMinutes(5),
                 EffectTypeId = 1, // DoubleStrength
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "big_potion.png"
             },
             new Bonus
             {
@@ -61,7 +61,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Investit un soldat supplémentaire pour les prochaines missions",
                 DureeParDefaut = TimeSpan.FromMinutes(3), // 3 missions comme durée
                 EffectTypeId = 3, // IncreaseLevel
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "soldat.png"
             },
             new Bonus
             {
@@ -70,7 +70,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
                 DureeParDefaut = TimeSpan.FromMinutes(5),
                 EffectTypeId = 2, // DoubleEndurance
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "big_potion.png"
             },
             new Bonus
             {
@@ -79,7 +79,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Double le nombre de ressources obtenues",
                 DureeParDefaut = TimeSpan.FromMinutes(1), 
                 EffectTypeId = 4, // DoubleResources
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "midas.png"
             },
             new Bonus
             {
@@ -88,7 +88,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Augmente l'expérience gagnée et permet de gagner un niveau supplémentaire à chaque mission",
                 DureeParDefaut = TimeSpan.FromMinutes(20),
                 EffectTypeId = 5, // ExperienceBoost
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "life.png"
             },
             new Bonus
             {
@@ -97,7 +97,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
                 Description = "Elimine instantanément tous les ministres",
                 DureeParDefaut = TimeSpan.FromMinutes(100),
                 EffectTypeId = 0, //TODO: HAHA C'EST COMPLIQUE CELUI CI
-                IconUrl = "assets/icons/potion.png"
+                IconUrl = "cheat.png"
             }
         };
 

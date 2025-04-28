@@ -39,35 +39,35 @@ public class TypeResourceConfiguration : IEntityTypeConfiguration<TypeResource>
                 Id = 1,
                 Name = "Matériau",
                 Description = "Matériau de construction",
-                Icon = "icons/materiau.png"
+                Icon = "materiau.png"
             },
             new TypeResource
             {
                 Id = 2,
                 Name = "Technologie",
                 Description = "Technologie avancée",
-                Icon = "icons/technologie.png"
+                Icon = "technologie.png"
             },
             new TypeResource
             {
                 Id = 3,
                 Name = "Artefact",
                 Description = "Artefact ancien",
-                Icon = "icons/artefact.png"
+                Icon = "artefact.png"
             },
             new TypeResource
             {
                 Id = 4,
                 Name = "Connaissance",
                 Description = "Connaissance avancée",
-                Icon = "icons/connaissance.png"
+                Icon = "connaissance.png"
             },
             new TypeResource
             {
                 Id = 5,
                 Name = "Consomable",
                 Description = "Consomable de base",
-                Icon = "icons/consomable.png"
+                Icon = "consomable.png"
             }
         );
     }
