@@ -221,8 +221,11 @@ public class Comptoir : PageModel
             // Enregistrer la transaction
             await _repositoryBonus.CreateTransactionAsync(userId, bonusId, bonus.Resources.ToList());
             
+            // Récupérer explicitement la durée du bonus
+            var bonusDuration = await _repositoryBonus.getDurationOfBonus(bonus);
+            
             // Ajouter le bonus au colon
-            await _repositoryColon.AddBonusToColonAsync(userId, bonusId, TimeSpan.Zero); // Utilise la durée par défaut du bonus
+            await _repositoryColon.AddBonusToColonAsync(userId, bonusId, bonusDuration); // Utilise la durée par défaut du bonus
             
             // Logger l'achat
             await _repositoryLog.AddLog(
