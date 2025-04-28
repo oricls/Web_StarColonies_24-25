@@ -9,9 +9,9 @@ Projet d'application web pour l'UE19. Le projet prend la forme d'une solution .N
 La suite du document sera à compléter par vos soins.
 
 ## Membres de l'équipe
-- Alex Tadino (Q210115)
-- Maximilien Withof (Q220271)
-- Oriane Clesse (Q220252)
+- Alex Tadino ([Q210115](https://git.helmo.be/Q210115))
+- Maximilien Withof ([Q220271](https://git.helmo.be/Q220271))
+- Oriane Clesse ([Q220252](https://git.helmo.be/Q220252))
 
 Responsable du déploiement : Maximilien Withof
 - URL : https://ue19.cg.helmo.be/Q220271
