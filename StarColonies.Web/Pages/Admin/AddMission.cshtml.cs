@@ -17,7 +17,7 @@ public class AddMission(IMissionRepository missionRepository) : PageModel
     public async Task OnGetAsync()
     {
         AvailableBestiaires = await missionRepository.GetAllBestiaires();
-        AvailableResources = await missionRepository.GetAllResources();
+        AvailableResources = await missionRepository.GetAllResourcesAsync();
     }
     
     public async Task<IActionResult> OnPostAsync()

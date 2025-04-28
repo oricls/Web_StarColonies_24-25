@@ -106,6 +106,37 @@ public class EfColonRepository : IColonRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IReadOnlyCollection<TypeResource>> GetAllTypeResourcesAsync()
+    {
+        return await _context.TypeResource
+            .Select(tr => new TypeResource
+            {
+                Id = tr.Id,
+                Name = tr.Name,
+                Icon = tr.Icon
+            })
+            .ToListAsync();
+    }
+
+    public Task AddResourceAsync(Resource resource)
+    {
+        var typeResource = _context.TypeResource
+            .SingleOrDefault(tr => tr.Id == resource.Type.Id);
+
+        if (typeResource == null)
+            throw new KeyNotFoundException($"Type de ressource avec ID {resource.Type.Id} non trouvé");
+
+        var resourceEntity = new Entities.Resource
+        {
+            Name = resource.Name,
+            Description = resource.Description,
+            TypeResource = typeResource,
+        };
+
+        _context.Resource.Add(resourceEntity);
+        return _context.SaveChangesAsync();
+    }
+
     /**
      * TODO : Si un colon fait partie d'une team il ne sera pas supprimé de celle-ci.
      * Que se passera-t-il ? "Theory will only take you so far." J. Robert Oppenheimer

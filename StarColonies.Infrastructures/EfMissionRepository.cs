@@ -239,7 +239,7 @@ public class EfMissionRepository : IMissionRepository
         return missionResultEntity.Id;
     }
 
-    public async Task<IReadOnlyList<Resource>> GetAllResources()
+    public async Task<IReadOnlyList<Resource>> GetAllResourcesAsync()
     {
         var resourceEntities = await _context.Resource
             .Include(r => r.TypeResource) // Inclure le type de ressource
@@ -347,6 +347,17 @@ public class EfMissionRepository : IMissionRepository
             TeamName = result.Team?.Name,
             TeamLogo = result.Team?.Logo
         };
+    }
+
+    public Task DeleteResourceAsync(Resource resource)
+    {
+        var resourceEntity = _context.Resource
+            .Include(r => r.MissionResources)
+            .FirstOrDefault(r => r.Id == resource.Id);
+
+        if (resourceEntity == null) return Task.CompletedTask;
+        _context.Resource.Remove(resourceEntity);
+        return _context.SaveChangesAsync();
     }
 
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission

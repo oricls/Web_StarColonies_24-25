@@ -1,0 +1,101 @@
+@page
+@model StarColonies.Web.Pages.Admin.AddResource
+
+@{
+    ViewData["Title"] = "Ajouter une ressource";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+@await Html.PartialAsync("_AdminNavbar")
+
+<div class="container mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="font-barlow">
+            <i class="fas fa-plus me-2"></i>Ajouter une ressource
+        </h1>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="shadow-sm rounded p-4 bg-dark">
+        <!-- Informations de base -->
+        <div class="mb-3">
+            <label asp-for="AddResourceInputModel.Name" class="form-label">Nom de la ressource</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary" asp-for="AddResourceInputModel.Name" required />
+            <span asp-validation-for="AddResourceInputModel.Name" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AddResourceInputModel.Description" class="form-label">Description</label>
+            <textarea class="form-control bg-dark text-white border-secondary" asp-for="AddResourceInputModel.Description" rows="3"></textarea>
+            <span asp-validation-for="AddResourceInputModel.Description" class="text-danger small"></span>
+        </div>
+
+        <!-- Sélection du type de ressource -->
+        <div class="mb-4">
+            <label asp-for="AddResourceInputModel.ResourceTypeId" class="form-label">Type de ressource</label>
+            <select class="form-select bg-dark text-white border-secondary" asp-for="AddResourceInputModel.ResourceTypeId" required>
+                <option value="">-- Sélectionnez un type --</option>
+                @foreach (var resourceType in Model.TypeResourcesAvailable)
+                {
+                    <option value="@resourceType.Id">@resourceType.Name</option>
+                }
+            </select>
+            <span asp-validation-for="AddResourceInputModel.ResourceTypeId" class="text-danger small"></span>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-accent">
+                <i class="fas fa-save me-2"></i>Créer la ressource
+            </button>
+        </div>
+    </form>
+</div>
+
+<partial name="Shared/_ValidationScriptsPartial" />
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.querySelector('.resource-image-preview').classList.add('has-image');
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}
+
+<style>
+    .resource-image-preview {
+        border: 2px dashed var(--accent-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .resource-image-preview::before {
+        content: "Aperçu de l'icône";
+        color: var(--text-color);
+        opacity: 0.5;
+    }
+
+    .resource-image-preview.has-image::before {
+        display: none;
+    }
+
+    .form-select {
+        cursor: pointer;
+    }
+
+    .form-select option {
+        background-color: var(--dark-bg-color);
+        color: var(--text-color);
+    }
+</style>

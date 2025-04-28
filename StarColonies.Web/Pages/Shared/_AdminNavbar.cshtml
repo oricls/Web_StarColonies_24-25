@@ -25,6 +25,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link @(currentPath.Contains("/admin/resources") ? "active" : "")" asp-page="/Admin/Resources">
+                        <i class="fas fa-list me-1"></i> Toutes les ressources
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(currentPath.Contains("/admin/addresource") ? "active" : "")" asp-page="/Admin/AddResource">
+                        <i class="fas fa-plus-circle me-1"></i> Ressources
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link @(currentPath.Contains("/admin/users") ? "active" : "")" asp-page="/Admin/Users">
                         <i class="fas fa-users me-1"></i> Utilisateurs
                     </a>
