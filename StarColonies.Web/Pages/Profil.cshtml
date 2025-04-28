@@ -13,7 +13,7 @@
                     <div class="d-flex justify-content-center align-items-center mb-4">
                         <label for="changeProfilPicture">
                             <div class="profil-preview-logo me-3 d-flex align-items-center w-500">
-                                <img id="logoPreview" src="@Model.Colon.Avatar" alt="User's profil" class="img-fluid" />
+                                <img id="logoPreview" src="~/uploads/avatars/@Model.Colon.Avatar" alt="User's profil" class="img-fluid" />
                             </div>
                         </label>
                         <input type="file" id="changeProfilPicture" class="d-none" asp-for="UpdateProfil.UploadAvatar" accept="image/*" />
