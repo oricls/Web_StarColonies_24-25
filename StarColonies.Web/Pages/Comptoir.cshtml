@@ -153,7 +153,7 @@
                                 {
                                     <button type="button" class="btn btn-warning w-100" disabled>
                                         <span class="countdown-timer"
-                                              data-expiration="@Model.ExpirationDates[bonus.Id].ToString("yyyy-MM-ddTHH:mm:ss")">
+                                              data-expiration="@Model.ExpirationDates[bonus.Id].ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss")">
                                             Expire dans @Model.RemainingTime[bonus.Id]
                                         </span>
                                     </button>
@@ -275,7 +275,7 @@
                         return;
                     }
 
-                    const expirationDate = new Date(expirationDateStr);
+                    const expirationDate = new Date(expirationDateStr + 'Z');
                     if (isNaN(expirationDate.getTime())) {
                         console.error("Date d'expiration invalide:", expirationDateStr);
                         return;

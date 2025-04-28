@@ -95,7 +95,7 @@ public class Comptoir : PageModel
             ExpirationDates = new Dictionary<int, DateTime>();
             
             // Vérifier quels bonus sont actifs et calculer le temps restant
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             foreach (var bonus in Bonuses)
             {
                 BonusDuration[bonus.Id] = await _repositoryBonus.getDurationOfBonus(bonus);
@@ -107,9 +107,9 @@ public class Comptoir : PageModel
                 if (activeBonus != null)
                 {
                     // Stocker la date d'expiration exacte
-                    ExpirationDates[bonus.Id] = activeBonus.DateExpiration;
+                    ExpirationDates[bonus.Id] = activeBonus.DateExpiration.ToUniversalTime();
                     
-                    var timeSpan = activeBonus.DateExpiration - now;
+                    var timeSpan = activeBonus.DateExpiration.ToUniversalTime() - now;
                     if (timeSpan.TotalDays >= 1)
                     {
                         RemainingTime[bonus.Id] = $"{(int)timeSpan.TotalDays}j {timeSpan.Hours}h";
