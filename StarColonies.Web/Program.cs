@@ -81,7 +81,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseRateLimiter();
+//app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
