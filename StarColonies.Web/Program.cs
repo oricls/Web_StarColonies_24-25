@@ -50,7 +50,7 @@ builder.Services.AddScoped<ILogRepository, EfLogRepository>();
 builder.Services.AddScoped<MissionEngine>();
 
 // https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-9.0
-builder.Services.AddRateLimiter(options =>
+/*builder.Services.AddRateLimiter(options =>
 {
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
@@ -62,7 +62,7 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 Window = TimeSpan.FromMinutes(1)
             }));
-});
+});*/
 
 var app = builder.Build();
 
