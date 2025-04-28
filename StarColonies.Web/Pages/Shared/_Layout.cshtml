@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/23635b0850.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Kumbh+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -44,6 +45,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-page="/Comptoir">
                                 <i class="fas fa-shopping-cart nav-link-icon"></i>Comptoir
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-page="/ConsultStats">
+                                <i class="fas fa-chart-line nav-link-icon"></i>Analyse
                             </a>
                         </li>
                         @if (User.IsInRole("Admin"))

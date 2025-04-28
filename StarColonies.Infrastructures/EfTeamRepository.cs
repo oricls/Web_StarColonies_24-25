@@ -116,11 +116,11 @@ public class EfTeamRepository : ITeamRepository
         return teamEntity.Members.Select(c => MapColonEntityToDomain(c)).ToList();
     }
 
-    public async Task< IReadOnlyList<Team>> GetTeamByColon(Colon colon)
+    public async Task< IReadOnlyList<Team>> GetTeamByColon(string colonId)
     {
         var teamWithColon = await _context.Team
                                             .Include(t => t.Members)
-                                            .Where(t => t.Members.Any(m => m.Id == colon.Id.ToString())).ToListAsync();
+                                            .Where(t => t.Members.Any(m => m.Id == colonId)).ToListAsync();
         return teamWithColon.Select(t => MapTeamEntityToDomain(t)).ToList();
     }
 
