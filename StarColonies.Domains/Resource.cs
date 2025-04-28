@@ -8,4 +8,5 @@ public class Resource
     public string TypeName { get; set; }
     public int Quantity { get; set; } // Utilisé lors de la récupération des ressources d'un colon
     public string IconUrl { get; set; }
+    public TypeResource Type { get; set; }
 }

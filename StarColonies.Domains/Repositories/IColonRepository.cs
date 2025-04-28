@@ -16,4 +16,6 @@ public interface IColonRepository
     Task UpdateResourceQuantityAsync(string colonId, int resourceId, int newQuantity);
     Task ExpireBonusAsync(string colonId, int bonusId);
     Task ChangePassword(string colonId, string newPswd);
+    Task<IReadOnlyCollection<TypeResource>> GetAllTypeResourcesAsync();
+    Task AddResourceAsync(Resource resource);
 }

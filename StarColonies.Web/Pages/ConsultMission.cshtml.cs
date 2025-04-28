@@ -60,7 +60,7 @@ public class ConsultMission(
             UserTeams = await teamRepository.GetTeamsWithoutMissionParticipationAsync(colon.Id, Mission.Id);
 
             // Récupérer les ressources disponibles
-            Resources = await missionRepository.GetResourcesByMissionIdAsync(Mission.Id);
+            Resources = await missionRepository.GetAllResourcesAsync();
 
             return Page();
         }
@@ -92,7 +92,7 @@ public class ConsultMission(
                 // Recharger toutes les données nécessaires comme dans OnGet
                 Bestiaires = await missionRepository.GetBestiairesByMissionIdAsync(Mission.Id);
                 UserTeams = await teamRepository.GetTeamsWithoutMissionParticipationAsync(userId, Mission.Id);
-                Resources = await missionRepository.GetAllResources();
+                Resources = await missionRepository.GetAllResourcesAsync();
             
                 return Page();
             }
