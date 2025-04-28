@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -116,8 +117,8 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
         {
             var user = await GetCurrentUserAsync();
             var colon = await colonRepository.GetColonByIdAsync(user.Id);
-            colon.Name = UpdateProfil.NomDeColon;
-            colon.Email = UpdateProfil.Courriel;
+            colon.Name = SanitizeInput(UpdateProfil.NomDeColon);
+            colon.Email = SanitizeInput(UpdateProfil.Courriel);
             colon.DateBirth = UpdateProfil.DateDeNaissance;
 
             UpdateProfil.UploadAvatar = Request.Form.Files.GetFile("changeProfilPicture");
@@ -161,7 +162,6 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
         }
     }
 
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
         try
@@ -187,4 +187,6 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
             return RedirectToPage("/Index");
         }
     }
+    
+    private string SanitizeInput(string input) => Regex.Replace(input, "<.*?>", String.Empty);
 }

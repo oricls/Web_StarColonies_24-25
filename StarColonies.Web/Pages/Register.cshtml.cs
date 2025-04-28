@@ -1,4 +1,5 @@
     using System.ComponentModel.DataAnnotations;
+    using System.Text.RegularExpressions;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -86,6 +87,9 @@
                 return Page();
             }
             
+            RegisterInput.NameOfColon = SanitizeInput(RegisterInput.NameOfColon);
+            RegisterInput.Courriel = SanitizeInput(RegisterInput.Courriel);
+            
             string avatarPath = "avatars/avatar_5.png"; // Avatar par défaut
             
             if (RegisterAvatarInput.SelectedAvatarId == "import" && RegisterAvatarInput.CustomAvatar != null)
@@ -152,6 +156,8 @@
 
             return RedirectToPage("/DashBoard");
         }
+        
+        private string SanitizeInput(string input) => Regex.Replace(input, "<.*?>", String.Empty);
     }
     public class RegisterInputModel
     {
@@ -206,3 +212,5 @@
         [Display(Name = "Endurance")]
         public int Endurance { get; set; }
     }
+    
+    

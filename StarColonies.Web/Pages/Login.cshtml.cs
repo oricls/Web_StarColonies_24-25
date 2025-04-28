@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,6 +42,7 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
         // Chercher d'abord par email
         // Si non trouvé, chercher par nom de colon
         // Recherche par NameColon (vous devrez implémenter cette méthode)
+        Input.Identifiant = SanitizeInput(Input.Identifiant);
         var user = await userManager.FindByEmailAsync(Input.Identifiant) ?? await userManager.Users.FirstOrDefaultAsync(u => u.UserName == Input.Identifiant);
 
         if (user is { UserName: not null })
@@ -48,7 +50,7 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
         {
             var result = await signInManager.PasswordSignInAsync(
                 user.UserName,
-                Input.Password,
+                SanitizeInput(Input.Password),
                 Input.RememberMe,
                 lockoutOnFailure: false);
 
@@ -86,4 +88,6 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
     {
         logger.LogInformation($"Utilisateur : {Input.Identifiant}, Mot de passe : {Input.Password}");
     }
+    
+    private string SanitizeInput(string input) => Regex.Replace(input, "<.*?>", String.Empty);
 }
