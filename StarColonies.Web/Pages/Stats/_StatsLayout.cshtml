@@ -1,0 +1,310 @@
+@{
+    Layout = "_Layout"; // Le layout de base de l'application
+}
+
+<!-- Navigation pour les statistiques -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            @await Html.PartialAsync("_StatsNavbar")
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Contenu principal -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-dark border-0 shadow-sm rounded-3" style="background: linear-gradient(to bottom, #1D1332, #221639);">
+                <div class="card-header bg-transparent border-bottom border-secondary">
+                    <h5 class="font-barlow fw-bold text-white mb-0">
+                        <i class="fas fa-users me-2 text-primary"></i>Équipes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-white-50 small mb-3">Sélectionnez une équipe</p>
+
+                    @await RenderSectionAsync("TeamSelector", required: true)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Configuration par défaut pour tous les graphiques
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+        Chart.defaults.font.family = "'Barlow Condensed', sans-serif";
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+}
+
+@section Styles {
+    <style>
+        /* Styles communs pour les pages de statistiques */
+        .font-barlow {
+            font-family: 'Barlow Condensed', sans-serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Team selector */
+        .team-selector {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .team-selector label {
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            display: block;
+        }
+
+        .team-selector input[type="submit"]:checked + label,
+        .team-selector input[type="radio"]:checked + label {
+            border: 2px solid #5a49ab;
+            box-shadow: 0 0 10px rgba(90, 73, 171, 0.5);
+        }
+
+        .team-card {
+            width: 100%;
+            background-color: #1d1935;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
+
+        .team-avatar {
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid transparent;
+        }
+
+        .team-selector input[type="submit"]:checked + label .team-avatar img,
+        .team-selector input[type="radio"]:checked + label .team-avatar img {
+            border-color: #5a49ab;
+        }
+
+        .team-name {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Cards styling */
+        .stats-card {
+            background: linear-gradient(to bottom right, #1D1332, #2A1D48);
+            border: 1px solid rgba(90, 73, 171, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-card-header {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+            padding: 0.75rem 1.25rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(90, 73, 171, 0.2);
+        }
+
+        /* Colon card styling */
+        .colon-card {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: #282344;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .colon-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .colon-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .colon-info {
+            flex-grow: 1;
+        }
+
+        .colon-name {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .colon-details {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        .colon-card.selected-colon {
+            border: 2px solid #00FF00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Download icon */
+        .download-icon {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .download-icon:hover {
+            color: #fff;
+        }
+
+        /* Badge styles */
+        .stat-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-badge-primary {
+            background-color: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        .stat-badge-success {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .stat-badge-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        /* Monster avatar */
+        .monster-avatar {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 50%;
+            background-color: #3B82F6;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+
+        .teams-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .team-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background-color: rgba(29, 19, 50, 0.5);
+            width: 90px;
+        }
+
+        .team-label:hover {
+            background-color: rgba(58, 36, 99, 0.7);
+        }
+
+        .team-selected {
+            border-color: #3B82F6;
+            background-color: rgba(58, 36, 99, 0.9);
+        }
+
+        .team-logo-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 6px;
+        }
+
+        .team-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-initial {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-weight: bold;
+            color: white;
+            background-color: #3A2463;
+        }
+
+        .team-name {
+            color: white;
+            font-size: 0.8rem;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+}

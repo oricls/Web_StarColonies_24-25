@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 using StarColonies.Domains.Repositories;
 
-namespace StarColonies.Web.Pages;
+namespace StarColonies.Web.Pages.Stats;
 
 public class SingleMissionData
 {
@@ -17,7 +17,7 @@ public class SingleMissionData
     
 }
 
-public class ConsultMissionStats(
+public class MissionsModel(
     UserManager<Infrastructures.Entities.Colon> userManager,
     ITeamRepository teamRepository,
     IMissionRepository missionRepository,
