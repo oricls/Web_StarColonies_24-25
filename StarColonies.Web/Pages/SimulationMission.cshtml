@@ -288,12 +288,15 @@ ViewData["HideNavButtons"] = true;
             const teamId = document.getElementById('teamId').value;
             const missionSlug = document.getElementById('missionSlug').value;
 
+            // Utiliser la racine de l'application
+            const appRoot = '@Url.Content("~/")';
+
             if (isSuccess === "true") {
-                window.location.href = `/MissionSucessful?idMission=${missionId}&teamId=${teamId}`;
+                window.location.href = `${appRoot}MissionSucessful?idMission=${missionId}&teamId=${teamId}`;
             } else {
-                window.location.href = `/ResultMissionFailed?slug=${missionSlug}`;
+                window.location.href = `${appRoot}ResultMissionFailed?slug=${missionSlug}`;
             }
-        }
+}
 
         // Créer une carte membre d'équipe
         function createTeamCard(member) {
@@ -429,7 +432,9 @@ ViewData["HideNavButtons"] = true;
         top: 0;
         left: 0;
         background: url("@Url.Content("~/uploads/banieres/" + Model.Team.Baniere )");
-        background-size: contain;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     .team-shadow {

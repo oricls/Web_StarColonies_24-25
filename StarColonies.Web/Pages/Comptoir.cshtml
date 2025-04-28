@@ -263,37 +263,76 @@
 
 @section Scripts {
     <script>
-        // Modification de la fonction de mise à jour des compteurs
         function updateCountdownTimers() {
             const now = new Date();
             let needsReload = false;
+
             document.querySelectorAll('.countdown-timer').forEach(element => {
                 try {
                     // Récupérer la date d'expiration depuis l'attribut data
                     const expirationDateStr = element.getAttribute('data-expiration');
-                    // Vérification supplémentaire pour s'assurer que la date est valide
+
+                    // Vérification pour s'assurer que la date est présente
                     if (!expirationDateStr) {
                         console.error("Date d'expiration manquante");
                         return;
                     }
-                    const expirationDate = new Date(expirationDateStr);
-                    // Vérifier si la date est valide
-                    if (isNaN(expirationDate.getTime())) {
-                        console.error("Date d'expiration invalide:", expirationDateStr);
+
+                    // Convertir la chaîne ISO en objet Date en utilisant une méthode plus fiable
+                    // C'est important car le format peut varier entre dev et prod
+                    let expirationDate;
+                    try {
+                        // Essayer d'abord le parsing direct
+                        expirationDate = new Date(expirationDateStr);
+
+                        // Si la date est invalide, essayer d'autres formats
+                        if (isNaN(expirationDate.getTime())) {
+                            // Format avec des espaces ou autres formats
+                            const parts = expirationDateStr.split(/[- :T.]/);
+                            if (parts.length >= 6) {
+                                // année, mois (0-11), jour, heure, minute, seconde
+                                expirationDate = new Date(
+                                    parseInt(parts[0]),
+                                    parseInt(parts[1]) - 1, // Les mois sont 0-indexés
+                                    parseInt(parts[2]),
+                                    parseInt(parts[3]),
+                                    parseInt(parts[4]),
+                                    parseInt(parts[5])
+                                );
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Erreur lors du parsing de la date:", e);
                         return;
                     }
+
+                    // Vérifier si la date est valide
+                    if (isNaN(expirationDate.getTime())) {
+                        console.error("Date d'expiration invalide après conversion:", expirationDateStr);
+                        return;
+                    }
+
+                    // Afficher les dates pour le débogage (en dev et prod)
+                    console.log(`Date actuelle: ${now.toISOString()}`);
+                    console.log(`Date d'expiration: ${expirationDate.toISOString()}`);
+                    console.log(`Différence en ms: ${expirationDate - now}`);
+
                     // Calculer la différence en millisecondes
                     const diff = expirationDate - now;
-                    // Si le bonus est expiré, marquer pour recharger la page une seule fois
+
+                    // Si le bonus est expiré
                     if (diff <= 0) {
+                        element.textContent = "Expiré";
                         needsReload = true;
                         return;
                     }
+
                     // Calculer les jours, heures, minutes et secondes
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
                     // Formater le texte du timer
                     let timeText = '';
                     if (days > 0) {
@@ -303,6 +342,7 @@
                     } else {
                         timeText = `${minutes}m ${seconds}s`;
                     }
+
                     // Mettre à jour le texte de l'élément
                     element.textContent = `Expire dans ${timeText}`;
                 } catch (error) {
@@ -310,23 +350,40 @@
                 }
             });
 
-            // Recharger la page une seule fois si nécessaire
-            // Utiliser localStorage pour maintenir l'état entre les rechargements
-            if (needsReload && localStorage.getItem('hasReloaded') !== 'true') {
-                localStorage.setItem('hasReloaded', 'true');
-                window.location.reload();
+            // Gérer le rechargement uniquement si un bonus est expiré
+            if (needsReload) {
+                // Utiliser sessionStorage au lieu de localStorage pour éviter que le drapeau ne persiste entre les sessions
+                if (sessionStorage.getItem('lastReload') === null ||
+                    (new Date() - new Date(sessionStorage.getItem('lastReload'))) > 10000) { // 10 secondes minimum entre les rechargements
+
+                    sessionStorage.setItem('lastReload', new Date().toString());
+                    console.log("Rechargement prévu...");
+                    // Rechargement avec un petit délai
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
             }
 }
 
         // Initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
-            // Vérifier si cette page vient juste d'être rechargée
-            if (localStorage.getItem('hasReloaded') === 'true') {
-                // Réinitialiser le drapeau après un court délai pour permettre à la page de se stabiliser
-                setTimeout(function() {
-                    localStorage.removeItem('hasReloaded');
-                }, 2000);
-            }
+            // Afficher les informations de débogage pour toutes les dates d'expiration
+            document.querySelectorAll('.countdown-timer').forEach(element => {
+                const expirationDateStr = element.getAttribute('data-expiration');
+                console.log("Date d'expiration (attribut):", expirationDateStr);
+
+                // Tester la conversion
+                if (expirationDateStr) {
+                    try {
+                        const testDate = new Date(expirationDateStr);
+                        console.log("Date convertie:", testDate);
+                        console.log("Date valide:", !isNaN(testDate.getTime()));
+                    } catch (e) {
+                        console.error("Erreur de conversion:", e);
+                    }
+                }
+            });
 
             // Vérifier si des timers existent et initialiser le rafraîchissement
             if (document.querySelectorAll('.countdown-timer').length > 0) {
