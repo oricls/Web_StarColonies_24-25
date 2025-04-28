@@ -50,7 +50,7 @@ builder.Services.AddScoped<ILogRepository, EfLogRepository>();
 builder.Services.AddScoped<MissionEngine>();
 
 // https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-9.0
-/*builder.Services.AddRateLimiter(options =>
+builder.Services.AddRateLimiter(options =>
 {
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
@@ -58,11 +58,11 @@ builder.Services.AddScoped<MissionEngine>();
             factory: partition => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
-                PermitLimit = 15,
+                PermitLimit = 50, 
                 QueueLimit = 0,
-                Window = TimeSpan.FromMinutes(1)
+                Window = TimeSpan.FromSeconds(10)
             }));
-});*/
+});
 
 var app = builder.Build();
 
@@ -81,7 +81,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-//app.UseRateLimiter();
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
