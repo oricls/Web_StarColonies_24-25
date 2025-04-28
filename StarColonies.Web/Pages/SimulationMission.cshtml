@@ -14,16 +14,6 @@ ViewData["HideNavButtons"] = true;
             <h5 class="text-white mb-3">@Model.Team.Name</h5>
             <div id="teamDeck" class="card-deck team-deck mx-auto">
                 <div class="team-banner-container">
-                    @if (!string.IsNullOrEmpty(Model.Team.Baniere))
-                    {
-                    <img src="/@Model.Team.Baniere" alt="Bannière d'équipe" class="team-banner" />
-                    }
-                    else
-                    {
-                    <div class="team-banner-placeholder">
-                        <i class="fas fa-flag"></i>
-                    </div>
-                    }
                 </div>
             </div>
         </div>
@@ -330,7 +320,7 @@ ViewData["HideNavButtons"] = true;
             // Avatar comme fond de carte
             const avatarImg = card.querySelector('.member-avatar');
             if (member.avatar && member.avatar.length > 0) {
-                avatarImg.src = `/${member.avatar}`;
+                avatarImg.src = `@Url.Content("~/uploads/avatars/")${member.avatar}`; 
             } else {
                 // Si pas d'avatar, utiliser un placeholder
                 avatarImg.src = "/images/avatar-placeholder.png";
@@ -364,7 +354,7 @@ ViewData["HideNavButtons"] = true;
             // Avatar comme fond de carte
             const avatarImg = card.querySelector('.monster-avatar');
             if (monster.typeBestiaireAvatar && monster.typeBestiaireAvatar.length > 0) {
-                avatarImg.src = `/${monster.typeBestiaireAvatar}`;
+                avatarImg.src = `@Url.Content("~/icons/")${monster.typeBestiaireAvatar}`;
             } else {
                 // Si pas d'avatar, utiliser un placeholder
                 avatarImg.src = "/images/monster-placeholder.png";
@@ -438,6 +428,8 @@ ViewData["HideNavButtons"] = true;
         border-radius: 10px;
         top: 0;
         left: 0;
+        background: url("@Url.Content("~/uploads/banieres/" + Model.Team.Baniere )");
+        background-size: contain;
     }
 
     .team-shadow {

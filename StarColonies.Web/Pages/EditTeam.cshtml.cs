@@ -346,7 +346,7 @@ namespace StarColonies.Web.Pages
                 }
 
                 // Retourner le chemin relatif pour le stockage en base de données
-                return $"uploads/{subDirectory}/{uniqueFileName}";
+                return $"{uniqueFileName}";
             }
             catch (Exception ex)
             {
