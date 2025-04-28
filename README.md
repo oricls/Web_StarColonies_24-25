@@ -63,11 +63,16 @@ dotnet build
 ```bash
 cd StarColonies.Web
 ```
-9. Exécutez l'application
+9. Exécuter les migrations
+```bash
+dotnet ef migrations add MaMigration --startup-project ../StarColonies.Web
+dotnet ef database update --startup-project ../StarColonies.Web   
+```
+10. Exécutez l'application
 ```bash
 dotnet run
 ```
-10. Ouvrez votre navigateur et accédez à l'URL indiquée dans la console
+11. Ouvrez votre navigateur et accédez à l'URL indiquée dans la console
 
 
 ## Fonctionnalités implémentées
