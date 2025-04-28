@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
@@ -5,6 +6,7 @@ using StarColonies.Domains.Repositories;
 
 namespace StarColonies.Web.Pages.Admin;
 
+[Authorize (Roles = "Admin")]
 public class Missions(IMissionRepository missionRepository) : PageModel
 {
     public IReadOnlyCollection<Mission> AvailableMissions { get; set; } = new List<Mission>();

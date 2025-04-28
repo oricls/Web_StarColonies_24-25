@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StarColonies.Infrastructures;
 
@@ -11,9 +12,11 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    partial class StarColoniesContextModelSnapshot : ModelSnapshot
+    [Migration("20250428092305_SeedTeam4")]
+    partial class SeedTeam4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -578,8 +581,8 @@ namespace StarColonies.Infrastructures.Migrations
                             Id = "ID_COLON_1",
                             AccessFailedCount = 0,
                             Avatar = "avatar_1.png",
-                            ConcurrencyStamp = "8a6b9083-8808-4207-9c16-8c592bd9417b",
-                            DateBirth = new DateTime(2005, 4, 28, 11, 23, 47, 712, DateTimeKind.Local).AddTicks(4078),
+                            ConcurrencyStamp = "dfb5abc6-74a2-45c5-afcc-7e589eff1d5f",
+                            DateBirth = new DateTime(2005, 4, 28, 11, 23, 4, 818, DateTimeKind.Local).AddTicks(4107),
                             Email = "alex.striker@example.com",
                             EmailConfirmed = true,
                             Endurance = 2,
@@ -588,9 +591,9 @@ namespace StarColonies.Infrastructures.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ALEX.STRIKER@EXAMPLE.COM",
                             NormalizedUserName = "ALEX STRIKER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAg1BM4PJaCLPYpsKXzmP1F82mijxYOYbUgtmrwGuU2MyeDLdycNSEMVRP8eQZhFiA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELyDcFzyP+mB3Qd1BX4SHMMiZjGEc7kw7tzLUbHI7uCdIeK6YIfR0hR067yRomfWgg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d492c8b1-55af-4151-a3b5-35ed7eae4555",
+                            SecurityStamp = "8b2494eb-471e-4826-b050-d07f09ef2064",
                             Strength = 5,
                             TwoFactorEnabled = false,
                             UserName = "Alex Striker"
@@ -600,8 +603,8 @@ namespace StarColonies.Infrastructures.Migrations
                             Id = "ID_COLON_2",
                             AccessFailedCount = 0,
                             Avatar = "avatar_2.png",
-                            ConcurrencyStamp = "15ffd771-3bb4-488e-9bc0-3c3d35980668",
-                            DateBirth = new DateTime(2000, 4, 28, 11, 23, 47, 769, DateTimeKind.Local).AddTicks(6210),
+                            ConcurrencyStamp = "ddf5deba-551e-422d-aeaa-aff8bc3ce5fc",
+                            DateBirth = new DateTime(2000, 4, 28, 11, 23, 4, 877, DateTimeKind.Local).AddTicks(7692),
                             Email = "mira.nova@example.com",
                             EmailConfirmed = true,
                             Endurance = 2,
@@ -610,9 +613,9 @@ namespace StarColonies.Infrastructures.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MIRA.NOVA@EXAMPLE.COM",
                             NormalizedUserName = "MIRA NOVA",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHL6dPf6AJ5FPM1NP5z+zCt/VcGPS7G97kXzeGDxxiPu8W65J4d1nVGdovVsAQLcTA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECpgpJYRlKdxKNJwZrSkaoBUexucDR/5GVph0EzGtAeb4MlFAlN04hPMsYsa5n3EHQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5f5250df-f281-4056-be33-6458b287c46d",
+                            SecurityStamp = "451c57e2-9ca1-40ea-93b5-e5316f641835",
                             Strength = 5,
                             TwoFactorEnabled = false,
                             UserName = "Mira Nova"
@@ -622,8 +625,8 @@ namespace StarColonies.Infrastructures.Migrations
                             Id = "ID_COLON_3",
                             AccessFailedCount = 0,
                             Avatar = "avatar_3.png",
-                            ConcurrencyStamp = "b8909ca2-af2b-4256-bf78-be4a86a8d8c4",
-                            DateBirth = new DateTime(1995, 4, 28, 11, 23, 47, 833, DateTimeKind.Local).AddTicks(6684),
+                            ConcurrencyStamp = "453e4722-6d5b-4513-b379-2561d0a3af23",
+                            DateBirth = new DateTime(1995, 4, 28, 11, 23, 4, 936, DateTimeKind.Local).AddTicks(5339),
                             Email = "elara.starfinder@example.com",
                             EmailConfirmed = true,
                             Endurance = 2,
@@ -632,9 +635,9 @@ namespace StarColonies.Infrastructures.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ELARA.STARFINDER@EXAMPLE.COM",
                             NormalizedUserName = "ELARA STARFINDER",
-                            PasswordHash = "AQAAAAIAAYagAAAAELEMRD2WxsV1YnhkZsNHpe+uzWzj9xFlpmd5Zo8u79Q6rtclBynGmXrDTCcidCStvQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB+znF3L0W3gyBV0y3hM0ouzE1yiULOqge/P8F1tgt70BGVUeU4YKYYbCaIdkDpmHw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8c7886e7-eacc-4bb7-a827-499beb4966de",
+                            SecurityStamp = "87cf69ce-9d31-4232-9f93-87793ecb22e2",
                             Strength = 5,
                             TwoFactorEnabled = false,
                             UserName = "Elara Starfinder"
@@ -644,8 +647,8 @@ namespace StarColonies.Infrastructures.Migrations
                             Id = "ID_COLON_4",
                             AccessFailedCount = 0,
                             Avatar = "avatar_4.png",
-                            ConcurrencyStamp = "349cbe68-d64a-4b1c-8c0d-d6f7b50eabd8",
-                            DateBirth = new DateTime(1990, 4, 28, 11, 23, 47, 896, DateTimeKind.Local).AddTicks(4129),
+                            ConcurrencyStamp = "f98a8782-2679-4c6b-9512-1aaf68140c37",
+                            DateBirth = new DateTime(1990, 4, 28, 11, 23, 4, 995, DateTimeKind.Local).AddTicks(1848),
                             Email = "jason.blades@example.com",
                             EmailConfirmed = true,
                             Endurance = 2,
@@ -654,9 +657,9 @@ namespace StarColonies.Infrastructures.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JASON.BLADES@EXAMPLE.COM",
                             NormalizedUserName = "JASON BLADES",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJXm/SABJg3a6BjdFF/ceEitV2ZCnGmY5AgCnEf/53rrUY+laPSoiwgPSQu2VSS5XA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENZJ0Z1PzjGA5Rz3TuZ9GzLKQK7Y9pkKYLZiczTu3BoehEMdrsusGPt3K+9OaVZV3Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6010b6eb-7e8c-4619-a0bc-4fe738da73a6",
+                            SecurityStamp = "8d06ec1e-503e-464b-b8da-7186a9094201",
                             Strength = 5,
                             TwoFactorEnabled = false,
                             UserName = "Jason Blades"
@@ -1304,16 +1307,6 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("IdColonCreator");
 
                     b.ToTable("Team");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = -1,
-                            Baniere = "default_baniere.png",
-                            IdColonCreator = "ID_COLON_1",
-                            Logo = "default_logo.png",
-                            Name = "Team du PDF"
-                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.TypeBestiaire", b =>
