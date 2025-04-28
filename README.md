@@ -21,30 +21,34 @@ Responsable du déploiement : Maximilien Withof
 
 **TODO :** expliquez les étapes nécessaires à la récupération de votre solution, à sa construction et à son exécution dans un environnement de développement (tel que l'ordinateur de votre responsable).
 
+1. Etre à l'helmo ou sinon avoir son VPN sur une adresse de l'école.
+2. Lancer le projet web en allant sur le lien (https://ue19.cg.helmo.be/Q220271)
+
+
 ## Fonctionnalités implémentées
 - US1 : totalement achevée
 - US2 : totalement achevée
 - US3 : totalement achevée
-- US4 : débutée -> la modification de l'avatar n'est pas mise à jour
+- US4 : totalement achevée
 - US5 : totalement achevée
 - US6 : totalement achevée
 - US7 : totalement achevée
 - US8 : totalement achevée
 - US9 : totalement achevée
 - US10 : totalement achevée
-- US11 : (à voir)
-- US12 : (à voir)
-- Bonus : (à voir)
+- US11 : totalement achevée
+- US12 : totalement achevée
+- Bonus : totalement achevée
 
 **TODO :** pour chaque US décrite dans l'énoncé, indiquez son état d'avancement (non-faite, débutée, partiellement achevée, totalement achevée). Quand une US est débutée ou partiellement achevée, indiquez en quelques mots ce qui manque selon vous.
 
 ## Données de connexion
 ### Administrateur
-- Email : admin@admin.com , Mdp : Test_12345
+- **Email** : admin@admin.com , **Mdp** : Test_12345
 
 ### Colon
-- Email : mira.nova@example.com , Mdp : Motdepasse123!
-- Email : alex.striker@example.com, Mdp : Motdepasse123!
+- **Email** : mira.nova@example.com , **Mdp** : Motdepasse123!
+- **Email** : alex.striker@example.com, **Mdp** : Motdepasse123!
 
 ## Éléments techniques notables
 Biblitohèques utilisées : 
