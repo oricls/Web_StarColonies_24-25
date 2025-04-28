@@ -60,7 +60,7 @@ public class ConsultMission(
             UserTeams = await teamRepository.GetTeamsWithoutMissionParticipationAsync(colon.Id, Mission.Id);
 
             // Récupérer les ressources disponibles
-            Resources = await missionRepository.GetAllResources();
+            Resources = await missionRepository.GetResourcesByMissionIdAsync(Mission.Id);
 
             return Page();
         }
