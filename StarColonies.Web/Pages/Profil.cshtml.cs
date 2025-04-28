@@ -87,6 +87,7 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
         }
     }
 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> OnPost()
     {
         if (string.IsNullOrEmpty(UpdateProfil.NouveauMotDePasse))
@@ -119,6 +120,8 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
             colon.Email = UpdateProfil.Courriel;
             colon.DateBirth = UpdateProfil.DateDeNaissance;
 
+            UpdateProfil.UploadAvatar = Request.Form.Files.GetFile("changeProfilPicture");
+            
             await colonRepository.UpdateColonAsync(colon);
             
             await logRepository.AddLog(
@@ -158,6 +161,7 @@ public class Profil(IColonRepository colonRepository, UserManager<Infrastructure
         }
     }
 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> OnPostDeleteAccountAsync()
     {
         try

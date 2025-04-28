@@ -33,6 +33,7 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
         
     }
 
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid) return Page();
