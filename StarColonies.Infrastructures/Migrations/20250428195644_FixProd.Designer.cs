@@ -12,8 +12,8 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    [Migration("20250426101550_AddGainedResourceMision4")]
-    partial class AddGainedResourceMision4
+    [Migration("20250428195644_FixProd")]
+    partial class FixProd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,8 +69,8 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ALTAD01-04-24 10:30:00Admin",
-                            ConcurrencyStamp = "ALTAD01-04-24 10:30:00Admin",
+                            Id = "Mac-mini-de-Maximilien1/04/2024 10:30:00Admin",
+                            ConcurrencyStamp = "Mac-mini-de-Maximilien1/04/2024 10:30:00Admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -359,7 +359,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Augmente temporairement la force de tous les membres d'une équipe",
                             DureeParDefaut = new TimeSpan(0, 0, 5, 0, 0),
                             EffectTypeId = 1,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "big_potion.png",
                             Name = "Potion de force"
                         },
                         new
@@ -368,7 +368,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Investit un soldat supplémentaire pour les prochaines missions",
                             DureeParDefaut = new TimeSpan(0, 0, 3, 0, 0),
                             EffectTypeId = 3,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "soldat.png",
                             Name = "Coup de pouce"
                         },
                         new
@@ -377,7 +377,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Augmente temporairement l'endurance de tous les membres d'une équipe",
                             DureeParDefaut = new TimeSpan(0, 0, 5, 0, 0),
                             EffectTypeId = 2,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "big_potion.png",
                             Name = "Potion d'endurance"
                         },
                         new
@@ -386,7 +386,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Double le nombre de ressources obtenues",
                             DureeParDefaut = new TimeSpan(0, 0, 1, 0, 0),
                             EffectTypeId = 4,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "midas.png",
                             Name = "Grâce de Midas"
                         },
                         new
@@ -395,7 +395,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Augmente l'expérience gagnée et permet de gagner un niveau supplémentaire à chaque mission",
                             DureeParDefaut = new TimeSpan(0, 0, 20, 0, 0),
                             EffectTypeId = 5,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "life.png",
                             Name = "Parchemin de monsieur Swinnen"
                         },
                         new
@@ -404,7 +404,7 @@ namespace StarColonies.Infrastructures.Migrations
                             Description = "Elimine instantanément tous les ministres",
                             DureeParDefaut = new TimeSpan(0, 1, 40, 0, 0),
                             EffectTypeId = 0,
-                            IconUrl = "assets/icons/potion.png",
+                            IconUrl = "cheat.png",
                             Name = "L'item trop cheatés"
                         });
                 });
@@ -433,6 +433,120 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasIndex("BonusId", "ResourceId");
 
                     b.ToTable("BonusResource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BonusId = 1,
+                            Quantite = 5,
+                            ResourceId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BonusId = 1,
+                            Quantite = 3,
+                            ResourceId = 11
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BonusId = 1,
+                            Quantite = 2,
+                            ResourceId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BonusId = 2,
+                            Quantite = 1,
+                            ResourceId = 6
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BonusId = 2,
+                            Quantite = 2,
+                            ResourceId = 18
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BonusId = 3,
+                            Quantite = 4,
+                            ResourceId = 4
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BonusId = 3,
+                            Quantite = 7,
+                            ResourceId = 14
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BonusId = 3,
+                            Quantite = 1,
+                            ResourceId = 13
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BonusId = 4,
+                            Quantite = 3,
+                            ResourceId = 12
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BonusId = 4,
+                            Quantite = 1,
+                            ResourceId = 17
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BonusId = 5,
+                            Quantite = 5,
+                            ResourceId = 20
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BonusId = 5,
+                            Quantite = 3,
+                            ResourceId = 2
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BonusId = 5,
+                            Quantite = 8,
+                            ResourceId = 15
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BonusId = 6,
+                            Quantite = 2,
+                            ResourceId = 7
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BonusId = 6,
+                            Quantite = 10,
+                            ResourceId = 16
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BonusId = 6,
+                            Quantite = 4,
+                            ResourceId = 19
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.BonusTransaction", b =>
@@ -574,6 +688,228 @@ namespace StarColonies.Infrastructures.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ID_COLON_1",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_1.png",
+                            ConcurrencyStamp = "f4dad9a2-71c4-41b8-a603-66c092944e33",
+                            DateBirth = new DateTime(2005, 4, 28, 21, 56, 44, 122, DateTimeKind.Local).AddTicks(1460),
+                            Email = "alex.striker@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALEX.STRIKER@EXAMPLE.COM",
+                            NormalizedUserName = "ALEX STRIKER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHcULfWHGZGp8r0WlXuJXuCAlmRnIu2pae41jhWEABKZPWyeA2sx2A2EpXrKJTB6vQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7c75ff34-162a-4eb4-a90d-fec9894dd117",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Alex Striker"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_2",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_2.png",
+                            ConcurrencyStamp = "43ccd8ab-6cc2-47d4-be8a-b5c5b3196fe1",
+                            DateBirth = new DateTime(2000, 4, 28, 21, 56, 44, 154, DateTimeKind.Local).AddTicks(6210),
+                            Email = "mira.nova@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MIRA.NOVA@EXAMPLE.COM",
+                            NormalizedUserName = "MIRA NOVA",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH26HE0HGWNQDjKgw+xygL1AAFYP9Xi7clmjQJRc1+9Zs9itB7P09BhFgyem0N1o4Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "18f94a6d-e0d2-4afc-ae84-552ef508d81c",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Mira Nova"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_3",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_3.png",
+                            ConcurrencyStamp = "d310943a-1b01-499b-8096-3b4ddda7a2a7",
+                            DateBirth = new DateTime(1995, 4, 28, 21, 56, 44, 186, DateTimeKind.Local).AddTicks(7260),
+                            Email = "elara.starfinder@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 3,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ELARA.STARFINDER@EXAMPLE.COM",
+                            NormalizedUserName = "ELARA STARFINDER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMDLmSuc71QjxFxe//y5kqLo8M3mdWIsvkpJPCQibXBTzYR/uBUPEmEsk1exV9JTOg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2ef741c5-219d-4f58-a869-05723a48be85",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Elara Starfinder"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_4",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_4.png",
+                            ConcurrencyStamp = "d7832c53-0fb0-4ce0-aed3-d7d252988c94",
+                            DateBirth = new DateTime(1990, 4, 28, 21, 56, 44, 217, DateTimeKind.Local).AddTicks(7330),
+                            Email = "jason.blades@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 4,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "JASON.BLADES@EXAMPLE.COM",
+                            NormalizedUserName = "JASON BLADES",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGf1vCNU/7PecUyD+cdd528rTfx4q6IhUlFvIAkZIeEjvv2Gfj6Ek0XWNY1Pv2JXug==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "465fffa1-6d6a-4e37-a25e-99bb2c4717b9",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Jason Blades"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_5",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_5.png",
+                            ConcurrencyStamp = "9ef16d3c-b9cd-4337-a65f-44e48a6ba45e",
+                            DateBirth = new DateTime(1997, 4, 28, 21, 56, 44, 249, DateTimeKind.Local).AddTicks(5550),
+                            Email = "lyra.moonshadow@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 3,
+                            IdProfession = 4,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "LYRA.MOONSHADOW@EXAMPLE.COM",
+                            NormalizedUserName = "LYRA MOONSHADOW",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAYsQX0jRis2XrGs61SQcNFOGvlceCjmLC68WMMSBPpo9mNdQJ+8H5cAR3ViRW9N7g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "eb0b29bc-37b2-47f7-b3eb-1dad8650fdd7",
+                            Strength = 4,
+                            TwoFactorEnabled = false,
+                            UserName = "Lyra Moonshadow"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_6",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_2.png",
+                            ConcurrencyStamp = "4d78dc86-f2c8-47ac-aea8-4a1fd83a15cd",
+                            DateBirth = new DateTime(1993, 4, 28, 21, 56, 44, 281, DateTimeKind.Local).AddTicks(8430),
+                            Email = "dax.ironfist@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 5,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DAX.IRONFIST@EXAMPLE.COM",
+                            NormalizedUserName = "DAX IRONFIST",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHZ23Iok3KkE8QC4uvhAdl2HMJEiE/eI88BAlwQStP6/YUkAVnPPnyOAzpgeO3p4HA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "bce5d473-2852-47da-953e-ca02d070148c",
+                            Strength = 6,
+                            TwoFactorEnabled = false,
+                            UserName = "Dax Ironfist"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_7",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_1.png",
+                            ConcurrencyStamp = "3f5c530c-b952-4c3d-911f-460ff16ae60c",
+                            DateBirth = new DateTime(1999, 4, 28, 21, 56, 44, 313, DateTimeKind.Local).AddTicks(4650),
+                            Email = "zara.flamewalker@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 4,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ZARA.FLAMEWALKER@EXAMPLE.COM",
+                            NormalizedUserName = "ZARA FLAMEWALKER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKGLM7kSmyAv0sIUR6YU3chFkzPOeIHe4A0QW9w3NlmdF4dX+Nt496S64J8NWI40xA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "50c97433-1cb2-466c-bb67-f14be562558f",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Zara Flamewalker"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_8",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_3.png",
+                            ConcurrencyStamp = "90aad3f0-6662-4589-a781-19e388233a10",
+                            DateBirth = new DateTime(1996, 4, 28, 21, 56, 44, 344, DateTimeKind.Local).AddTicks(5690),
+                            Email = "orion.starborn@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 3,
+                            IdProfession = 3,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ORION.STARBORN@EXAMPLE.COM",
+                            NormalizedUserName = "ORION STARBORN",
+                            PasswordHash = "AQAAAAIAAYagAAAAECaNjOe7xALLeGmDT9sQZNLJVsBOlnSdMxZsybzXpPqbpe50MyYm8YgKEPtJtMvTuA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "d650e79c-2160-4913-9e05-56f975ea580f",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Orion Starborn"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_9",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_4.png",
+                            ConcurrencyStamp = "796fc595-b106-404a-8f57-b5f5506587a4",
+                            DateBirth = new DateTime(2001, 4, 28, 21, 56, 44, 375, DateTimeKind.Local).AddTicks(8360),
+                            Email = "selene.frost@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 4,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SELENE.FROST@EXAMPLE.COM",
+                            NormalizedUserName = "SELENE FROST",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGf8t2HMWHI5DYGQoGHxp7dIHQTiGKEXC1eGnx/6OjMZ2gY5/NQqmbxFuavidR6IHQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dd781379-9c20-436f-8406-13f476c1a529",
+                            Strength = 4,
+                            TwoFactorEnabled = false,
+                            UserName = "Selene Frost"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_10",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_5.png",
+                            ConcurrencyStamp = "04ed5d48-d8da-4c94-84fc-56bb44774e5b",
+                            DateBirth = new DateTime(1998, 4, 28, 21, 56, 44, 406, DateTimeKind.Local).AddTicks(9790),
+                            Email = "ryder.nightfall@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 5,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RYDER.NIGHTFALL@EXAMPLE.COM",
+                            NormalizedUserName = "RYDER NIGHTFALL",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMoP6Qo7gEjH+DUmD94ioOpVmMX890Cjo/pzGhMWo9A7yqzCo7svpGnhvLlR9Nk29w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7ffcb5e3-b2a8-4342-9d64-6e220a385e6b",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Ryder Nightfall"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ColonBonus", b =>
@@ -678,35 +1014,35 @@ namespace StarColonies.Infrastructures.Migrations
                         {
                             Id = 1,
                             Description = "Une ancienne base de recherche abandonnée recèle des créatures étranges et des technologies perdues.",
-                            Image = "base_abandonnee.jpg",
+                            Image = "base.png",
                             Name = "Exploration de la base abandonnée"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Un monstre marin légendaire menace les colonies côtières. Son élimination est primordiale.",
-                            Image = "leviathan_abysses.jpg",
+                            Image = "hunt.png",
                             Name = "Chasse au Léviathan des abysses"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Des scientifiques sont piégés dans une zone contaminée par des créatures expérimentales.",
-                            Image = "quarantaine_zone.jpg",
+                            Image = "save.png",
                             Name = "Sauvetage dans la zone de quarantaine"
                         },
                         new
                         {
                             Id = 4,
                             Description = "Une entité extraterrestre intelligente a pris le contrôle d'un réacteur nucléaire.",
-                            Image = "hegemon_reactor.jpg",
+                            Image = "hegemon.png",
                             Name = "Désactivation du Hégémon"
                         },
                         new
                         {
                             Id = 5,
                             Description = "Des créatures extraterrestres ont infesté d'anciennes ruines découvertes sur une lune lointaine.",
-                            Image = "ruines_aliennes.jpg",
+                            Image = "ruines.png",
                             Name = "Nettoyage des ruines aliennes"
                         });
                 });
@@ -850,16 +1186,78 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Property<int>("IdMission")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdRessource")
+                    b.Property<int>("IdResource")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("IdMission", "IdRessource");
+                    b.HasIndex("IdMission");
 
-                    b.HasIndex("IdRessource");
+                    b.HasIndex("IdResource");
 
-                    b.ToTable("MissionResources", (string)null);
+                    b.ToTable("MissionResource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IdMission = 1,
+                            IdResource = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IdMission = 1,
+                            IdResource = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IdMission = 2,
+                            IdResource = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IdMission = 2,
+                            IdResource = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IdMission = 3,
+                            IdResource = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IdMission = 3,
+                            IdResource = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IdMission = 4,
+                            IdResource = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IdMission = 4,
+                            IdResource = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IdMission = 5,
+                            IdResource = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IdMission = 5,
+                            IdResource = 10
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
@@ -1188,49 +1586,49 @@ namespace StarColonies.Infrastructures.Migrations
                         new
                         {
                             Id = 1,
-                            Avatar = "Avatar1.png",
+                            Avatar = "robot.png",
                             Description = "Créations mécaniques ou cybernétiques, souvent conçues pour des tâches spécifiques. Peuvent aller des assistants domestiques aux machines de guerre autonomes.",
                             Name = "Robot"
                         },
                         new
                         {
                             Id = 2,
-                            Avatar = "icons/naturelle.png",
+                            Avatar = "naturelle.png",
                             Description = "Êtres organiques issus de l'évolution naturelle, parfaitement adaptés à leur écosystème. Inclut les créatures des forêts, des océans et autres habitats terrestres.",
                             Name = "Naturelle"
                         },
                         new
                         {
                             Id = 3,
-                            Avatar = "icons/extraterrestre.png",
+                            Avatar = "extraterrestre.png",
                             Description = "Formes de vie originaires d'autres planètes ou dimensions, possédant souvent des caractéristiques biologiques exotiques et des capacités inexplicables.",
                             Name = "Extraterrestre"
                         },
                         new
                         {
                             Id = 4,
-                            Avatar = "icons/paranormal.png",
+                            Avatar = "paranormal.png",
                             Description = "Entités défiant les lois de la physique, souvent liées à des phénomènes spirituels ou énigmatiques. Inclut fantômes, esprits et créatures dimensionnelles.",
                             Name = "Paranormal"
                         },
                         new
                         {
                             Id = 5,
-                            Avatar = "icons/animal.png",
+                            Avatar = "animal.png",
                             Description = "Espèces animales terrestres, qu'elles soient communes ou rares. Peuvent inclure des variants évolués ou génétiquement modifiés.",
                             Name = "Animal"
                         },
                         new
                         {
                             Id = 6,
-                            Avatar = "icons/experience.png",
+                            Avatar = "experience.png",
                             Description = "Résultats d'expérimentations scientifiques ou magiques, combinant souvent des traits de multiples espèces. Créatures instables aux capacités imprévisibles.",
                             Name = "Expérience"
                         },
                         new
                         {
                             Id = 7,
-                            Avatar = "icons/humanoide.png",
+                            Avatar = "humanoide.png",
                             Description = "Êtres bipèdes à morphologie semblable aux humains, qu'ils soient d'origine naturelle ou artificielle. Peuvent posséder une intelligence avancée et une société structurée.",
                             Name = "Humanoïde"
                         });
@@ -1268,35 +1666,35 @@ namespace StarColonies.Infrastructures.Migrations
                         {
                             Id = 1,
                             Description = "Matériau de construction",
-                            Icon = "icons/materiau.png",
+                            Icon = "materiau.png",
                             Name = "Matériau"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Technologie avancée",
-                            Icon = "icons/technologie.png",
+                            Icon = "technologie.png",
                             Name = "Technologie"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Artefact ancien",
-                            Icon = "icons/artefact.png",
+                            Icon = "artefact.png",
                             Name = "Artefact"
                         },
                         new
                         {
                             Id = 4,
                             Description = "Connaissance avancée",
-                            Icon = "icons/connaissance.png",
+                            Icon = "connaissance.png",
                             Name = "Connaissance"
                         },
                         new
                         {
                             Id = 5,
                             Description = "Consomable de base",
-                            Icon = "icons/consomable.png",
+                            Icon = "consomable.png",
                             Name = "Consomable"
                         });
                 });
@@ -1511,15 +1909,15 @@ namespace StarColonies.Infrastructures.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Ressource")
-                        .WithMany()
-                        .HasForeignKey("IdRessource")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
+                        .WithMany("MissionResources")
+                        .HasForeignKey("IdResource")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Mission");
 
-                    b.Navigation("Ressource");
+                    b.Navigation("Resource");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
@@ -1599,6 +1997,8 @@ namespace StarColonies.Infrastructures.Migrations
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.Navigation("ColonResources");
+
+                    b.Navigation("MissionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Team", b =>

@@ -143,7 +143,7 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-28),
         Avatar = "avatar_5.png",
-        IdProfession = 5,
+        IdProfession = 4,
         Endurance = 3,
         Strength = 4
     };
@@ -160,8 +160,8 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         SecurityStamp = Guid.NewGuid().ToString(),
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-32),
-        Avatar = "avatar_6.png",
-        IdProfession = 6,
+        Avatar = "avatar_2.png",
+        IdProfession = 2,
         Endurance = 5,
         Strength = 6
     };
@@ -178,8 +178,8 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         SecurityStamp = Guid.NewGuid().ToString(),
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-26),
-        Avatar = "avatar_7.png",
-        IdProfession = 7,
+        Avatar = "avatar_1.png",
+        IdProfession = 1,
         Endurance = 4,
         Strength = 5
     };
@@ -196,8 +196,8 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         SecurityStamp = Guid.NewGuid().ToString(),
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-29),
-        Avatar = "avatar_8.png",
-        IdProfession = 8,
+        Avatar = "avatar_3.png",
+        IdProfession = 3,
         Endurance = 3,
         Strength = 5
     };
@@ -214,8 +214,8 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         SecurityStamp = Guid.NewGuid().ToString(),
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-24),
-        Avatar = "avatar_9.png",
-        IdProfession = 9,
+        Avatar = "avatar_4.png",
+        IdProfession = 2,
         Endurance = 4,
         Strength = 4
     };
@@ -232,8 +232,8 @@ public class ColonConfiguration : IEntityTypeConfiguration<Colon>
         SecurityStamp = Guid.NewGuid().ToString(),
         ConcurrencyStamp = Guid.NewGuid().ToString(),
         DateBirth = DateTime.Now.AddYears(-27),
-        Avatar = "avatar_10.png",
-        IdProfession = 10,
+        Avatar = "avatar_5.png",
+        IdProfession = 1,
         Endurance = 5,
         Strength = 5
     };

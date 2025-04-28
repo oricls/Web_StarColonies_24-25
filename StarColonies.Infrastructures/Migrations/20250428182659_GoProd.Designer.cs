@@ -12,8 +12,8 @@ using StarColonies.Infrastructures;
 namespace StarColonies.Infrastructures.Migrations
 {
     [DbContext(typeof(StarColoniesContext))]
-    [Migration("20250425115437_ResolvegitLeaks5")]
-    partial class ResolvegitLeaks5
+    [Migration("20250428182659_GoProd")]
+    partial class GoProd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,8 +69,8 @@ namespace StarColonies.Infrastructures.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ALTAD01-04-24 10:30:00Admin",
-                            ConcurrencyStamp = "ALTAD01-04-24 10:30:00Admin",
+                            Id = "Mac-mini-de-Maximilien1/04/2024 10:30:00Admin",
+                            ConcurrencyStamp = "Mac-mini-de-Maximilien1/04/2024 10:30:00Admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -574,6 +574,228 @@ namespace StarColonies.Infrastructures.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ID_COLON_1",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_1.png",
+                            ConcurrencyStamp = "03ca1f88-b451-4304-a0b6-4cbac1f31a68",
+                            DateBirth = new DateTime(2005, 4, 28, 20, 26, 59, 177, DateTimeKind.Local).AddTicks(7120),
+                            Email = "alex.striker@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ALEX.STRIKER@EXAMPLE.COM",
+                            NormalizedUserName = "ALEX STRIKER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEVUetnBp7FeFM6yy0sT4Uq2ss81sXrB30s0MzgXzwAar5RP4+/aWYQ54EVMa8ifkQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "faa7d029-d798-4ad7-8b15-08dff23ce8ea",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Alex Striker"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_2",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_2.png",
+                            ConcurrencyStamp = "b14c4d7c-cd5b-4ace-b409-280d39c9b4fb",
+                            DateBirth = new DateTime(2000, 4, 28, 20, 26, 59, 210, DateTimeKind.Local).AddTicks(950),
+                            Email = "mira.nova@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MIRA.NOVA@EXAMPLE.COM",
+                            NormalizedUserName = "MIRA NOVA",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ8mC0iBVruo5Atlav7cE4SjNsLW4QERZVo2YdRwJsjq2NOhadx2Mht1X4zB/zyS/g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "d68c94e1-a614-4bce-8872-86e7480719e6",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Mira Nova"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_3",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_3.png",
+                            ConcurrencyStamp = "489c3fa9-a579-4809-a668-bac2cc7a9dd1",
+                            DateBirth = new DateTime(1995, 4, 28, 20, 26, 59, 241, DateTimeKind.Local).AddTicks(9230),
+                            Email = "elara.starfinder@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 3,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ELARA.STARFINDER@EXAMPLE.COM",
+                            NormalizedUserName = "ELARA STARFINDER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJndSlzy0pet9dhD2xPcnPm35q4AuuRIvIQIpY9G5sTqEsu0zrW+Bs5OEm4Biw/RNQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1e4dbb19-e83b-4d38-8197-d1eef281140f",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Elara Starfinder"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_4",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_4.png",
+                            ConcurrencyStamp = "a99828c7-45b0-4af6-bdee-c269bc5343f8",
+                            DateBirth = new DateTime(1990, 4, 28, 20, 26, 59, 274, DateTimeKind.Local).AddTicks(2490),
+                            Email = "jason.blades@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 2,
+                            IdProfession = 4,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "JASON.BLADES@EXAMPLE.COM",
+                            NormalizedUserName = "JASON BLADES",
+                            PasswordHash = "AQAAAAIAAYagAAAAECE3ba2YtIk46OpipBswVr21fWlN2wXvP2T4s5cfoMnmSsxsG8a7HbQ+3NS6A3gioQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "6a966e87-e0b9-44fd-931e-59b9a0916e39",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Jason Blades"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_5",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_5.png",
+                            ConcurrencyStamp = "23a6b1d6-473e-416b-90f0-4f485a604cea",
+                            DateBirth = new DateTime(1997, 4, 28, 20, 26, 59, 306, DateTimeKind.Local).AddTicks(5210),
+                            Email = "lyra.moonshadow@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 3,
+                            IdProfession = 4,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "LYRA.MOONSHADOW@EXAMPLE.COM",
+                            NormalizedUserName = "LYRA MOONSHADOW",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOynJyOjXGYV0i+/UIeGc09roK//l+f8zyh/keFViDh3qP8ww/vwuyDopx5YwBN5KA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "e95bd084-d6d5-4f97-addc-bf0f5d951a97",
+                            Strength = 4,
+                            TwoFactorEnabled = false,
+                            UserName = "Lyra Moonshadow"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_6",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_6.png",
+                            ConcurrencyStamp = "185fc2bb-4b9a-438b-aa0b-4cc237669027",
+                            DateBirth = new DateTime(1993, 4, 28, 20, 26, 59, 337, DateTimeKind.Local).AddTicks(3110),
+                            Email = "dax.ironfist@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 5,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DAX.IRONFIST@EXAMPLE.COM",
+                            NormalizedUserName = "DAX IRONFIST",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGcDpKQFA9C8c+Or9q2OylSFhUU8skRPTaGxpq2BExtHxjaBApRRVULNbsneXhaqjA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "96596525-997e-4d7b-8340-dc095755e7c5",
+                            Strength = 6,
+                            TwoFactorEnabled = false,
+                            UserName = "Dax Ironfist"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_7",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_7.png",
+                            ConcurrencyStamp = "ac81e0a4-1e87-4344-a76a-9fa6ee39ce15",
+                            DateBirth = new DateTime(1999, 4, 28, 20, 26, 59, 368, DateTimeKind.Local).AddTicks(2120),
+                            Email = "zara.flamewalker@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 4,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ZARA.FLAMEWALKER@EXAMPLE.COM",
+                            NormalizedUserName = "ZARA FLAMEWALKER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGmYHTt55WXfb6Xstvg2hY0MQZtLYe8JYIJJO53oVpmsWolHnG/WH+BRr/Z7vmIZpQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "e6586aaf-3cb6-4739-b321-11c7075c3294",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Zara Flamewalker"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_8",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_8.png",
+                            ConcurrencyStamp = "c4a1adde-fe2d-40b7-b88b-e68082620eda",
+                            DateBirth = new DateTime(1996, 4, 28, 20, 26, 59, 399, DateTimeKind.Local).AddTicks(5170),
+                            Email = "orion.starborn@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 3,
+                            IdProfession = 3,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ORION.STARBORN@EXAMPLE.COM",
+                            NormalizedUserName = "ORION STARBORN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC9DIZz5bqsI5jE4d7k8p5K/6+JXpb9hztJgDL/krYznGD6wmNDzB++RXM1hr4xD6Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1bf6bd08-0ab5-4e2b-bdae-5fce73c092ff",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Orion Starborn"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_9",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_9.png",
+                            ConcurrencyStamp = "7ae78c90-2a94-4b6b-8e48-d0b578d30f9f",
+                            DateBirth = new DateTime(2001, 4, 28, 20, 26, 59, 431, DateTimeKind.Local).AddTicks(5320),
+                            Email = "selene.frost@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 4,
+                            IdProfession = 2,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SELENE.FROST@EXAMPLE.COM",
+                            NormalizedUserName = "SELENE FROST",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMNnUHeSdct8RlcS1ncenrbTy8/WSSyeLxJDe8ogOYMqThPfF/kA1l1GG1YzMh3T2A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f0df683f-7295-410c-908a-95ec7b13d2fd",
+                            Strength = 4,
+                            TwoFactorEnabled = false,
+                            UserName = "Selene Frost"
+                        },
+                        new
+                        {
+                            Id = "ID_COLON_10",
+                            AccessFailedCount = 0,
+                            Avatar = "avatar_10.png",
+                            ConcurrencyStamp = "447a4065-f665-49f3-a235-97197257fca9",
+                            DateBirth = new DateTime(1998, 4, 28, 20, 26, 59, 463, DateTimeKind.Local).AddTicks(9370),
+                            Email = "ryder.nightfall@example.com",
+                            EmailConfirmed = true,
+                            Endurance = 5,
+                            IdProfession = 1,
+                            Level = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RYDER.NIGHTFALL@EXAMPLE.COM",
+                            NormalizedUserName = "RYDER NIGHTFALL",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHjy+ycaLif5S9WbZ/OMU42k2T3ljsP7aYUmvLhK+98xAwWQhpFrwOcjMUyo8qdp+g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "98a9f97a-6976-48ae-b01d-fd318e454d59",
+                            Strength = 5,
+                            TwoFactorEnabled = false,
+                            UserName = "Ryder Nightfall"
+                        });
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.ColonBonus", b =>
@@ -836,6 +1058,91 @@ namespace StarColonies.Infrastructures.Migrations
                             IdMission = 4,
                             IdBestiaire = 5,
                             Id = 0
+                        });
+                });
+
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionResource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdMission")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdResource")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdMission");
+
+                    b.HasIndex("IdResource");
+
+                    b.ToTable("MissionResource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IdMission = 1,
+                            IdResource = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IdMission = 1,
+                            IdResource = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IdMission = 2,
+                            IdResource = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IdMission = 2,
+                            IdResource = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IdMission = 3,
+                            IdResource = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IdMission = 3,
+                            IdResource = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IdMission = 4,
+                            IdResource = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IdMission = 4,
+                            IdResource = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IdMission = 5,
+                            IdResource = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IdMission = 5,
+                            IdResource = 10
                         });
                 });
 
@@ -1480,6 +1787,25 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Mission");
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionResource", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", "Mission")
+                        .WithMany("GainedResources")
+                        .HasForeignKey("IdMission")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
+                        .WithMany("MissionResources")
+                        .HasForeignKey("IdResource")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mission");
+
+                    b.Navigation("Resource");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.TypeResource", "TypeResource")
@@ -1547,6 +1873,8 @@ namespace StarColonies.Infrastructures.Migrations
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Mission", b =>
                 {
+                    b.Navigation("GainedResources");
+
                     b.Navigation("MissionBestiaires");
 
                     b.Navigation("ResultatMissions");
@@ -1555,6 +1883,8 @@ namespace StarColonies.Infrastructures.Migrations
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.Navigation("ColonResources");
+
+                    b.Navigation("MissionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Team", b =>

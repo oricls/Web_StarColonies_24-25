@@ -48,7 +48,7 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
             {
                 Id = 1,
                 Name = "Exploration de la base abandonnée",
-                Image = "base_abandonnee.jpg",
+                Image = "base.png",
                 Description =
                     "Une ancienne base de recherche abandonnée recèle des créatures étranges et des technologies perdues."
             },
@@ -56,7 +56,7 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
             {
                 Id = 2,
                 Name = "Chasse au Léviathan des abysses",
-                Image = "leviathan_abysses.jpg",
+                Image = "hunt.png",
                 Description =
                     "Un monstre marin légendaire menace les colonies côtières. Son élimination est primordiale."
             },
@@ -64,21 +64,21 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
             {
                 Id = 3,
                 Name = "Sauvetage dans la zone de quarantaine",
-                Image = "quarantaine_zone.jpg",
+                Image = "save.png",
                 Description = "Des scientifiques sont piégés dans une zone contaminée par des créatures expérimentales."
             },
             new()
             {
                 Id = 4,
                 Name = "Désactivation du Hégémon",
-                Image = "hegemon_reactor.jpg",
+                Image = "hegemon.png",
                 Description = "Une entité extraterrestre intelligente a pris le contrôle d'un réacteur nucléaire."
             },
             new()
             {
                 Id = 5,
                 Name = "Nettoyage des ruines aliennes",
-                Image = "ruines_aliennes.jpg",
+                Image = "ruines.png",
                 Description =
                     "Des créatures extraterrestres ont infesté d'anciennes ruines découvertes sur une lune lointaine."
             }

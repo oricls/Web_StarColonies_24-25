@@ -175,7 +175,7 @@ public class EfTeamRepository : ITeamRepository
             .ToListAsync();
 
         var teamsWithParticipation = await _context.ResultatMission
-            .Where(rm => rm.IdMission == missionId)
+            .Where(rm => rm.IdMission == missionId && rm.IssueStrength > 0 && rm.IssueEndurance > 0)
             .Select(rm => rm.IdTeam)
             .Distinct()
             .ToListAsync();
