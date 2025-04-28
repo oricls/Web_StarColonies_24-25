@@ -19,10 +19,20 @@ Responsable du déploiement : Maximilien Withof
 
 ## Construction de la solution
 
-**TODO :** expliquez les étapes nécessaires à la récupération de votre solution, à sa construction et à son exécution dans un environnement de développement (tel que l'ordinateur de votre responsable).
+### Préalables
+- Etre à l'helmo ou sinon avoir son VPN sur une adresse de l'école.
+- Installer Rider (vers.2025.1)
 
-1. Etre à l'helmo ou sinon avoir son VPN sur une adresse de l'école.
-2. Lancer le projet web en allant sur le lien (https://ue19.cg.helmo.be/Q220271)
+### Lancement
+1. Importer le projet git sur Rider
+2. Lancer le programme via Rider ou en ligne de commande par :
+```bash
+$ cd StarColonies\StarColonies.Web 
+$ dotnet run
+```
+3. Ouvrir le lien http://localhost:5298 dans un navigateur
+
+**TODO :** expliquez les étapes nécessaires à la récupération de votre solution, à sa construction et à son exécution dans un environnement de développement (tel que l'ordinateur de votre responsable).
 
 
 ## Fonctionnalités implémentées
