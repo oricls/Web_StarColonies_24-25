@@ -14,4 +14,7 @@ public interface IBonusRepository
     
     Task<IReadOnlyList<TransactionInfo>> GetColonTransactionsAsync(string colonId, int? limit = null);
     Task CreateTransactionAsync(string colonId, int bonusId, List<BonusResource> resources);
+    
+    Task CleanExpiredBonusesAsync(string userId);
+
 }

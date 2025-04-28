@@ -11,4 +11,6 @@ public class Resource
     public TypeResource TypeResource { get; set; } = null!;
     
     public IList<ColonResource> ColonResources { get; set; } = new List<ColonResource>();
+    
+    public IList<MissionResource> MissionResources { get; set; } = new List<MissionResource>();
 }

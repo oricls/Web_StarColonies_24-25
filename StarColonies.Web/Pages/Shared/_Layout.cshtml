@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +21,7 @@
         {
             <!-- Mode normal avec logo à gauche et boutons à droite -->
             <a class="navbar-brand" asp-area="" asp-page="/Index">
-                <img src="~/img/logo.png" alt="Logo Starcolonies" height="70">
+                <img src="~/uploads/logos/logo.png" alt="Logo Starcolonies" height="70">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -53,7 +55,7 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-page="/Admin">
+                                <a class="nav-link text-white" asp-page="Admin/ViewLogs">
                                     <i class="fas fa-user-shield nav-link-icon"></i>Admin
                                 </a>
                             </li>
@@ -63,11 +65,13 @@
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
+                    var userAvatar = User.FindFirstValue("Avatar") ?? "default-avatar.png";
+
                     <!-- Menu utilisateur connecté -->
                     <div class="d-flex align-items-center">
                         <div class="dropdown">
                             <button class="btn btn-accent dropdown-toggle d-flex align-items-center" type="button" id="userMenu" data-bs-toggle="dropdown">
-                                <img src="~/img/default-avatar.jpg" class="user-avatar" alt="Avatar">
+                                <img src="~/uploads/avatars/@userAvatar" class="user-avatar" alt="Avatar">
                                 <span>@User.Identity.Name</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -108,7 +112,7 @@
             <!-- Mode authentification avec logo centré -->
             <div class="w-100 text-center">
                 <a class="navbar-brand mx-auto" asp-page="/Index">
-                    <img src="~/img/logo.png" alt="Logo Starcolonies" height="80">
+                    <img src="~/uploads/logos/logo.png" alt="Logo Starcolonies" height="80">
                 </a>
             </div>
         }

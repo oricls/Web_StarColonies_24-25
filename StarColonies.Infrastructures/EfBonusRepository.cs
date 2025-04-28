@@ -203,6 +203,24 @@ public class EfBonusRepository : IBonusRepository
             
         await _context.SaveChangesAsync();
     }
+
+    public async Task CleanExpiredBonusesAsync(string userId)
+    {
+        var now = DateTime.Now;
+    
+        // Récupérer les bonus actifs du colon directement depuis le contexte
+        var expiredColonBonuses = await _context.ColonBonus
+            .Where(cb => cb.ColonId == userId && cb.DateExpiration < now)
+            .ToListAsync();
+    
+        if (expiredColonBonuses.Any())
+        {
+            // Supprimer les bonus expirés
+            _context.ColonBonus.RemoveRange(expiredColonBonuses);
+            await _context.SaveChangesAsync();
+        }
+    }
+
     private Bonus MapBonusEntityToDomain(Entities.Bonus bonusEntity)
     {
         var dateAchat = DateTime.Now; //Todo: a revoir ? -> pas très SOLID mais ça marche

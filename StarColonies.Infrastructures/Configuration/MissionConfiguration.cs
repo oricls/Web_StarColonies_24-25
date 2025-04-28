@@ -31,6 +31,11 @@ public class MissionConfiguration : IEntityTypeConfiguration<Mission>
             .WithOne(mb => mb.Mission)
             .HasForeignKey(mb => mb.IdMission)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(m => m.GainedResources)
+            .WithOne()
+            .HasForeignKey(r => r.IdMission)
+            .OnDelete(DeleteBehavior.Cascade);
 
         SeedMissions(builder);
     }

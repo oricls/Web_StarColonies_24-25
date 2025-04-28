@@ -1,0 +1,67 @@
+@page
+@model StarColonies.Web.Pages.Admin.Missions
+@{
+    ViewData["Title"] = "Missions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+@await Html.PartialAsync("_AdminNavbar")
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="font-barlow">
+            <i class="fas fa-tasks me-2"></i>Missions
+        </h1>
+    </div>
+
+    @if (ModelState.ErrorCount > 0)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    @if (Model.AvailableMissions.Any())
+    {
+        <div class="table-responsive shadow-sm rounded bg-dark p-4">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var mission in Model.AvailableMissions)
+                {
+                    <tr>
+                        <td style="width: 100px;">
+                            <img src="~/img/missions/@mission.Image" alt="@mission.Name" class="img-fluid rounded" style="height: 60px; object-fit: cover;" />
+                        </td>
+                        <td>@mission.Name</td>
+                        <td>@mission.Description</td>
+                        <td style="width: 150px;">
+                            <form method="post" asp-page-handler="DeleteMission" asp-route-missionId="@mission.Id" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt me-1"></i> Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Aucune mission disponible pour le moment.
+        </div>
+    }
+</div>

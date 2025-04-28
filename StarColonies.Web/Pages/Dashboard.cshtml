@@ -8,7 +8,7 @@
 <div class="container-fluid py-4">
     <!-- Section Mes équipes -->
     <section class="mb-5">
-        <h2 class="font-barlow text-white fw-bold mb-4">Mes équipes</h2>
+        <h2 class="font-barlow text-white fw-bold mb-4">Mes meilleures équipes</h2>
 
         <div class="row g-4">
             @if (Model.UserTeams.Any())
@@ -17,30 +17,41 @@
                 {
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center mb-3">
+                            <!-- Bannière plus grande avec overlay et logo superposé -->
+                            <div class="banner-container position-relative overflow-hidden rounded-top" style="height: 140px;">
+                                <img src="~/uploads/@(string.IsNullOrEmpty(team.Baniere) ? $"logos/{team.Logo}" : $"banieres/{team.Baniere}")" alt="Bannière de l'équipe" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                                <div class="banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(29,19,50,0.9)); z-index: 2;"></div>
+                                
+                                <!-- Logo et nom d'équipe superposés sur la bannière -->
+                                <div class="position-relative d-flex align-items-center p-3" style="z-index: 3; height: 100%;">
                                     <div class="me-3">
                                         @if (!string.IsNullOrEmpty(team.Logo))
                                         {
-                                            <img src="~/@team.Logo" alt="Avatar @team.Name"  style="width: 50px; height: 50px; object-fit: cover;">
+                                            <div class="rounded-circle border border-2 border-white shadow" style="width: 60px; height: 60px; overflow: hidden;">
+                                                <img src="~/uploads/logos/@team.Logo" alt="Avatar @team.Name" class="w-100 h-100 object-fit-cover">
+                                            </div>
                                         }
                                         else
                                         {
-                                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <div class="bg-primary rounded-circle border border-2 border-white d-flex align-items-center justify-content-center shadow" style="width: 60px; height: 60px;">
                                                 <span class="text-white fw-bold">@(team.Name.Substring(0, 1))</span>
                                             </div>
                                         }
                                     </div>
                                     <div>
-                                        <h5 class="font-barlow text-white fw-bold mb-0">@team.Name</h5>
+                                        <h5 class="font-barlow text-white fw-bold mb-0 text-shadow">@team.Name</h5>
                                         @if (team.IsSelectedForMissions)
                                         {
                                             <div class="d-flex align-items-center text-success small">
-                                                <span>Sélectionnée pour les missions</span>
+                                                <span class="text-shadow">Sélectionnée pour les missions</span>
                                             </div>
                                         }
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div class="card-body p-4">
+                                <!-- Les infos d'équipe commencent directement par les stats -->
 
                                 <div class="row mb-3">
                                     <div class="col-6">
@@ -62,14 +73,14 @@
                                     @if (Model.TeamMembers.ContainsKey(team.Id))
                                     {
                                         var members = Model.TeamMembers[team.Id];
-                                        var displayMembers = members.Take(4).ToList();
+                                        var displayMembers = members;
                                         
                                         @foreach (var member in displayMembers)
                                         {
                                             <div class="me-2" style="width: 40px; height: 40px;">
                                                 @if (!string.IsNullOrEmpty(member.Avatar))
                                                 {
-                                                    <img src="~/@member.Avatar" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <img src="~/uploads/avatars/@member.Avatar" alt="@member.Name" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                                 }
                                                 else
                                                 {
@@ -77,21 +88,17 @@
                                                 }
                                             </div>
                                         }
-                                        
-                                        @if (members.Count > 4)
-                                        {
-                                            <div class="text-white fw-bold">+@(members.Count - 4)</div>
-                                        }
                                     }
                                 </div>
 
-                                <a asp-page="/ConsultTeam" asp-route-slug="@team.Name.ToKebab()" class="btn btn-purple w-100">CONSULTER</a>                            </div>
+                                <a asp-page="/ConsultTeam" asp-route-slug="@team.Name.ToKebab()" class="btn btn-purple w-100">CONSULTER</a>
+                            </div>
                         </div>
                     </div>
                 }
             }
 
-            <!-- Nouvelle équipe -->
+            <!-- Nouvelle équipe (pas de modification nécessaire ici) -->
             <a asp-page="/createteams" class="col-md-6 text-decoration-none col-lg-4">
                 <div class="card h-100 rounded-3 shadow d-flex align-items-center justify-content-center" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
                     <div class="text-center p-5">
@@ -117,14 +124,25 @@
             {
                 <div class="col-md-6">
                     <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
-                        <div class="card-body p-4 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <h3 class="font-barlow text-white fw-bold mb-0">@mission.Name</h3>
+                        <!-- Ajout de l'image de la mission -->
+                        <div class="mission-banner-container position-relative overflow-hidden rounded-top" style="height: 180px;">
+                            <img src="~/uploads/missions/@(!string.IsNullOrEmpty(mission.Image) ? mission.Image : "images/default-mission.jpg")" alt="Image de la mission" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                            <div class="mission-banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(29,19,50,0.9)); z-index: 2;"></div>
+
+                            <!-- Niveau de mission superposé sur l'image -->
+                            <div class="position-absolute top-0 end-0 m-3" style="z-index: 3;">
                                 <div class="bg-primary px-3 py-1 rounded">
                                     <span class="text-white fw-bold">Nv. @mission.Level</span>
                                 </div>
                             </div>
 
+                            <!-- Nom de la mission superposé sur l'image -->
+                            <div class="position-absolute bottom-0 start-0 p-3 w-100" style="z-index: 3;">
+                                <h3 class="font-barlow text-white fw-bold mb-0 text-shadow">@mission.Name</h3>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column">
                             <p class="h6 opacity-75 text-white mb-4">@mission.Description</p>
 
                             <div class="mb-4">
@@ -133,9 +151,9 @@
                                     @foreach (var bestiaire in mission.BestiaireIcons)
                                     {
                                         <div class="me-2">
-                                            <img class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                            <img class=" rounded-circle d-flex align-items-center justify-content-center"
                                                  style="width: 40px; height: 40px; object-fit: cover;"
-                                                 src="~/@bestiaire.Avatar"
+                                                 src="~/icons/@bestiaire.Avatar"
                                                  alt="@bestiaire.Name"
                                                  title="@bestiaire.Name (@bestiaire.TypeName)" />
                                         </div>
@@ -157,6 +175,16 @@
         /* Style pour l'arrière-plan quaternaire (comme dans la page Comptoir) */
         .bg-quaternary-bg-color {
             background-color: var(--quaternary-bg-color);
+        }
+        
+        /* Style pour les images en object-fit cover */
+        .object-fit-cover {
+            object-fit: cover;
+        }
+        
+        /* Effet d'ombre pour le texte sur la bannière */
+        .text-shadow {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
         }
     </style>
 }

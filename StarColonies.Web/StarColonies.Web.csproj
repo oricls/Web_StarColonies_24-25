@@ -23,11 +23,12 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Teams\create.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\uploads\banieres\" />
-      <Folder Include="wwwroot\uploads\logos\" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\missions\a0a4c365-2488-4010-9609-43485b81a423.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\missions\a3812707-25ae-4e66-9ad0-7628f37943cb.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\img\missions\2645365e-fe8b-4597-8cab-438c96d6ee36.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\img\missions\68d6baa9-c17c-4708-9700-4fd116e4526a.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\img\missions\756eab70-a84c-480c-b0fc-c07562d7961c.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\img\missions\7b9b85a1-c015-4bf4-9850-da7e3e76e36a.jpg" />
     </ItemGroup>
 
 </Project>

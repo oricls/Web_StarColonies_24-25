@@ -167,6 +167,111 @@ public class EfTeamRepository : ITeamRepository
         
         _context.SaveChanges();
     }
+    
+    public async Task<IReadOnlyList<Team>> GetTeamsWithoutMissionParticipationAsync(string userId, int missionId)
+    {
+        var userTeams = await _context.Team
+            .Where(t => t.Members.Any(m => m.Id == userId)).Include(team => team.Members)
+            .ToListAsync();
+
+        var teamsWithParticipation = await _context.ResultatMission
+            .Where(rm => rm.IdMission == missionId)
+            .Select(rm => rm.IdTeam)
+            .Distinct()
+            .ToListAsync();
+
+        var teamsWithoutParticipation = userTeams
+            .Where(t => !teamsWithParticipation.Contains(t.Id))
+            .ToList();
+
+        return teamsWithoutParticipation.Select(MapTeamEntityToDomain).ToList();
+    }
+
+    public async Task<bool> IsUserMemberOfTeam(string userId, int teamId)
+    {
+        var team = await GetTeamById(teamId);
+
+        var members = await GetMembersOfTeam(team);
+        return members.Any(m => m.Id == userId);
+    }
+
+
+    public async Task<IReadOnlyList<TeamRankingModel>> GetTopTeamsAsync(int count = 10)
+    {
+        var teams = await _context.Team
+            .Include(t => t.Members)
+            .Include(t => t.ResultatMissions)
+            .ToListAsync();
+    
+        var teamRankings = teams.Select(team => 
+            {
+                // Une mission est réussie si issueStrength > 0 ET issueEndurance > 0
+                var missionsCompleted = team.ResultatMissions?
+                    .Count(rm => rm.IssueStrength > 0 && rm.IssueEndurance > 0) ?? 0;
+        
+                int score = CalculateTeamScore(team);
+        
+                return new TeamRankingModel
+                {
+                    Id = team.Id,
+                    Name = team.Name,
+                    Logo = team.Logo,
+                    Baniere = team.Baniere,
+                    MissionsCompleted = missionsCompleted,
+                    Score = score,
+                    AverageLevel = team.Members.Count > 0 ? (int)Math.Round(team.Members.Average(m => m.Level)) : 0
+                };
+            })
+            .OrderByDescending(t => t.Score)
+            .ThenByDescending(t => t.MissionsCompleted)
+            .ThenByDescending(t => t.AverageLevel)
+            .Take(count)
+            .ToList();
+    
+        return teamRankings;
+    }
+
+    public async Task<int> GetSuccessfulMissionsCountAsync(int teamId)
+    {
+        var teamEntity = await _context.Team
+            .Include(t => t.ResultatMissions)
+            .FirstOrDefaultAsync(t => t.Id == teamId);
+        
+        if (teamEntity == null)
+            return 0;
+        
+        // TODO : Modularité avec top teams
+        // Une mission est réussie si issueStrength > 0 ET issueEndurance > 0
+        return teamEntity.ResultatMissions?
+            .Count(rm => rm.IssueStrength > 0 && rm.IssueEndurance > 0) ?? 0;
+    }
+
+    private int CalculateTeamScore(Entities.Team team)
+    {
+        if (!team.Members.Any())
+            return 0;
+        
+        // Score de base basé sur le niveau des membres
+        int baseScore = team.Members.Sum(m => m.Level) * 100;
+    
+        // Bonus pour les missions réussies
+        int missionBonus = 0;
+        if (team.ResultatMissions.Any())
+        {
+            missionBonus = team.ResultatMissions
+                .Where(rm => rm.IssueStrength > 0 && rm.IssueEndurance > 0)  // Mission réussie
+                .Sum(rm => rm.IdMission * 10);
+        }
+    
+        // Bonus pour la diversité des professions
+        var uniqueProfessions = team.Members
+            .Select(m => m.IdProfession)
+            .Distinct()
+            .Count();
+        int diversityBonus = uniqueProfessions * 50;
+    
+        return baseScore + missionBonus + diversityBonus;
+    }
 
     private Team MapTeamEntityToDomain(Entities.Team teamEntity)
     {

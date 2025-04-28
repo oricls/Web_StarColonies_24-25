@@ -8,7 +8,11 @@
 
     namespace StarColonies.Web.Pages;
 
-    public class RegisterModel(UserManager<Colon> userManager, SignInManager<Colon> signInManagern, IColonRepository colonRepository, ILogRepository logRepository) : PageModel
+    public class RegisterModel(UserManager<Colon> userManager,
+        SignInManager<Colon> signInManagern,
+        IColonRepository colonRepository,
+        ILogRepository logRepository,
+        IWebHostEnvironment webHostEnvironment) : PageModel
     {
 
         public IEnumerable<Profession> Profession { get; set; } = [];
@@ -37,11 +41,65 @@
             }
         }
         
+        private async Task<string> UploadFile(IFormFile file, string subDirectory)
+        {
+            try
+            {
+                // Vérifier le fichier
+                if (file == null || file.Length == 0)
+                {
+                    return null;
+                }
+
+                // Créer le répertoire s'il n'existe pas
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads", subDirectory);
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Générer un nom de fichier unique
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Sauvegarder le fichier
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                // Retourner le chemin relatif pour le stockage en base de données
+                return $"uploads/{subDirectory}/{uniqueFileName}";
+            }
+            catch (Exception ex)
+            {
+                // Gérer l'erreur d'upload
+                return null;
+            }
+        }
+        
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+            
+            string avatarPath = "avatars/avatar_5.png"; // Avatar par défaut
+            
+            if (RegisterAvatarInput.SelectedAvatarId == "import" && RegisterAvatarInput.CustomAvatar != null)
+            {
+                // Utiliser la méthode UploadFile pour gérer l'upload
+                var uploadedPath = await UploadFile(RegisterAvatarInput.CustomAvatar, "avatars");
+                if (!string.IsNullOrEmpty(uploadedPath))
+                {
+                    avatarPath = uploadedPath;
+                }
+            }
+            else if (RegisterAvatarInput.SelectedAvatarId != null)
+            {
+                // Si un avatar prédéfini est sélectionné
+                avatarPath = $"avatars/avatar_{RegisterAvatarInput.SelectedAvatarId}.png";
             }
             
             var colon = new Colon()
@@ -54,9 +112,7 @@
                 Strength = RegisterProfessionInput.Force,
                 Endurance = RegisterProfessionInput.Endurance,
                 Level = 1,
-                Avatar = RegisterAvatarInput.SelectedAvatarId != null && RegisterAvatarInput.SelectedAvatarId != "import" 
-                    ? $"avatars/avatar_{RegisterAvatarInput.SelectedAvatarId}.png" 
-                    : "avatars/avatar_5.png",
+                Avatar = avatarPath,
                 IdProfession = RegisterProfessionInput.SelectedProfession,
             };
             
@@ -87,7 +143,7 @@
                 new Log()
                 {
                     RequeteAction = "Inscription",
-                    ResponseAction = "Inscription réussie",
+                    ResponseAction = "Inscription réussie pour " + RegisterInput.NameOfColon,
                     DateHeureAction = DateTime.Now
                 }
             );

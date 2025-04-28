@@ -836,6 +836,91 @@ namespace StarColonies.Infrastructures.Migrations
                         });
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionResource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("IdMission")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdResource")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdMission");
+
+                    b.HasIndex("IdResource");
+
+                    b.ToTable("MissionResource");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IdMission = 1,
+                            IdResource = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IdMission = 1,
+                            IdResource = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IdMission = 2,
+                            IdResource = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IdMission = 2,
+                            IdResource = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IdMission = 3,
+                            IdResource = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IdMission = 3,
+                            IdResource = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IdMission = 4,
+                            IdResource = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IdMission = 4,
+                            IdResource = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IdMission = 5,
+                            IdResource = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IdMission = 5,
+                            IdResource = 10
+                        });
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Profession", b =>
                 {
                     b.Property<int>("Id")
@@ -1477,6 +1562,25 @@ namespace StarColonies.Infrastructures.Migrations
                     b.Navigation("Mission");
                 });
 
+            modelBuilder.Entity("StarColonies.Infrastructures.Entities.MissionResource", b =>
+                {
+                    b.HasOne("StarColonies.Infrastructures.Entities.Mission", "Mission")
+                        .WithMany("GainedResources")
+                        .HasForeignKey("IdMission")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StarColonies.Infrastructures.Entities.Resource", "Resource")
+                        .WithMany("MissionResources")
+                        .HasForeignKey("IdResource")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mission");
+
+                    b.Navigation("Resource");
+                });
+
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.HasOne("StarColonies.Infrastructures.Entities.TypeResource", "TypeResource")
@@ -1544,6 +1648,8 @@ namespace StarColonies.Infrastructures.Migrations
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Mission", b =>
                 {
+                    b.Navigation("GainedResources");
+
                     b.Navigation("MissionBestiaires");
 
                     b.Navigation("ResultatMissions");
@@ -1552,6 +1658,8 @@ namespace StarColonies.Infrastructures.Migrations
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Resource", b =>
                 {
                     b.Navigation("ColonResources");
+
+                    b.Navigation("MissionResources");
                 });
 
             modelBuilder.Entity("StarColonies.Infrastructures.Entities.Team", b =>

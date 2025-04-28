@@ -58,7 +58,7 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
                     new Log()
                     {
                         DateHeureAction = DateTime.Now,
-                        RequeteAction = "Login Request",
+                        RequeteAction = "Connexion",
                         ResponseAction = $"Success : {user.UserName} s'est connecté avec succès",
                     }
                 );
@@ -68,6 +68,15 @@ public class Login(SignInManager<Colon> signInManager, UserManager<Colon> userMa
 
         ModelState.AddModelError(string.Empty, "Identifiant ou mot de passe incorrect");
         logger.LogWarning("Tentative de connexion échouée pour l'identifiant: {Identifiant}", Input.Identifiant);
+        
+        await logRepository.AddLog(
+            new Log()
+            {
+                DateHeureAction = DateTime.Now,
+                RequeteAction = "Connexion",
+                ResponseAction = $"Échec : {Input.Identifiant} a échoué à se connecter",
+            }
+        );
 
         return Page();
     }

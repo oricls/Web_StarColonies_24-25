@@ -6,40 +6,115 @@
     ViewData["ActivePage"] = "Missions";
 }
 
-<div class="row g-4">
-    @foreach (var mission in Model.AllMissions)
-    {
-        <div class="col-md-6">
-            <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
-                <div class="card-body p-4 d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h3 class="font-barlow text-white fw-bold mb-0">@mission.Name</h3>
-                        <div class="bg-primary px-3 py-1 rounded">
-                            <span class="text-white fw-bold">Nv. @mission.Level</span>
+<div class="container-fluid py-4">
+    <!-- Barre de recherche et filtres -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto">
+            <div>
+                <form method="get">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-quaternary-bg-color border-0 text-white">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="searchTerm" value="@Model.SearchTerm"
+                                       class="form-control login-input border-0"
+                                       placeholder="Rechercher une mission..."
+                                       aria-label="Rechercher une mission">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-quaternary-bg-color border-0 text-white">
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                                <select class="form-select login-input border-0" id="difficultyFilter" name="difficultyFilter" aria-label="Filtrer par difficulté">
+                                    <option value="" selected="@(Model.DifficultyFilter == "")">Toutes difficultés</option>
+                                    <option value="1-5" selected="@(Model.DifficultyFilter == "1-5")">Facile (1-5)</option>
+                                    <option value="6-10" selected="@(Model.DifficultyFilter == "6-10")">Moyenne (6-10)</option>
+                                    <option value="11-15" selected="@(Model.DifficultyFilter == "11-15")">Difficile (11-15)</option>
+                                    <option value="16+" selected="@(Model.DifficultyFilter == "16+")">Extrême (16+)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="h-100 btn btn-purple w-100">
+                                Rechercher
+                            </button>
                         </div>
                     </div>
-
-                    <p class="h6 opacity-75 text-white mb-4">@mission.Description</p>
-
-                    <div class="mb-4">
-                        <h4 class="font-barlow text-white mb-2">Monstres présents :</h4>
-                        <div class="d-flex">
-                            @foreach (var bestiaire in mission.BestiaireIcons)
-                            {
-                                <div class="me-2">
-                                    <img class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
-                                         style="width: 40px; height: 40px; object-fit: cover;"
-                                         src="@bestiaire.Avatar"
-                                         alt="@bestiaire.Name"
-                                         title="@bestiaire.Name (@bestiaire.TypeName)" />
-                                </div>
-                            }
-                        </div>
-                    </div>
-
-                    <a href="@mission.Target" class="btn btn-warning w-100 text-dark fw-bold mt-auto">CONSULTER LA MISSION</a>
-                </div>
+                </form>
             </div>
         </div>
-    }
+    </div>
+
+    <!-- Liste des missions -->
+    <div class="row g-4">
+        @foreach (var mission in Model.AllMissions)
+        {
+            <div class="col-md-6">
+                <div class="card h-100 rounded-3 shadow" style="background: linear-gradient(to bottom, #1D1332, #3A2463); border: 1px solid #6751A3;">
+                    <!-- Ajout de l'image de la mission -->
+                    <div class="mission-banner-container position-relative overflow-hidden rounded-top" style="height: 180px;">
+                        <img src="~/uploads/missions/@(!string.IsNullOrEmpty(mission.Image) ? mission.Image : "base.png")" alt="Image de la mission" class="w-100 h-100 object-fit-cover position-absolute" style="z-index: 1;">
+                        <div class="mission-banner-overlay position-absolute w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(29,19,50,0.9)); z-index: 2;"></div>
+
+                        <!-- Niveau de mission superposé sur l'image -->
+                        <div class="position-absolute top-0 end-0 m-3" style="z-index: 3;">
+                            <div class="bg-primary px-3 py-1 rounded">
+                                <span class="text-white fw-bold">Nv. @mission.Level</span>
+                            </div>
+                        </div>
+
+                        <!-- Nom de la mission superposé sur l'image -->
+                        <div class="position-absolute bottom-0 start-0 p-3 w-100" style="z-index: 3;">
+                            <h3 class="font-barlow text-white fw-bold mb-0 text-shadow">@mission.Name</h3>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4 d-flex flex-column">
+                        <p class="h6 opacity-75 text-white mb-4">@mission.Description</p>
+
+                        <div class="mb-4">
+                            <h4 class="font-barlow text-white mb-2">Monstres présents :</h4>
+                            <div class="d-flex">
+                                @foreach (var bestiaire in mission.BestiaireIcons)
+                                {
+                                    <div class="me-2">
+                                        <img class="rounded-circle d-flex align-items-center justify-content-center"
+                                             style="width: 40px; height: 40px; object-fit: cover;"
+                                             src="~/icons/@bestiaire.Avatar"
+                                             alt="@bestiaire.Name"
+                                             title="@bestiaire.Name (@bestiaire.TypeName)" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <a href="@mission.Target" class="btn btn-warning w-100 text-dark fw-bold mt-auto">CONSULTER LA MISSION</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+@section Styles {
+    <style>
+        /* Style pour l'arrière-plan quaternaire */
+        .bg-quaternary-bg-color {
+            background-color: var(--quaternary-bg-color);
+        }
+
+        /* Style pour les images en object-fit cover */
+        .object-fit-cover {
+            object-fit: cover;
+        }
+
+        /* Effet d'ombre pour le texte sur la bannière */
+        .text-shadow {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+}

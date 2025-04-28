@@ -28,36 +28,40 @@ public class StarColoniesContext : IdentityDbContext<Colon> {
     public DbSet<Log> Logs { get; set; }
     public DbSet<BonusTransaction> BonusTransaction { get; set; }
     public DbSet<BonusTransactionResource> BonusTransactionResource { get; set; }
+    public DbSet<MissionResource> MissionResource { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // 1. Configurations de base et types
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        
         modelBuilder.ApplyConfiguration(new ProfessionConfiguration());
         modelBuilder.ApplyConfiguration(new TypeBestiaireConfiguration());
         modelBuilder.ApplyConfiguration(new TypeResourceConfiguration());
     
+        // 2. Entités principales autonomes
         modelBuilder.ApplyConfiguration(new ResourceConfiguration());
         modelBuilder.ApplyConfiguration(new BestiaireConfiguration());
         modelBuilder.ApplyConfiguration(new BonusConfiguration());
-    
         modelBuilder.ApplyConfiguration(new ColonConfiguration());
         modelBuilder.ApplyConfiguration(new TeamConfiguration());
         modelBuilder.ApplyConfiguration(new MissionConfiguration());
     
-        modelBuilder.ApplyConfiguration(new ResultatMissionConfiguration());
-        modelBuilder.ApplyConfiguration(new BonusResourceConfiguration());
+        // 3. Tables de jointure (relations many-to-many)
         modelBuilder.ApplyConfiguration(new MissionBestiaireConfiguration());
-        modelBuilder.ApplyConfiguration(new ColonBonusConfiguration());
         modelBuilder.ApplyConfiguration(new ColonResourceConfiguration());
-        
-        // Configurations pour le système d'administration
-        modelBuilder.ApplyConfiguration(new LogConfiguration());
-        
+        modelBuilder.ApplyConfiguration(new ColonBonusConfiguration());
+        modelBuilder.ApplyConfiguration(new BonusResourceConfiguration());
+        modelBuilder.ApplyConfiguration(new MissionResourceConfiguration());
+    
+        // 4. Entités liées aux opérations
+        modelBuilder.ApplyConfiguration(new ResultatMissionConfiguration());
         modelBuilder.ApplyConfiguration(new BonusTransactionConfiguration());
         modelBuilder.ApplyConfiguration(new BonusTransactionResourceConfiguration());
-        
+    
+        // 5. Configurations administratives
+        modelBuilder.ApplyConfiguration(new LogConfiguration());
+    
         base.OnModelCreating(modelBuilder);
     }
 }

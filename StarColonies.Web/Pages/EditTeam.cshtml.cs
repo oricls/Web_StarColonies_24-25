@@ -31,11 +31,11 @@ namespace StarColonies.Web.Pages
 
         [BindProperty]
         [Display(Name = "Logo de l'équipe")]
-        public string Logo { get; set; } = "img/rocket.png";
+        public string Logo { get; set; } = "default_logo.png";
 
         [BindProperty]
         [Display(Name = "Bannière de l'équipe")]
-        public string Baniere { get; set; } = "img/rocket.png";
+        public string Baniere { get; set; } = "default_baniere.png";
 
         // Fichiers uploadés - Pas de BindProperty ici pour éviter le modèle vide
         public IFormFile LogoFile { get; set; }
@@ -346,7 +346,7 @@ namespace StarColonies.Web.Pages
                 }
 
                 // Retourner le chemin relatif pour le stockage en base de données
-                return $"uploads/{subDirectory}/{uniqueFileName}";
+                return $"{uniqueFileName}";
             }
             catch (Exception ex)
             {

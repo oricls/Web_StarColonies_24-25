@@ -222,7 +222,7 @@ public class EfMissionRepository : IMissionRepository
         await _context.SaveChangesAsync();
     }
 
-    public void SaveMissionResult(ResultatMission missionResult)
+    public int SaveMissionResult(ResultatMission missionResult)
     {
         var missionResultEntity = new Entities.ResultatMission
         {
@@ -235,6 +235,8 @@ public class EfMissionRepository : IMissionRepository
 
         _context.ResultatMission.Add(missionResultEntity);
         _context.SaveChanges();
+        
+        return missionResultEntity.Id;
     }
 
     public async Task<IReadOnlyList<Resource>> GetAllResources()
@@ -250,6 +252,101 @@ public class EfMissionRepository : IMissionRepository
             IconUrl = resourceEntity.TypeResource.Icon,
             TypeName = resourceEntity.TypeResource.Name, // Ajouter le nom du type
         }).ToList();
+    }
+
+    public async Task<IReadOnlyList<Bestiaire>> GetAllBestiaires()
+    {
+        var bestiaireEntities = await _context.Bestiaire
+            .Include(b => b.TypeBestiaire)
+            .ToListAsync();
+
+        return bestiaireEntities.Select(bestiaireEntity => new Bestiaire
+        {
+            Id = bestiaireEntity.Id,
+            Name = bestiaireEntity.Name,
+            Strength = bestiaireEntity.Strength,
+            Endurance = bestiaireEntity.Endurance,
+            TypeBestiaireName = bestiaireEntity.TypeBestiaire.Name,
+            TypeBestiaireAvatar = bestiaireEntity.TypeBestiaire.Avatar,
+            TypeBestiaireDescription = bestiaireEntity.TypeBestiaire.Description
+        }).ToList();
+    }
+
+    public async Task AddMission(Mission mission)
+    {
+        var missionEntity = new Entities.Mission
+        {
+            Name = mission.Name,
+            Image = mission.Image,
+            Description = mission.Description,
+            MissionBestiaires = mission.Bestiaires.Select(b => new Entities.MissionBestiaire
+            {
+                IdBestiaire = b.Id
+            }).ToList(),
+        
+            GainedResources = mission.Resources.Select(r => new Entities.MissionResource
+            {
+                IdResource = r.Id
+            }).ToList()
+        };
+
+        _context.Mission.Add(missionEntity);
+        await _context.SaveChangesAsync();
+    }
+
+    public Task DeleteMissionAsync(Mission mission)
+    {
+        var missionEntity = _context.Mission
+            .Include(m => m.MissionBestiaires)
+            .FirstOrDefault(m => m.Id == mission.Id);
+
+        if (missionEntity == null) return Task.CompletedTask;
+        _context.Mission.Remove(missionEntity);
+        return _context.SaveChangesAsync();
+
+    }
+
+    public async Task<IReadOnlyList<Resource>> GetResourcesByMissionIdAsync(int missionId)
+    {
+        var resources = await _context.MissionResource
+            .Where(mr => mr.IdMission == missionId)
+            .Include(mr => mr.Resource)
+            .ThenInclude(r => r.TypeResource)
+            .Select(mr => new Resource
+            {
+                Id = mr.Resource.Id,
+                Name = mr.Resource.Name,
+                Description = mr.Resource.Description,
+                IconUrl = mr.Resource.TypeResource.Icon,
+                TypeName = mr.Resource.TypeResource.Name
+            })
+            .ToListAsync();
+
+        return resources;
+    }
+
+    public async Task<ResultatMission> GetMissionResultById(int resultId)
+    {
+        var result = await _context.ResultatMission
+            .Include(rm => rm.Mission)
+            .Include(rm => rm.Team)
+            .FirstOrDefaultAsync(rm => rm.Id == resultId);
+        
+        if (result == null)
+            return null;
+        
+        return new ResultatMission
+        {
+            Id = result.Id,
+            IssueStrength = result.IssueStrength,
+            IssueEndurance = result.IssueEndurance,
+            IsSuccess = (result.IssueEndurance > 0 && result.IssueStrength > 0),
+            Date = result.Date,
+            MissionId = result.IdMission,
+            TeamId = result.IdTeam,
+            TeamName = result.Team?.Name,
+            TeamLogo = result.Team?.Logo
+        };
     }
 
     // Méthode utilitaire pour mapper une entité Mission vers un objet de domaine Mission
