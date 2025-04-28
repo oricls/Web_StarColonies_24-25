@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StarColonies.Domains;
 using StarColonies.Domains.Repositories;
 
-namespace StarColonies.Web.Pages;
+namespace StarColonies.Web.Pages.Admin;
 
 [Authorize(Roles = "Admin")]
 public class AdminModel(ILogRepository logRepository) : PageModel
