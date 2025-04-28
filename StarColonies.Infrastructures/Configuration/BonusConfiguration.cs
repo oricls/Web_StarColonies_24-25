@@ -94,7 +94,7 @@ public class BonusConfiguration : IEntityTypeConfiguration<Bonus>
             {
                 Id = 6,
                 Name = "L'item trop cheatés",
-                Description = "Elimine instantanément tous les ministres",
+                Description = "Elimine instantanément tous les monstres (ne fonctionne pas)",
                 DureeParDefaut = TimeSpan.FromMinutes(100),
                 EffectTypeId = 0, //TODO: HAHA C'EST COMPLIQUE CELUI CI
                 IconUrl = "cheat.png"

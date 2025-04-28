@@ -234,7 +234,6 @@ else
 }
 
 @section Scripts {
-    // Partie à remplacer dans la section Scripts de votre fichier Razor
     <script type="text/javascript">
         // S'assurer que teamStats est disponible et correctement formaté
         const teamStats = @Html.Raw(JsonSerializer.Serialize(Model.TeamStats));
