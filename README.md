@@ -9,23 +9,43 @@ Projet d'application web pour l'UE19. Le projet prend la forme d'une solution .N
 La suite du document sera à compléter par vos soins.
 
 ## Membres de l'équipe
+- Alex Tadino (Q210115)
+- Maximilien Withof (Q220271)
+- Oriane Clesse (Q220252)
 
-**TODO :** indiquez les membres de votre équipe (de deux à trois membres).
+Responsable du déploiement : Maximilien Withof
+- URL : https://ue19.cg.helmo.be/Q220271
 
-**TODO :** indiquez quel membre est responsable du déploiement. Nous testerons l'application web depuis son URL https://ue19.cg.helmo.be/matricule.
 
 ## Construction de la solution
 
 **TODO :** expliquez les étapes nécessaires à la récupération de votre solution, à sa construction et à son exécution dans un environnement de développement (tel que l'ordinateur de votre responsable).
 
 ## Fonctionnalités implémentées
+- US1 : totalement achevée
+- US2 : totalement achevée
+- US3 : totalement achevée
+- US4 : débutée -> la modification de l'avatar n'est pas mise à jour
+- US5 : totalement achevée
+- US6 : totalement achevée
+- US7 : totalement achevée
+- US8 : totalement achevée
+- US9 : totalement achevée
+- US10 : totalement achevée
+- US11 : (à voir)
+- US12 : (à voir)
+- Bonus : (à voir)
 
 **TODO :** pour chaque US décrite dans l'énoncé, indiquez son état d'avancement (non-faite, débutée, partiellement achevée, totalement achevée). Quand une US est débutée ou partiellement achevée, indiquez en quelques mots ce qui manque selon vous.
 
 ## Données de connexion
+### Administrateur
+- Email : admin@admin.com , Mdp : Test_12345
 
-**TODO :** indiquez au minimum trois comptes dont un compte d'administrateur.
+### Colon
+- Email : mira.nova@example.com , Mdp : Motdepasse123!
+- Email : alex.striker@example.com, Mdp : Motdepasse123!
 
 ## Éléments techniques notables
-
-**TODO :** indiquez les éléments techniques que vous jugez notables. Par exemple, l'utilisation d'un framework CSS autre que Bootstrap. Autre exemple, l'utilisation de bibliothèques JS pour l'affichage de graphiques.
+Biblitohèques utilisées : 
+- Chart.JS
