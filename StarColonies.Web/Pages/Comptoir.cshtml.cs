@@ -65,6 +65,9 @@ public class Comptoir : PageModel
             // Récupérer l'identifiant de l'utilisateur connecté
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
+            // Nettoyer les bonus expirés en priorité
+            await _repositoryBonus.CleanExpiredBonusesAsync(userId);
+            
             Bonuses = await _repositoryBonus.GetAllBonusAsync();
             var resourcesOfColon = await _repositoryColon.GetColonResourcesAsync(userId);
             
