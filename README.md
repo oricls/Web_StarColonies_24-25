@@ -20,19 +20,54 @@ Responsable du déploiement : Maximilien Withof
 ## Construction de la solution
 
 ### Préalables
-- Etre à l'helmo ou sinon avoir son VPN sur une adresse de l'école.
-- Installer Rider (vers.2025.1)
+- .NET SDK (version 8.0 ou supérieure)
+- Rider (vers.2025.1) ou autre IDE
+- Git
+- Accès à la base de données SQL Server d'Helmo
 
-### Lancement
-1. Importer le projet git sur Rider
-2. Lancer le programme via Rider ou en ligne de commande par :
+### Instructions de construction et d'exécution
+1. Accédez à votre espace de travail
 ```bash
-$ cd StarColonies\StarColonies.Web 
-$ dotnet run
+cd votre/espace/de/travail/
 ```
-3. Ouvrir le lien http://localhost:5298 dans un navigateur
-
-**TODO :** expliquez les étapes nécessaires à la récupération de votre solution, à sa construction et à son exécution dans un environnement de développement (tel que l'ordinateur de votre responsable).
+2. Créez un nouvel emplacement pour le projet
+```bash
+mkdir star_colonies
+```
+3. Accédez au nouvel emplacement du projet
+```bash
+cd star_colonies
+```
+4. Clonez le dépôt dans le nouvel emplacement du projet
+```bash
+git clone https://git.helmo.be/students/info/q220271/star-colonies.git
+```
+5. Accédez au dossier du projet cloné
+```bash
+cd star-colonies
+```
+6. Vérifiez que votre connexion à la base de données est correctement configurée
+    - Ouvrez le fichier StarColonies.Web/appsettings.Development.json
+    - Modifiez la chaîne de connexion si nécessaire avec vos identifiants :
+```bash
+"ConnectionStrings": {
+  "DefaultConnection": "Data Source=asterix-intra.cg.helmo.be,11433;User Id=VOTRE_ID; Password=VOTRE_MOT_DE_PASSE; Initial Catalog=VOTRE_BASE; Encrypt=false"
+}
+```
+7. Restaurez les dépendances et compilez la solution
+```bash
+dotnet restore
+dotnet build
+```
+8. Accédez au projet web
+```bash
+cd StarColonies.Web
+```
+9. Exécutez l'application
+```bash
+dotnet run
+```
+10. Ouvrez votre navigateur et accédez à l'URL indiquée dans la console
 
 
 ## Fonctionnalités implémentées
